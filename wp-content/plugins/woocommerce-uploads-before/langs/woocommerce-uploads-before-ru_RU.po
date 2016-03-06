@@ -1,0 +1,322 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Uploads Before Add-On\n"
+"POT-Creation-Date: 2016-01-08 10:11+0100\n"
+"PO-Revision-Date: 2016-02-15 18:36+0300\n"
+"Language-Team: WP Fortune <info@wpfortune.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: _;__;_e;_x;_n:1,2;_n_noop:1,2;_nx:1,2\n"
+"Last-Translator: Anton Grakhov <ant.grakhov@gmail.com>\n"
+"Language: ru_RU\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../classes/class-wc-plugin-update.php:370
+#, php-format
+msgid ""
+"The license key for %s has expired. You can reactivate or purchase a license "
+"key from your account %s."
+msgstr ""
+"Лицензионный ключ для %s истек. Можно включить или приобрести лицензионный "
+"ключ из вашего счета %s."
+
+#: ../classes/class-wc-plugin-update.php:370
+#: ../classes/class-wc-plugin-update.php:385
+#: ../classes/class-wc-plugin-update.php:400
+#: ../classes/class-wc-plugin-update.php:415
+#: ../classes/class-wc-plugin-update.php:430
+#: ../classes/class-wc-plugin-update.php:445
+#: ../classes/class-wc-plugin-update.php:460
+#: ../classes/class-wc-plugin-update.php:475
+#: ../classes/class-wc-plugin-update.php:490
+#: ../classes/class-wc-plugin-update.php:505
+#: ../classes/class-wc-plugin-update.php:535
+msgid "dashboard"
+msgstr "Панель управления"
+
+#: ../classes/class-wc-plugin-update.php:385
+#, php-format
+msgid ""
+"The subscription for %s is on-hold. You can reactivate the subscription from "
+"your account %s."
+msgstr ""
+"Подписка на %s на удержании. Вы можете активировать подписку со своего счета "
+"%s."
+
+#: ../classes/class-wc-plugin-update.php:400
+#, php-format
+msgid ""
+"The subscription for %s has been cancelled. You can renew the subscription "
+"from your account %s. A new license key will be emailed to you after your "
+"order has been completed."
+msgstr ""
+"Подписка на %s была отменена. Вы можете продлить подписку с вашего счета %s. "
+"Новый лицензионный ключ будет выслан Вам после того как ваш заказ был "
+"завершен."
+
+#: ../classes/class-wc-plugin-update.php:415
+#, php-format
+msgid ""
+"The subscription for %s has expired. You can reactivate the subscription "
+"from your account %s."
+msgstr ""
+"Подписка на %s истекла. Вы можете активировать подписку со своего счета %s."
+
+#: ../classes/class-wc-plugin-update.php:430
+#, php-format
+msgid ""
+"The subscription for %s has been suspended. You can reactivate the "
+"subscription from your account %s."
+msgstr ""
+"Подписка на %s была приостановлена. Вы можете активировать подписку со "
+"своего счета %s."
+
+#: ../classes/class-wc-plugin-update.php:445
+#, php-format
+msgid ""
+"The subscription for %s is still pending. You can check on the status of the "
+"subscription from your account %s."
+msgstr ""
+"Подписка на %s еще не принята. Вы можете проверить статус подписки с вашего "
+"счета %s."
+
+#: ../classes/class-wc-plugin-update.php:460
+#, php-format
+msgid ""
+"The subscription for %s has been placed in the trash and will be deleted "
+"soon. You can purchase a new subscription from your account %s."
+msgstr ""
+"Подписка на %s была помещена в мусорный контейнер и скоро будет удалена. Вы "
+"можете приобрести новую подписку с вашего счета %s."
+
+#: ../classes/class-wc-plugin-update.php:475
+#, php-format
+msgid ""
+"A subscription for %s could not be found. You can purchase a subscription "
+"from your account %s."
+msgstr ""
+"Подписка для %s не может быть найдена. Вы можете приобрести подписку от "
+"вашего счета %s."
+
+#: ../classes/class-wc-plugin-update.php:490
+#, php-format
+msgid ""
+"A license key for %s could not be found. Maybe you forgot to enter a license "
+"key when setting up %s, or the key was deactivated in your account. You can "
+"reactivate or purchase a license key from your account %s."
+msgstr ""
+"Лицензионный ключ для %s не может быть найден. Может быть, вы забыли ввести "
+"лицензионный ключ при настройке %s, или ключ был деактивирован в вашем "
+"аккаунте. Можно включить или приобрести лицензионный ключ из вашего счета %s."
+
+#: ../classes/class-wc-plugin-update.php:505
+#, php-format
+msgid ""
+"Download permission for %s has been revoked possibly due to a license key or "
+"subscription expiring. You can reactivate or purchase a license key from "
+"your account %s."
+msgstr ""
+"Скачать разрешение на %s был аннулирован возможно из-за лицензионного ключа "
+"или подписки угасании. Вы можете активировать или приобрести лицензионный "
+"ключ из вашего счета %s."
+
+#: ../classes/class-wc-plugin-update.php:520
+#, php-format
+msgid ""
+"%s has not been activated. Go to the settings page and enter the license key "
+"and license email to activate %s."
+msgstr ""
+"%s не был активирован. Перейти на страницу настроек и ввести лицензионный "
+"ключ и лицензировать электронную почту, чтобы активировать %s."
+
+#: ../classes/class-wc-plugin-update.php:535
+#, php-format
+msgid ""
+"You changed the subscription for %s, so you will need to enter your new API "
+"License Key in the settings page. The License Key should have arrived in "
+"your email inbox, if not you can get it by logging into your account %s."
+msgstr ""
+"Вы изменили подписку на %s, так что вам нужно будет ввести новый API "
+"лицензионный ключ на странице настроек. Лицензионный ключ должен был прибыть "
+"в свой электронный почтовый ящик, если вы не можете получить его, войдя в "
+"свой счет %s."
+
+#: ../classes/class-wpf-uploads-before.php:226
+msgid "Add to cart"
+msgstr "Добавить в корзину"
+
+#: ../classes/class-wpf-uploads-before.php:227
+#: ../classes/class-wpf-uploads-before.php:714
+msgid "Add to cart & upload files"
+msgstr "Добавить в корзину и загрузить файлы"
+
+#: ../classes/class-wpf-uploads-before.php:511
+#, php-format
+msgid ""
+"WooCommerce Uploads and/or WooCommerce is not active. Please activate "
+"WooCommerce and WooCommerce Uploads before using %s."
+msgstr ""
+"WooCommerce Uploads и / или WooCommerce не активны. Пожалуйста, включите "
+"WooCommerce и WooCommerce Uploads перед использованием %s."
+
+#: ../classes/class-wpf-uploads-before.php:698
+msgid "Add to cart & upload"
+msgstr "Добавить в корзину и загрузить"
+
+#: ../classes/class-wpf-uploads-before.php:748
+#: ../pages/admin/extra-settings.php:15
+msgid "You can always add, change or remove your uploads after checkout."
+msgstr ""
+"Вы всегда можете добавить, изменить или удалить свои загруженные после "
+"проверки."
+
+#: ../classes/class-wpf-uploads-before.php:797
+msgid "Uploaded files:"
+msgstr "Загруженные файлы:"
+
+#: ../classes/class-wpf-uploads-before.php:814
+msgid "Upload / View files"
+msgstr "Загрузка / Просмотр файлов"
+
+#: ../classes/class-wpfortune-base.php:95
+msgid "Docs"
+msgstr "Документы"
+
+#: ../classes/class-wpfortune-base.php:96
+msgid "Support"
+msgstr "Поддержка"
+
+#: ../classes/class-wpfortune-base.php:97
+#: ../classes/class-wpfortune-base.php:102
+msgid "Settings"
+msgstr "Настройки"
+
+#: ../pages/admin/extra-settings.php:3
+msgid "Uploads before checkout"
+msgstr "Загрузить до проверки заказа"
+
+#: ../pages/admin/extra-settings.php:9
+msgid "Cart message:"
+msgstr "Сообщение в корзине:"
+
+#: ../pages/admin/extra-settings.php:17
+msgid ""
+"Please enter the text you want to display on the cart page. If empty, the "
+"default message will be shown."
+msgstr ""
+"Пожалуйста, введите текст, который будет отображаться на странице корзины. "
+"Если пусто, будет показано сообщение по умолчанию."
+
+#: ../pages/admin/extra-settings.php:27
+msgid "Show 'View Cart' button:"
+msgstr "Показать кнопку «Посмотреть корзину»"
+
+#: ../pages/admin/extra-settings.php:33
+msgid "Don't show"
+msgstr "Не показывать"
+
+#: ../pages/admin/extra-settings.php:34
+msgid "Before upload boxes"
+msgstr "Блоки перед загрузкой"
+
+#: ../pages/admin/extra-settings.php:35
+msgid "After upload boxes"
+msgstr "Блоки после загрузки"
+
+#: ../pages/admin/extra-settings.php:37
+msgid ""
+"Where or whether to show the view cart button on the upload page for a "
+"single product"
+msgstr ""
+"Где или показывать ли кнопку Просмотр корзины на странице загрузки для "
+"одного продукта"
+
+#: ../pages/admin/extra-settings.php:47
+msgid "Show uploaded files in cart:"
+msgstr "Показать загруженные в корзину файлы:"
+
+#: ../pages/admin/extra-settings.php:53 ../pages/admin/extra-settings.php:71
+#: ../pages/admin/extra-settings.php:91 ../pages/admin/extra-settings.php:109
+msgid "Enable"
+msgstr "Включить"
+
+#: ../pages/admin/extra-settings.php:55
+msgid ""
+"Whether to show the filenames of the uploads for each product in the cart"
+msgstr "Показывать ли имена файлов загрузки для каждого продукта в корзине"
+
+#: ../pages/admin/extra-settings.php:65
+msgid "Uploads required:"
+msgstr "Загрузка обязательна:"
+
+#: ../pages/admin/extra-settings.php:73
+msgid "Uploads are required before the customer can proceed to checkout"
+msgstr ""
+"Требуется прежде загрузить файлы, чем клиент может приступить к оформлению "
+"заказа"
+
+#: ../pages/admin/extra-settings.php:85
+msgid "Strict mode:"
+msgstr "Строгий режим:"
+
+#: ../pages/admin/extra-settings.php:93
+msgid ""
+"If you enable strict mode, customers must exactly upload the amount of files "
+"corresponding the 'Number of uploads' for a specific upload box."
+msgstr ""
+"Если включить строгий режим, клиенты должны загрузить точное количество "
+"файлов, соответствующих полю «Число загрузок» для специального блока "
+"загрузки."
+
+#: ../pages/admin/extra-settings.php:103
+msgid "Mutiple ordered items:"
+msgstr "Несколько оформленных товаров:"
+
+#: ../pages/admin/extra-settings.php:111
+msgid ""
+"If a customer orders multiple items of the same product, the customer must "
+"upload files for each item before they can proceed to checkout (the 'Upload "
+"procedure' setting must be set to 'Multiple uploads for each product')."
+msgstr ""
+"Если клиент заказывает несколько элементов одного и того же продукта, клиент "
+"должен загружать файлы для каждого элемента, прежде чем они могут перейти к "
+"оформлению заказа (далее «Порядок загрузки отметкой должен быть установлен в "
+"«Несколько загрузок для каждого продукта»)."
+
+#: ../pages/admin/extra-settings.php:121
+msgid "Hide upload button in cart:"
+msgstr "Скрыть кнопку загрузки в корзине:"
+
+#: ../pages/admin/extra-settings.php:127
+msgid "Hide"
+msgstr "Скрыть"
+
+#: ../pages/admin/extra-settings.php:129
+msgid ""
+"Check this option if you want to hide the upload button for each product in "
+"the cart"
+msgstr ""
+"Отметьте эту опцию, если вы хотите, чтобы кнопка загрузки была скрыта для "
+"каждого продукта в корзине"
+
+#: ../pages/admin/extra-settings.php:143
+msgid "Save settings"
+msgstr "Сохранить настройки"
+
+#: ../pages/frontend/upload-boxes-header.php:13
+msgid "Items in cart:"
+msgstr "Элементов в корзине:"
+
+#: ../pages/frontend/uploads-needed.php:7
+msgid "The following products need uploads:"
+msgstr "Следующие продукты требуют загрузки файлов:"
+
+#: ../pages/frontend/uploads-needed.php:17
+msgid "Please upload your files before proceeding to checkout"
+msgstr ""
+"Пожалуйста, загрузите ваши файлы, прежде чем приступить к оформлению заказа"

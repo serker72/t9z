@@ -1,0 +1,1021 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Uploads\n"
+"POT-Creation-Date: 2016-02-15 17:13+0300\n"
+"PO-Revision-Date: 2016-02-15 18:42+0300\n"
+"Last-Translator: Anton Grakhov <ant.grakhov@gmail.com>\n"
+"Language-Team: \n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: classes/class-wc-plugin-update.php:370
+#, php-format
+msgid ""
+"The license key for %s has expired. You can reactivate or purchase a license "
+"key from your account %s."
+msgstr ""
+"Лицензионный ключ для %s истек. Можно включить или приобрести лицензионный "
+"ключ из вашего счета %s."
+
+#: classes/class-wc-plugin-update.php:370
+#: classes/class-wc-plugin-update.php:385
+#: classes/class-wc-plugin-update.php:400
+#: classes/class-wc-plugin-update.php:415
+#: classes/class-wc-plugin-update.php:430
+#: classes/class-wc-plugin-update.php:445
+#: classes/class-wc-plugin-update.php:460
+#: classes/class-wc-plugin-update.php:475
+#: classes/class-wc-plugin-update.php:490
+#: classes/class-wc-plugin-update.php:505
+#: classes/class-wc-plugin-update.php:535
+msgid "dashboard"
+msgstr "Панель управления"
+
+#: classes/class-wc-plugin-update.php:385
+#, php-format
+msgid ""
+"The subscription for %s is on-hold. You can reactivate the subscription from "
+"your account %s."
+msgstr ""
+"Подписка на %s на удержании. Вы можете активировать подписку со своего счета "
+"%s."
+
+#: classes/class-wc-plugin-update.php:400
+#, php-format
+msgid ""
+"The subscription for %s has been cancelled. You can renew the subscription "
+"from your account %s. A new license key will be emailed to you after your "
+"order has been completed."
+msgstr ""
+"Подписка на %s была отменена. Вы можете продлить подписку с вашего счета %s. "
+"Новый лицензионный ключ будет выслан Вам после того как ваш заказ был "
+"завершен."
+
+#: classes/class-wc-plugin-update.php:415
+#, php-format
+msgid ""
+"The subscription for %s has expired. You can reactivate the subscription "
+"from your account %s."
+msgstr ""
+"Подписка на %s истекла. Вы можете активировать подписку со своего счета %s."
+
+#: classes/class-wc-plugin-update.php:430
+#, php-format
+msgid ""
+"The subscription for %s has been suspended. You can reactivate the "
+"subscription from your account %s."
+msgstr ""
+"Подписка на %s была приостановлена. Вы можете активировать подписку со "
+"своего счета %s."
+
+#: classes/class-wc-plugin-update.php:445
+#, php-format
+msgid ""
+"The subscription for %s is still pending. You can check on the status of the "
+"subscription from your account %s."
+msgstr ""
+"Подписка на %s еще не принята. Вы можете проверить статус подписки с вашего "
+"счета %s."
+
+#: classes/class-wc-plugin-update.php:460
+#, php-format
+msgid ""
+"The subscription for %s has been placed in the trash and will be deleted "
+"soon. You can purchase a new subscription from your account %s."
+msgstr ""
+"Подписка на %s была помещена в мусорный контейнер и скоро будет удалена. Вы "
+"можете приобрести новую подписку с вашего счета %s."
+
+#: classes/class-wc-plugin-update.php:475
+#, php-format
+msgid ""
+"A subscription for %s could not be found. You can purchase a subscription "
+"from your account %s."
+msgstr ""
+"Подписка для %s не может быть найдена. Вы можете приобрести подписку от "
+"вашего счета %s."
+
+#: classes/class-wc-plugin-update.php:490
+#, php-format
+msgid ""
+"A license key for %s could not be found. Maybe you forgot to enter a license "
+"key when setting up %s, or the key was deactivated in your account. You can "
+"reactivate or purchase a license key from your account %s."
+msgstr ""
+"Лицензионный ключ для %s не может быть найдена. Может быть, вы забыли ввести "
+"лицензионный ключ при настройке %s, или ключ был деактивирован в вашем "
+"аккаунте. Можно включить или приобрести лицензионный ключ из вашего счета %s."
+
+#: classes/class-wc-plugin-update.php:505
+#, php-format
+msgid ""
+"Download permission for %s has been revoked possibly due to a license key or "
+"subscription expiring. You can reactivate or purchase a license key from "
+"your account %s."
+msgstr ""
+"Скачать разрешение на %s был аннулирован возможно из-за лицензионного ключа "
+"или подписки угасании. Вы можете активировать или приобрести лицензионный "
+"ключ из вашего счета %s."
+
+#: classes/class-wc-plugin-update.php:520
+#, php-format
+msgid ""
+"%s has not been activated. Go to the settings page and enter the license key "
+"and license email to activate %s."
+msgstr ""
+"%s не была активирована. Перейти на страницу настроек и ввести лицензионный "
+"ключ и лицензионный почту, чтобы активировать %s."
+
+#: classes/class-wc-plugin-update.php:535
+#, php-format
+msgid ""
+"You changed the subscription for %s, so you will need to enter your new API "
+"License Key in the settings page. The License Key should have arrived in "
+"your email inbox, if not you can get it by logging into your account %s."
+msgstr ""
+"Вы изменили подписку на %s, так что вам нужно будет ввести новый API "
+"лицензионный ключ на странице настроек. Лицензионный ключ должен был прибыть "
+"в свой электронный почтовый ящик, если вы не можете получить его, войдя в "
+"свой счет %s."
+
+#: classes/class-wpf-uploads-data.php:381
+msgid "Login to upload your file and attach it to your order."
+msgstr "Войдите чтобы загрузить файл и прикрепить ее к вашему заказу."
+
+#: classes/class-wpf-uploads-data.php:382 classes/class-wpf-uploads.php:459
+msgid "Login to upload your files and attach them to your order."
+msgstr "Войдите для загрузки файлов и прикрепления их к вашему заказу."
+
+#: classes/class-wpf-uploads-data.php:394
+#: pages/frontend/_single-uploaded-file.php:47
+msgid "Your file will be manually verified."
+msgstr "Файл будет проверен вручную."
+
+#: classes/class-wpf-uploads-data.php:395
+#: pages/frontend/_single-uploaded-file.php:53
+msgid "We have found a problem with this file. Please upload a new file."
+msgstr ""
+"Мы обнаружили проблему с этим файлом. Пожалуйста, загрузите новый файл."
+
+#: classes/class-wpf-uploads-data.php:396
+#: pages/frontend/_single-uploaded-file.php:50
+msgid "Your file is approved."
+msgstr "Ваш файл будет одобрен."
+
+#: classes/class-wpf-uploads-upload.php:55
+msgid "There was an error with this file"
+msgstr "С этим файлом возникла ошибка"
+
+#: classes/class-wpf-uploads-upload.php:172
+msgid "Upload successful"
+msgstr "Успешная загрузка"
+
+#: classes/class-wpf-uploads-upload.php:264
+#: classes/class-wpf-uploads-upload.php:272
+#, php-format
+msgid "The %s filetype is not allowed."
+msgstr "Загрузка файлов с расширением %s не допускается."
+
+#: classes/class-wpf-uploads-upload.php:282
+#, php-format
+msgid "The file %s is too big."
+msgstr "Файл %s слишком большой."
+
+#: classes/class-wpf-uploads-upload.php:291
+#, php-format
+msgid "The width of this image must be at least %s."
+msgstr "Ширина этого изображения должна быть не менее %s."
+
+#: classes/class-wpf-uploads-upload.php:293
+#, php-format
+msgid "The height of this image must be at least %s."
+msgstr "Высота этого изображения должна быть не менее %s."
+
+#: classes/class-wpf-uploads-upload.php:295
+#, php-format
+msgid "The width of this image could not exceeds %s."
+msgstr "Ширина этого изображения не может превышать %s."
+
+#: classes/class-wpf-uploads-upload.php:297
+#, php-format
+msgid "The height of this image could not exceeds %s."
+msgstr "Высота этого изображения не может превышать %s."
+
+#: classes/class-wpf-uploads-upload.php:322 classes/class-wpf-uploads.php:713
+msgid "You have reached the maximum amount of uploads"
+msgstr "Вы достигли максимального количества загрузок"
+
+#: classes/class-wpf-uploads.php:356 classes/class-wpf-uploads.php:360
+#, php-format
+msgid "Error #%s - Please contact the owner."
+msgstr "Ошибка #%s - Пожалуйста, обратитесь к администратору."
+
+#: classes/class-wpf-uploads.php:461
+msgid "Login to upload your file and attach them to your order."
+msgstr "Войдите чтобы загрузить файлы и прикрепить их к вашему заказу."
+
+#: classes/class-wpf-uploads.php:468 classes/class-wpf-uploads.php:472
+msgid "Upload file(s)"
+msgstr "Загрузка файлов"
+
+#: classes/class-wpf-uploads.php:729
+msgid "Are you sure you want to delete this file?"
+msgstr "Вы уверены, что хотите удалить этот файл?"
+
+#: classes/class-wpf-uploads.php:757
+msgid "E-mail successfully sent"
+msgstr "E-mail успешно отправлен"
+
+#: classes/class-wpf-uploads.php:758
+msgid ""
+"Are you sure you want to enable uploads for all current products? The "
+"default uploadset will be used for this."
+msgstr ""
+"Вы уверены, что хотите включить загрузку для всех существующих продуктов? "
+"Набор загрузки по умолчанию будет использоваться для этого."
+
+#: classes/class-wpf-uploads.php:773
+msgid "Can't delete upload box. There must be at least one upload box."
+msgstr ""
+"Не удается удалить блок загрузки. Должен быть по крайней мере один блок для "
+"загрузки файлов."
+
+#: classes/class-wpf-uploads.php:774
+msgid "Less settings"
+msgstr "Скрыть"
+
+#: classes/class-wpf-uploads.php:775 pages/admin/uploadset.php:26
+msgid "More settings"
+msgstr "Настройки"
+
+#: classes/class-wpf-uploads.php:816
+#, php-format
+msgid ""
+"%s was installed successfully. If we found settings of a previous version, "
+"we tried to restore your settings. Please check this before you use this "
+"plugin."
+msgstr ""
+"%s был успешно установлен. Если бы мы нашли настройки предыдущей версии, мы "
+"попытались восстановить настройки. Пожалуйста, проверьте это, прежде чем "
+"использовать этот плагин."
+
+#: classes/class-wpf-uploads.php:829
+#, php-format
+msgid ""
+"There was an error installing %s. Please contact the owner of this plugin."
+msgstr ""
+"В процессе установки %s возникла ошибка. Пожалуйста, свяжитесь с владельцем "
+"плагина."
+
+#: classes/class-wpf-uploads.php:841
+#, php-format
+msgid "WooCommerce is not active. Please activate WooCommerce before using %s."
+msgstr ""
+"WooCommerce не активен. Пожалуйста, включите WooCommerce перед "
+"использованием %s."
+
+#: classes/class-wpf-uploads.php:855 classes/class-wpf-uploads.php:877
+msgid "Uploads"
+msgstr "Загрузка"
+
+#: classes/class-wpf-uploads.php:880
+msgid "Uploaded Files"
+msgstr "Загруженные файлы"
+
+#: classes/class-wpf-uploads.php:943
+msgid "Your settings have been saved."
+msgstr "Ваши настройки были сохранены."
+
+#: classes/class-wpf-uploads.php:1022
+msgid "The reason cannot be empty"
+msgstr "Причина не может быть пустой"
+
+#: classes/class-wpf-uploads.php:1026 classes/class-wpf-uploads.php:1044
+msgid "Error while sending mail"
+msgstr "Ошибка в процессе отправки почты"
+
+#: classes/class-wpf-uploads.php:1035 pages/admin/order_uploads.php:101
+msgid "Files accepted"
+msgstr "Файлы приняты"
+
+#: classes/class-wpf-uploads.php:1035 pages/admin/order_uploads.php:102
+msgid "Files rejected"
+msgstr "Файлы отклонены"
+
+#: classes/class-wpf-uploads.php:1148
+msgid "Uploads for current products are now enabled."
+msgstr "Загрузки для существующих продуктов включены."
+
+#: classes/class-wpf-uploads.php:1157
+msgid ""
+"No products without upload settings were found. No products are updated."
+msgstr ""
+"Не было обнаружено продуктов без изменений параметров загрузки. Нет товаров "
+"для обновления."
+
+#: classes/class-wpf-uploads.php:1336
+msgid "New / Modified file(s)"
+msgstr "Новые / Измененные файлы"
+
+#: classes/class-wpfortune-base.php:93
+msgid "Settings"
+msgstr "Настройки"
+
+#: classes/class-wpfortune-base.php:94
+msgid "Docs"
+msgstr "Документы"
+
+#: classes/class-wpfortune-base.php:95 pages/admin/main.php:169
+msgid "Support"
+msgstr "Техподдержка"
+
+#: pages/admin/_admin-messages.php:3
+msgid "Custom messages:"
+msgstr "Кастомизация сообщений:"
+
+#: pages/admin/_admin-messages.php:9 pages/admin/_admin-notifications.php:9
+#: pages/admin/_thumbnail-settings.php:9 pages/admin/_thumbnail-settings.php:51
+#: pages/admin/_uploader-settings.php:29 pages/admin/_uploader-settings.php:47
+msgid "Enable"
+msgstr "Включено"
+
+#: pages/admin/_admin-messages.php:11
+msgid ""
+"Check this option if you want to set your own messages, that will be showed "
+"to the customer after uploading a file."
+msgstr ""
+"Отметьте эту опцию, если вы хотите, чтобы можно было установить свои "
+"собственные сообщения, которые будут показаны клиенту после загрузки файла."
+
+#: pages/admin/_admin-messages.php:23
+msgid "Not checked:"
+msgstr "Не проверено:"
+
+#: pages/admin/_admin-messages.php:29
+msgid "Please enter the text you want to display after upload."
+msgstr "Пожалуйста, введите текст, который будет отображаться после загрузки."
+
+#: pages/admin/_admin-messages.php:39
+msgid "Declined files:"
+msgstr "Отклоненные файлы:"
+
+#: pages/admin/_admin-messages.php:45
+msgid "Please enter the text you want to display after you've rejected a file."
+msgstr ""
+"Пожалуйста, введите текст, который будет отображаться после того как вы "
+"отвергли файл."
+
+#: pages/admin/_admin-messages.php:55
+msgid "Accepted files:"
+msgstr "Принятые файлы:"
+
+#: pages/admin/_admin-messages.php:61
+msgid "Please enter the text you want to display after you've accepted a file."
+msgstr ""
+"Пожалуйста, введите текст, который будет отображаться после того как вы "
+"приняли файл."
+
+#: pages/admin/_admin-messages.php:73 pages/admin/uploadset.php:47
+msgid "Upload description:"
+msgstr "Загрузить описание:"
+
+#: pages/admin/_admin-messages.php:79
+msgid "Show a description below the upload title, leave empty to hide it."
+msgstr ""
+"Показать описание под заголовком загрузки. Оставьте пустым, чтобы скрыть его."
+
+#: pages/admin/_admin-notifications.php:3
+msgid "Admin notifications:"
+msgstr "Уведомления администратора:"
+
+#: pages/admin/_admin-notifications.php:11
+msgid ""
+"Send a message to the admin when files are uploaded / changed by the user."
+msgstr ""
+"Отправить сообщение для администратора, когда файлы загружаются / изменены "
+"пользователем."
+
+#: pages/admin/_admin-notifications.php:23
+msgid "Recurrence:"
+msgstr "Повторять:"
+
+#: pages/admin/_admin-notifications.php:35
+msgid "Choose how many times you want to receive an e-mail."
+msgstr "Выберите, сколько раз вы хотите получить по электронной почте."
+
+#: pages/admin/_admin-notifications.php:45
+msgid "Recipients:"
+msgstr "Получатели:"
+
+#: pages/admin/_admin-notifications.php:51
+#, php-format
+msgid "Enter recipients (comma separated) for this email. Defaults to %s."
+msgstr ""
+"Введите получателей (разделенные запятой) для этой электронной почты. По "
+"умолчанию %s."
+
+#: pages/admin/_customer-notifications.php:3
+msgid "Link to customer e-mail:"
+msgstr "Ссылка на электронную почту клиента:"
+
+#: pages/admin/_customer-notifications.php:8
+msgid "Add link to order detail page (requires customer account)"
+msgstr "Добавить ссылку на страницу заказа с деталями (требуется счет клиента)"
+
+#: pages/admin/_customer-notifications.php:12
+msgid "Add link to order tracking page (no account required)"
+msgstr ""
+"Добавить ссылку на заказ отслеживания страницу (не требуется учетная запись)"
+
+#: pages/admin/_customer-notifications.php:16
+msgid "Don't add link to email"
+msgstr "Не добавлять ссылку по электронной почте"
+
+#: pages/admin/_customer-notifications.php:29
+msgid "E-mail text customer e-mail:"
+msgstr "Текст в письме для клиентов:"
+
+#: pages/admin/_customer-notifications.php:37
+msgid "Singular: One file upload"
+msgstr "Загрузить один файл"
+
+#: pages/admin/_customer-notifications.php:42
+msgid "Plural: Multiple file upload"
+msgstr "Множественная загрузка файлов"
+
+#: pages/admin/_general-settings.php:5
+msgid "Default upload:"
+msgstr "Загрузка по умолчанию"
+
+#: pages/admin/_general-settings.php:11
+msgid "Default enable upload"
+msgstr "Включить загрузку по умолчанию"
+
+#: pages/admin/_general-settings.php:13
+msgid "Default enable file upload for new products."
+msgstr "По умолчанию позволяет загрузку файлов для новых продуктов."
+
+#: pages/admin/_general-settings.php:23
+msgid "Enable upload all products:"
+msgstr "Включить загрузку для всех продуктов:"
+
+#: pages/admin/_general-settings.php:27
+msgid "Enable upload for all current products"
+msgstr "Включить загрузку для всех существующих продуктов"
+
+#: pages/admin/_general-settings.php:29
+msgid ""
+"Enable file upload for all current products in your webshop. The default "
+"upload set will be used for this."
+msgstr ""
+"Включить загрузку файла для всех существующих продуктов в вашем интернет-"
+"магазине. Настройки загрузки по умолчанию будет использоваться для этого."
+
+#: pages/admin/_general-settings.php:40
+msgid "Styling:"
+msgstr "Стилизация:"
+
+#: pages/admin/_general-settings.php:46
+#, php-format
+msgid "Enable %s CSS"
+msgstr "Включить %s CSS"
+
+#: pages/admin/_general-settings.php:48
+msgid ""
+"We've made some default styling for the frontend. Do you want to use it?"
+msgstr ""
+"Мы сделали некоторые стили по умолчанию для интерфейса. Хотите использовать "
+"их?"
+
+#: pages/admin/_general-settings.php:58
+msgid "Order tracking page:"
+msgstr "Страница отслеживания заказа:"
+
+#: pages/admin/_general-settings.php:64
+msgid "- Select order tracking page -"
+msgstr "- Выберите страницу отслеживания заказа -"
+
+#: pages/admin/_general-settings.php:79
+msgid "Select the order tracking page."
+msgstr "Выберите страницу отслеживания заказа."
+
+#: pages/admin/_general-settings.php:89
+msgid "Position:"
+msgstr "Позиция:"
+
+#: pages/admin/_general-settings.php:95
+msgid "Before order item table"
+msgstr "Перед таблицей заказа"
+
+#: pages/admin/_general-settings.php:96
+msgid "After order item table"
+msgstr "После таблицы заказа"
+
+#: pages/admin/_general-settings.php:100
+msgid "Where do you want to show the upload fields on the order detail page?"
+msgstr ""
+"Где вы хотите, чтобы показывались поля загрузки на странице деталей заказа?"
+
+#: pages/admin/_general-settings.php:110
+msgid "Thank you page:"
+msgstr "Страница благодарности:"
+
+#: pages/admin/_general-settings.php:116
+msgid "Show on thank you page"
+msgstr "Показать на странице благодарности"
+
+#: pages/admin/_general-settings.php:118
+msgid "Show upload fields on thank you page, directly after payment."
+msgstr ""
+"Показать поля загрузки на странице благодарности, непосредственно после "
+"оплаты."
+
+#: pages/admin/_general-settings.php:128
+msgid "Upload path:"
+msgstr "Папка для загрузки файлов:"
+
+#: pages/admin/_general-settings.php:134
+msgid ""
+"Upload path for new uploads. Subfolders with the order-ID will be created "
+"within this directory."
+msgstr ""
+"Путь для новых загрузок. Подпапки с идентификатором заказа будут созданы в "
+"этом каталоге."
+
+#: pages/admin/_general-settings.php:144
+msgid "Upload procedure:"
+msgstr "Процедура загрузки:"
+
+#: pages/admin/_general-settings.php:149
+msgid "One upload for each product"
+msgstr "Один файл для каждого продукта"
+
+#: pages/admin/_general-settings.php:150
+msgid ""
+"If a customer orders multiple items of the same product, only one upload box "
+"is shown."
+msgstr ""
+"Если клиент заказывает несколько элементов одного и того же продукта, только "
+"один блок загрузки показывается."
+
+#: pages/admin/_general-settings.php:154
+msgid "Multiple uploads for each product"
+msgstr "Несколько файлов для каждого продукта"
+
+#: pages/admin/_general-settings.php:155
+msgid ""
+"If a customer orders multiple items of the same product, for each item an "
+"upload box is shown."
+msgstr ""
+"Если клиент заказывает несколько элементов одного и того же продукта, для "
+"каждого продукта показываются несколько блоков загрузки."
+
+#: pages/admin/_general-settings.php:167
+msgid "Order numbering:"
+msgstr "Нумерация заказа:"
+
+#: pages/admin/_general-settings.php:172
+msgid "Order ID"
+msgstr "ID заказа"
+
+#: pages/admin/_general-settings.php:175
+msgid "Order number"
+msgstr "Номер заказа"
+
+#: pages/admin/_general-settings.php:177
+msgid ""
+"Default files are stored in a directory named as the order id. Some plugins "
+"let you choose your own order numbers, choose 'Order number' in this case."
+msgstr ""
+"Файлы по умолчанию хранятся в каталоге с именем в качестве идентификатора "
+"заказа. Некоторые плагины позволяют выбрать свои собственные номера заказов, "
+"выберите ‘Номер заказа’ в данном случае."
+
+#: pages/admin/_general-settings.php:187
+msgid "Customer delete:"
+msgstr "Удаление файлов клиентом:"
+
+#: pages/admin/_general-settings.php:193
+msgid "Let customers delete uploaded files"
+msgstr "Могут ли удалять клиенты загруженные файлы"
+
+#: pages/admin/_general-settings.php:195
+msgid "Let customers delete files until they are reviewed by admin."
+msgstr ""
+"Могут ли клиенты удалять файлы, пока они не были просмотрены администратором."
+
+#: pages/admin/_general-settings.php:205
+msgid "Required status(es):"
+msgstr "Необходимые статусы:"
+
+#: pages/admin/_general-settings.php:238
+msgid "Specify which order statuses will allow customers to upload files."
+msgstr "Укажите в каком порядке статусы позволит клиентам загружать файлы."
+
+#: pages/admin/_thumbnail-settings.php:3
+msgid "Preview thumbnails:"
+msgstr "Просмотр миниатюр:"
+
+#: pages/admin/_thumbnail-settings.php:11
+msgid ""
+"Check this option if you want to show the customer a thumbnail in case the "
+"uploaded file is an image."
+msgstr ""
+"Отметьте эту опцию, если вы хотите, чтобы клиенту была показана миниатюра "
+"изображения."
+
+#: pages/admin/_thumbnail-settings.php:23
+msgid "Preview thumbnail size:"
+msgstr "Размер миниатюры:"
+
+#: pages/admin/_thumbnail-settings.php:27 pages/admin/uploadset.php:113
+#: pages/admin/uploadset.php:133
+msgid "Width"
+msgstr "Ширина"
+
+#: pages/admin/_thumbnail-settings.php:30 pages/admin/uploadset.php:116
+#: pages/admin/uploadset.php:136
+msgid "Height"
+msgstr "Высота"
+
+#: pages/admin/_thumbnail-settings.php:33
+msgid ""
+"Select the size of the preview thumbnail images. Sizes must be given in "
+"pixels."
+msgstr ""
+"Выберите размер изображений предварительного просмотра. Размеры должны быть "
+"приведены в пикселях."
+
+#: pages/admin/_thumbnail-settings.php:45
+msgid "Crop thumbnails:"
+msgstr "Обрезать миниатюры:"
+
+#: pages/admin/_thumbnail-settings.php:54
+msgid ""
+"Do you want to crop your thumbnails to above defined max width and height?"
+msgstr ""
+"Вы хотите, чтобы миниатюры обрезались больше определенной максимальной "
+"ширины и высоты?"
+
+#: pages/admin/_thumbnail-settings.php:64
+msgid "Thumbnail quality:"
+msgstr "Качество миниатюр:"
+
+#: pages/admin/_thumbnail-settings.php:78
+msgid ""
+"Quality of the generated thumbnails in %. A value between 0 - 100 must be "
+"given. How higher the quality, how bigger the filesize will be."
+msgstr ""
+"Качество сгенерированных миниатюр в %. Должно быть указано значение от "
+"0-100. Чем выше качество, тем больше размер файла."
+
+#: pages/admin/_uploader-settings.php:3
+msgid "Uploader type:"
+msgstr "Тип загрузчика:"
+
+#: pages/admin/_uploader-settings.php:8
+msgid "AJAX enabled upload"
+msgstr "Включить AJAX-загрузку"
+
+#: pages/admin/_uploader-settings.php:11
+msgid "HTML upload (old)"
+msgstr "HTML-загрузка"
+
+#: pages/admin/_uploader-settings.php:23
+msgid "Show dropzone:"
+msgstr "Показать dropzone:"
+
+#: pages/admin/_uploader-settings.php:31
+msgid ""
+"Check this option if you want to show a dropzone on your upload box(es). If "
+"this option is checked, customers can drag and drop their images easily to "
+"an area to upload the files. "
+msgstr ""
+"Отметьте эту опцию, если вы хотите, чтобы была показана Dropzone в блоке "
+"загрузки. Если эта опция включена, клиенты могут перетаскивать файлы в "
+"Dropzone."
+
+#: pages/admin/_uploader-settings.php:41
+msgid "Autostart uploading:"
+msgstr "Автозагрузка файлов:"
+
+#: pages/admin/_uploader-settings.php:49
+msgid ""
+"Check this option if you want to automatically start uploading when files "
+"are added. "
+msgstr ""
+"Отметьте эту опцию, если вы хотите автоматически запустить обновление при "
+"добавлении файлов. "
+
+#: pages/admin/_uploader-settings.php:59
+msgid "Max. chunk size:"
+msgstr "Максимальный размер фрагмента файла:"
+
+#: pages/admin/_uploader-settings.php:65
+#, php-format
+msgid ""
+"Specify maximum upload chunk size in MegaBytes. Large files will be split in "
+"multiple parts (chunks) to handle the upload process. Don't set this higher "
+"then %s."
+msgstr ""
+"Укажите максимальный размер загрузки фрагмента файла в мегабайтах. Большие "
+"файлы будут разделены на несколько частей для управления процессом загрузки. "
+"Не устанавливайте это значение больше, чем %s."
+
+#: pages/admin/main.php:16 pages/admin/main.php:42
+msgid "General settings"
+msgstr "Основные настройки"
+
+#: pages/admin/main.php:17 pages/admin/main.php:73
+msgid "Default upload set"
+msgstr "Настройки для загрузки по умолчанию"
+
+#: pages/admin/main.php:18
+msgid "Messages & Notifications"
+msgstr "Сообщения и уведомления"
+
+#: pages/admin/main.php:28
+msgid "Uploader"
+msgstr "Загрузка"
+
+#: pages/admin/main.php:38 pages/admin/main.php:52 pages/admin/main.php:99
+#: pages/admin/main.php:113 pages/admin/main.php:131
+msgid "Save settings"
+msgstr "Сохранить настройки"
+
+#: pages/admin/main.php:56
+msgid "Preview thumbnail settings"
+msgstr "Настройки предварительного просмотра"
+
+#: pages/admin/main.php:89
+msgid "Messages"
+msgstr "Сообщения"
+
+#: pages/admin/main.php:103
+msgid "Customer notifications"
+msgstr "Уведомления для клиента"
+
+#: pages/admin/main.php:117
+msgid "Admin notifications"
+msgstr "Уведомления для администратора"
+
+#: pages/admin/main.php:139
+msgid "Need support?"
+msgstr "Требуется помощь?"
+
+#: pages/admin/main.php:145
+msgid ""
+"If you're having any problems with this plugin, or if you got any questions "
+"related to this plugin, you can visit our documentation or contact us via "
+"our helpdesk"
+msgstr ""
+"Если у вас возникли какие-либо проблемы с этим плагином, или у вас возникли "
+"какие-либо вопросы, связанные с этим плагином, вы можете посмотреть нашу "
+"документацию или связаться с нами через наш HelpDesk"
+
+#: pages/admin/main.php:163
+msgid "Want to upload before checkout?"
+msgstr "Хотите загружать перед проверкой?"
+
+#: pages/admin/main.php:166
+msgid "About this plugin"
+msgstr "Об этом плагине"
+
+#: pages/admin/main.php:167
+msgid "Documentation"
+msgstr "Документация"
+
+#: pages/admin/main.php:168
+msgid "FAQ"
+msgstr "FAQ"
+
+#: pages/admin/order_uploads.php:21
+#, php-format
+msgid "Item #%s"
+msgstr "Элемент #%s"
+
+#: pages/admin/order_uploads.php:63
+msgid "With selected:"
+msgstr "С выбранными:"
+
+#: pages/admin/order_uploads.php:68
+msgid "Accept"
+msgstr "Принять"
+
+#: pages/admin/order_uploads.php:69
+msgid "Decline"
+msgstr "Отказать"
+
+#: pages/admin/order_uploads.php:71
+msgid "GO"
+msgstr "GO"
+
+#: pages/admin/order_uploads.php:83 pages/admin/order_uploads.php:105
+msgid "Send mail"
+msgstr "Отправить почту"
+
+#: pages/admin/order_uploads.php:93
+msgid "Reason accepted / declined:"
+msgstr "Причина принятия / отказа"
+
+#: pages/admin/uploadset.php:10
+msgid "Enable upload"
+msgstr "Включить загрузку"
+
+#: pages/admin/uploadset.php:15
+msgid "Add a new upload box to this set"
+msgstr "Добавить новый блок загрузки к этому набору"
+
+#: pages/admin/uploadset.php:15
+msgid "Add new upload box"
+msgstr "Добавить новый блок загрузки"
+
+#: pages/admin/uploadset.php:25
+msgid "Delete"
+msgstr "Удалить"
+
+#: pages/admin/uploadset.php:31
+msgid "Upload title:"
+msgstr "Заголовок загрузки:"
+
+#: pages/admin/uploadset.php:59
+msgid "Number of uploads:"
+msgstr "Число загрузок:"
+
+#: pages/admin/uploadset.php:76
+msgid "(Dis)Allowed file types:"
+msgstr "Разрешенные / запрещенные типы файлов:"
+
+#: pages/admin/uploadset.php:96
+msgid "Max. upload size:"
+msgstr "Максимальный размер загрузки"
+
+#: pages/admin/uploadset.php:109
+msgid "Min. resolution:"
+msgstr "Минимальное разрешение:"
+
+#: pages/admin/uploadset.php:129
+msgid "Max. resolution:"
+msgstr "Максимальное разрешение:"
+
+#: pages/admin/uploadset.php:158
+#, php-format
+msgid ""
+"Please check the combined upload max sizes don't override your PHP settings "
+"of %s."
+msgstr ""
+"Пожалуйста, проверьте, чтобы настройки Upload Max не были переопределены "
+"настройками PHP %s."
+
+#: pages/frontend/_single-uploaded-file.php:14
+msgid "Delete this upload"
+msgstr "Удалить эту загрузку"
+
+#: pages/frontend/upload-boxes.php:4
+msgid "Upload files"
+msgstr "Загрузка файлов"
+
+#: pages/frontend/upload-boxes.php:22
+msgid "Uploading"
+msgstr "Загрузка"
+
+#: pages/frontend/upload-boxes.php:47
+#, php-format
+msgid "Upload(s) for item #%d"
+msgstr "Загрузки для элемента #%d"
+
+#: pages/frontend/upload-boxes.php:47
+#, php-format
+msgid "Upload(s) for one item of this product"
+msgid_plural "Upload(s) for %d items of this product"
+msgstr[0] "Загрузить один файл"
+msgstr[1] "Загрузить %d файла"
+msgstr[2] "Загрузить %d файлов"
+
+#: pages/frontend/upload-boxes.php:74
+msgid "Drop your files"
+msgstr "Удалить файлы"
+
+#: pages/frontend/upload-boxes.php:81
+msgid "Select files"
+msgstr "Выбрать файлы"
+
+#: pages/frontend/upload-boxes.php:83
+msgid "Start upload"
+msgstr "Начать загрузку"
+
+#: pages/frontend/upload-boxes.php:142
+msgid "Disallowed filetype(s):"
+msgstr "Неразрешенные типы файлов"
+
+#: pages/frontend/upload-boxes.php:142
+msgid "Allowed filetype(s):"
+msgstr "Разрешенные типы файлов"
+
+#: pages/frontend/upload-boxes.php:142
+msgid "Max. uploads:"
+msgstr "Максимальное количество загрузок:"
+
+#: pages/frontend/upload-boxes.php:142
+msgid "Max. filesize:"
+msgstr "Максимальный размер:"
+
+#: pages/frontend/upload-boxes.php:144
+msgid "Min. width:"
+msgstr "Минимальная ширина:"
+
+#: pages/frontend/upload-boxes.php:145
+msgid "Min. height:"
+msgstr "Минимальная высота:"
+
+#: pages/frontend/upload-boxes.php:146
+msgid "Max. width:"
+msgstr "Максимальная ширина:"
+
+#: pages/frontend/upload-boxes.php:147
+msgid "Max. height:"
+msgstr "Максимальная высота:"
+
+#: pages/frontend/upload-boxes.php:189 templates/myaccount/my-orders.php:143
+msgid "Upload"
+msgstr "Загрузка"
+
+#: pages/frontend/upload-boxes.php:199
+msgid "View Cart"
+msgstr "Посмотреть корзину"
+
+#: templates/emails/admin-notifications.php:7
+msgid "Please review orders below:"
+msgstr "Пожалуйста, ознакомьтесь с заказом ниже:"
+
+#: templates/emails/admin-notifications.php:15
+msgid "View order"
+msgstr "Посмотреть заказ"
+
+#: templates/emails/admin-notifications.php:21
+msgid "Login is required to edit orders"
+msgstr "Требуется войти, чтобы отредактировать заказы"
+
+#: templates/emails/uploads-approve.php:7
+#, php-format
+msgid "You order with order number %s now has the following status: %s"
+msgstr "Ваш заказ под номером %s теперь имеет следующий статус: %s"
+
+#: templates/emails/uploads-approve.php:12
+msgid "Please log into your account and upload your file(s) again."
+msgstr "Войдите в свой аккаунт и загрузите файлы снова."
+
+#: templates/emails/uploads-approve.php:13
+msgid "Login to upload your files again."
+msgstr "Войдите, чтобы загрузить файлы снова."
+
+#: templates/myaccount/my-orders.php:42
+msgid "Recent Orders"
+msgstr "Последние заказы"
+
+#: templates/myaccount/my-orders.php:48
+msgid "Order"
+msgstr "Заказ"
+
+#: templates/myaccount/my-orders.php:49
+msgid "Date"
+msgstr "Дата"
+
+#: templates/myaccount/my-orders.php:50
+msgid "Status"
+msgstr "Статус"
+
+#: templates/myaccount/my-orders.php:51
+msgid "Total"
+msgstr "Всего"
+
+#: templates/myaccount/my-orders.php:52
+msgid "Files"
+msgstr "Файлы"
+
+#: templates/myaccount/my-orders.php:141
+msgid "Approved"
+msgstr "Одобрено"
+
+#: templates/myaccount/my-orders.php:157
+msgid "Pay"
+msgstr "Оплата"
+
+#: templates/myaccount/my-orders.php:164
+msgid "Cancel"
+msgstr "Отменить"
+
+#: templates/myaccount/my-orders.php:170
+msgid "View"
+msgstr "Посмотреть"
