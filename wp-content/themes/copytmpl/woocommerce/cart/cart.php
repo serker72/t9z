@@ -71,21 +71,93 @@ do_action( 'woocommerce_before_cart' ); ?>
 					</td>
 
 					<td class="product-name" data-title="<?php _e( 'Product', 'woocommerce' ); ?>">
-						<?php
-							if ( ! $_product->is_visible() ) {
-								echo apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ) . '&nbsp;';
-							} else {
-								echo apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $_product->get_permalink( $cart_item ) ), $_product->get_title() ), $cart_item, $cart_item_key );
-							}
+                                            <?php
+                                            if ( ! $_product->is_visible() ) {
+                                                    echo apply_filters( 'woocommerce_cart_item_name', $_product->get_title(), $cart_item, $cart_item_key ) . '&nbsp;';
+                                            } else {
+                                                    echo apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $_product->get_permalink( $cart_item ) ), $_product->get_title() ), $cart_item, $cart_item_key );
+                                            }
 
-							// Meta data
-							echo WC()->cart->get_item_data( $cart_item );
+                                            // Meta data
+                                            echo WC()->cart->get_item_data( $cart_item );
 
-							// Backorder notification
-							if ( $_product->backorders_require_notification() && $_product->is_on_backorder( $cart_item['quantity'] ) ) {
-								echo '<p class="backorder_notification">' . esc_html__( 'Available on backorder', 'woocommerce' ) . '</p>';
-							}
-						?>
+                                            // KSK - вывод загруженных файлов
+                                            $cart_data = $cart_item['data'];
+                                            $url_args['show'] = 'uploads';
+                                            if (!empty($cart_item['variation_id'])) {
+                                              $url_args['vpid'] = $cart_item['variation_id'];
+                                            }
+                                            $url_args['ck'] = $cart_item_key;
+                                            ?>
+                                            <div class="wpf-umf-cart-uploaded-files-label"><?php echo __('Uploaded files:', 'woocommerce-uploads-before'); ?></div>
+                                            <!--div class="ksk_cart_file_name_title">Имя файла</div>
+                                            <div class="ksk_cart_file_pages_title">Страниц</div>
+                                            <div class="ksk_cart_file_copies_title">Копий</div-->
+                                            <table class="ksk_cart_file" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Имя файла</th>
+                                                        <th width="20%">Кол-во страниц</th>
+                                                        <th width="30%">Кол-во копий</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                            <?php
+                                            if (!empty($cart_item['variation_id'])) {
+                                              $need_uploads = WPF_Uploads::product_needs_upload($cart_item['variation_id'], true);
+                                            } else {
+                                              $need_uploads = WPF_Uploads::product_needs_upload($cart_data->post->ID);
+                                            }
+
+                                            if ($need_uploads) {
+                                                $return = '';
+                                                $current_uploads = WPF_Uploads_Before::get_cart_item_uploads($cart_item, $cart_item_key);
+
+                                                if (is_array($current_uploads) && count($current_uploads)) {
+                                                    foreach ($current_uploads AS $key => $value) {
+                                                        $value = apply_filters('wpf_umf_cart_uploaded_file', [
+                                                            'name' => $value['name'],
+                                                            'pages' => $value['pages'],
+                                                            'copies' => $value['copies'],
+                                                        ], $value);
+
+                                                        $return .= '<tr>';
+                                                        $return .= '<td>'.$value['name'].'</td>';
+                                                        $return .= '<td><input type="text" id="pages_'.$cart_item['product_id'].'_'.$key.'" name="pages_'.$cart_item['product_id'].'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4" readonly="true"></td>';
+                                                        $return .= '<td><div class="print-options-photo-upload-image-item-num">';
+                                                        $return .= '<span class="print-options-photo-upload-image-item-num-selector">';
+                                                        $return .= '<input type="text" step="1" min="1" max="" id="copies_'.$cart_item['product_id'].'_'.$key.'" name="copies_'.$cart_item['product_id'].'_'.$key.'" value="'.esc_attr($value['copies']).'" title="" class="" size="4">';
+                                                        $return .= '</span></div></td>';
+                                                                
+                                                        //$return .= '<div class="ksk_cart_file_name">'.$value['name'].'</div>';
+                                                        //$return .= '<div class="ksk_cart_file_pages">'.$value['pages'].'</div>';
+                                                        //$return .= '<div class="ksk_cart_file_copies print-options-photo-upload-image-item-num">';
+                                                        //$return .= '<div class="ksk_cart_file_copies">';
+                                                        //$return .= '<span class="print-options-photo-upload-image-item-num-selector">';
+                                                        //$return .= '<span><input type="text" step="1" min="1" max="100000" name="copies_'.$cart_item['product_id'].'_'.$key.'" value="'.esc_attr($value['copies']).'" title="" class="" size="4">';
+                                                        //$return .= '</span></div>';
+
+                                                        $return .= '</tr>';
+                                                    }
+                                                }
+                                            }
+                                            
+                                            //$return .= '<div style="clear: both;margin-bottom: 10px;"></div>';
+                                            $return .= '<tr><td colspan="3">';
+                                            $return .= '<div class="wpf-umf-cart-upload-button-container"><a href="'.add_query_arg($url_args, get_post_permalink($cart_data->post->ID)).'" class="wpf-umf-cart-upload-button button">'.__('Upload / View files', 'woocommerce-uploads-before').'</a></div>';
+                                            $return .= '</td></tr>';
+                                            $return .= '<div style="clear: both;margin-bottom: 10px;"></div>';
+                                            
+                                            $return .= '</tbody></table>';
+                                            
+                                            echo $return;
+                                            // KSK ==========================
+
+                                            // Backorder notification
+                                            if ( $_product->backorders_require_notification() && $_product->is_on_backorder( $cart_item['quantity'] ) ) {
+                                                    echo '<p class="backorder_notification">' . esc_html__( 'Available on backorder', 'woocommerce' ) . '</p>';
+                                            }
+                                            ?>
 					</td>
 
 					<td class="product-price" data-title="<?php _e( 'Price', 'woocommerce' ); ?>">
@@ -96,7 +168,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 					<td class="product-quantity" data-title="<?php _e( 'Quantity', 'woocommerce' ); ?>">
 						<?php
-							if ( $_product->is_sold_individually() ) {
+							/*if ( $_product->is_sold_individually() ) {
 								$product_quantity = sprintf( '1 <input type="hidden" name="cart[%s][qty]" value="1" />', $cart_item_key );
 							} else {
 								$product_quantity = woocommerce_quantity_input( array(
@@ -107,7 +179,11 @@ do_action( 'woocommerce_before_cart' ); ?>
 								), $_product, false );
 							}
 
-							echo apply_filters( 'woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item );
+							echo apply_filters( 'woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item );*/
+                                                        //echo '<div style="text-align: center;">'.$cart_item['quantity'].'</div>';
+                                                        echo '<input type="text" id="copies_'.$cart_item['product_id'].'" name="cart['.$cart_item_key.'][qty]" value="'.esc_attr($cart_item['quantity']).'" title="" class="" size="4" readonly="true">';
+                                                        // cart[e8e81f480b531104a8061f4830f4bcf5][qty]
+                                                        // cart[e5d7437f14963440287972fa09e63d36][qty]
 						?>
 					</td>
 

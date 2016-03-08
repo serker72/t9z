@@ -962,7 +962,7 @@ p.demo_store a {
 .woocommerce td.product-name dl.variation dt {
     display: inline-block;
     float: left;
-    margin-bottom: 1em
+    /*margin-bottom: 1em*/
 }
 .woocommerce td.product-name dl.variation dt {
     font-weight: 700;
@@ -1713,4 +1713,56 @@ body:not(.search-results) .twentysixteen .entry-summary {
     .woocommerce-page table.shop_table_responsive tr td:before {
         position: static;
     }
+}
+
+/* KSK */
+.ksk_cart_file_name_title {
+    float: left;
+    width: 50%;
+    text-align: left;
+    font-weight: bold;
+}
+.ksk_cart_file_pages_title {
+    float: left;
+    width: 25%;
+    text-align: center;
+    font-weight: bold;
+}
+.ksk_cart_file_copies_title {
+    float: right;
+    width: 25%;
+    text-align: center;
+    font-weight: bold;
+}
+.ksk_cart_file_name {
+    float: left;
+    width: 50%;
+    text-align: left;
+}
+.ksk_cart_file_pages {
+    float: left;
+    width: 25%;
+    text-align: center;
+}
+.ksk_cart_file_copies {
+    float: right;
+    width: 25%;
+    text-align: center;
+}
+.ksk_cart_file {
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+.ksk_cart_file th, .ksk_cart_file td {
+    font-size: 90%;
+    vertical-align: middle;
+}
+.ksk_cart_file td span {
+    margin: 0;
+    vertical-align: middle;
+}
+.ksk_cart_file td input[type="text"] {
+    font-size: 95%;
 }

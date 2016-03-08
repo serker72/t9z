@@ -209,6 +209,10 @@ class WPF_Uploads_Upload {
                     'thumb' => $this->thumb,
                     'status' => 'on-hold',
                     'type' => $upload_type_name,
+                    // KSK - добавим новые поля для загрузок
+                    'pages' => 1,
+                    'copies' => 1,
+                    // KSK =================================
                 );
                 $upload_data->save_order_meta_data($this->order_id);
 
@@ -225,6 +229,10 @@ class WPF_Uploads_Upload {
                     'thumb' => $this->thumb,
                     'status' => 'on-hold',
                     'type' => $upload_type_name,
+                    // KSK - добавим новые поля для загрузок
+                    'pages' => 1,
+                    'copies' => 1,
+                    // KSK =================================
             );
 
             do_action('wpf_umf_before_upload_save', $upload_data);

@@ -798,9 +798,18 @@ class WPF_Uploads_Before extends WPFortune_Base {
 
                     foreach ($current_uploads AS $key => $value) {
 
-                        $value = apply_filters('wpf_umf_cart_uploaded_file', $value['name'], $value);
+                        //$value = apply_filters('wpf_umf_cart_uploaded_file', $value['name'], $value);
+                        //$return .= '<li class="wpf-cart-uploaded-file">'.$value.'</li>';
+                        //
+                        // KSK - вывод в корзине
+                        $value = apply_filters('wpf_umf_cart_uploaded_file', [
+                            'name' => $value['name'],
+                            'pages' => $value['pages'],
+                            'copies' => $value['copies'],
+                        ], $value);
+                        // KSK =================
 
-                        $return .= '<li class="wpf-cart-uploaded-file">'.$value.'</li>';
+                        $return .= '<li class="wpf-cart-uploaded-file">'.$value['name'].' - pages='.$value['pages'].' - copies='.$value['copies'].'</li>';
 
                     }
 

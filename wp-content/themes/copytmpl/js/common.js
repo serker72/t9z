@@ -51,7 +51,8 @@
 		selectorToggler.on('click', function(){
 			var toggler = $(this),
 				valueCurrent = Number( selectorField.val() ),
-				toggleType = toggler.data('type')
+				toggleType = toggler.data('type'),
+                                togglerId = selectorField[0].id
 
 			if ( toggleType == 'minus' ) {
 				if ( valueCurrent > 1 ) selectorField.val( valueCurrent -1 )
@@ -61,6 +62,10 @@
 			}
 
 			selectorField.trigger('change')
+                        
+                        if (togglerId.indexOf('copies_') > -1) {
+                            ksk_cart_quantity_calc(togglerId)
+                        }
 		})
 	})
 
@@ -114,4 +119,23 @@ function close_popup(){
 		close: '×',
 		html: '<h3 class="popup-title">Ваш запрос успешно отправлен</h3><div class="popup-content" style="width:auto">Мы свяжемся с Вами в ближайшее время.<br/><br/>Спасибо за Ваше обращение!</div>'
 	})
+}
+
+function ksk_cart_quantity_calc(id) {
+    if (id != '' && id != undefined) {
+        name_array = id.split('_');
+        qty = 0;
+        i = 0;
+        name1 = name_array[0] + '_' + name_array[1] + '_' + i;
+        name2 = 'pages_' + name_array[1] + '_' + i;
+        name3 = name_array[0] + '_' + name_array[1];
+        while (jQuery("input[type=text]").is("#" + name1)) {
+            qty = qty + jQuery("#" + name1).val() * jQuery("#" + name2).val();
+            i++;
+            name1 = name_array[0] + '_' + name_array[1] + '_' + i;
+            name2 = 'pages_' + name_array[1] + '_' + i;
+        }
+        
+        jQuery("#" + name3).attr('value', qty);
+    }
 }

@@ -331,3 +331,80 @@ function copytmpl_woocommerce_mini_cart_shortcode_func(){
 	return ob_get_clean();
 }
 add_shortcode( 'mini_cart', 'copytmpl_woocommerce_mini_cart_shortcode_func' );
+
+// KSK - start
+add_action( 'woocommerce_before_calculate_totals', 'add_custom_price' );
+
+function add_custom_price( $cart_object ) {
+    $discount_percent = [
+        56 => [0.1, 0.2],
+        70 => [0.125, 0.25],
+    ];
+    
+    foreach ( $cart_object->cart_contents as $key => $value ) {
+        $a1 = $discount_percent[$value['product_id']][0];
+        $a2 = $discount_percent[$value['product_id']][1];
+        $b1 = $value['data']->price;
+        
+        if ($value['quantity']>100 && $value['quantity']<501) {
+            $discount = $value['data']->price * $discount_percent[$value['product_id']][0];  
+            $value['data']->price = round($value['data']->price - $discount, 1);
+        }
+        elseif ($value['quantity']>500) {
+            $discount = $value['data']->price * $discount_percent[$value['product_id']][1];
+            $value['data']->price = round($value['data']->price - $discount, 1);
+       } else { ''; }
+    }
+}
+
+add_action( 'woocommerce_after_cart_item_quantity_update', 'ksk_update_uploads_copies' );
+
+function ksk_update_uploads_copies() {
+    $cart_totals  = isset( $_POST['cart'] ) ? $_POST['cart'] : '';
+    if ( ! WC()->cart->is_empty() && is_array( $cart_totals ) ) {
+        foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+            if (!empty($cart_item['variation_id'])) {
+              $need_uploads = WPF_Uploads::product_needs_upload($cart_item['variation_id'], true);
+            } else {
+              $need_uploads = WPF_Uploads::product_needs_upload($cart_data->post->ID);
+            }
+
+            if ($need_uploads) {
+                $current_uploads = WPF_Uploads_Before::get_cart_item_uploads($cart_item, $cart_item_key);
+                
+                if (is_array($current_uploads) && count($current_uploads)) {
+                    foreach ($current_uploads AS $key => $value) {
+                        $value = apply_filters('wpf_umf_cart_uploaded_file', [
+                            'name' => $value['name'],
+                            'extension' => $value['extension'],
+                            'path' =>  $value['path'],
+                            'thumb' => $value['thumb'],
+                            'status' => $value['status'],
+                            'type' => $value['type'],
+                            'pages' => $value['pages'],
+                            'copies' => $value['copies'],
+                        ], $value);
+                        
+                        $copies = 'copies_'.$cart_item['product_id'].'_'.$key;
+                        
+                        $value['copies'] = isset( $_POST[$copies] ) ? $_POST[$copies] : '';
+                        
+                        $upload_data[$cart_item['product_id']][$key]['"'.$value['type'].'"'][$key] = array(
+                            'name' => $value['name'],
+                            'extension' => $value['extension'],
+                            'path' =>  $value['path'],
+                            'thumb' => $value['thumb'],
+                            'status' => $value['status'],
+                            'type' => $value['type'],
+                            'pages' => $value['pages'],
+                            'copies' => $value['copies'],
+                        );
+                        
+                        WPF_Uploads_Before::save_temp_upload_data($upload_data);
+                    }
+                }
+            }
+        }
+    }
+}
+// KSK - end
