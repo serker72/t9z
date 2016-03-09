@@ -53,6 +53,8 @@
 				valueCurrent = Number( selectorField.val() ),
 				toggleType = toggler.data('type'),
                                 togglerId = selectorField[0].id
+                                
+                                //alert('togglerId='+togglerId);
 
 			if ( toggleType == 'minus' ) {
 				if ( valueCurrent > 1 ) selectorField.val( valueCurrent -1 )
@@ -63,7 +65,7 @@
 
 			selectorField.trigger('change')
                         
-                        if (togglerId.indexOf('copies_') > -1) {
+                        if ((togglerId.indexOf('copies_') > -1) || (togglerId.indexOf('pages_') > -1)) {
                             ksk_cart_quantity_calc(togglerId)
                         }
 		})
@@ -122,18 +124,27 @@ function close_popup(){
 }
 
 function ksk_cart_quantity_calc(id) {
+    //alert('id='+id);
     if (id != '' && id != undefined) {
         name_array = id.split('_');
         qty = 0;
         i = 0;
         name1 = name_array[0] + '_' + name_array[1] + '_' + i;
-        name2 = 'pages_' + name_array[1] + '_' + i;
-        name3 = name_array[0] + '_' + name_array[1];
+        if (name_array[0] == 'copies') {
+            name2 = 'pages_' + name_array[1] + '_' + i;
+        } else {
+            name2 = 'copies_' + name_array[1] + '_' + i;
+        }
+        name3 = 'copies_' + name_array[1];
         while (jQuery("input[type=text]").is("#" + name1)) {
             qty = qty + jQuery("#" + name1).val() * jQuery("#" + name2).val();
             i++;
             name1 = name_array[0] + '_' + name_array[1] + '_' + i;
-            name2 = 'pages_' + name_array[1] + '_' + i;
+            if (name_array[0] == 'copies') {
+                name2 = 'pages_' + name_array[1] + '_' + i;
+            } else {
+                name2 = 'copies_' + name_array[1] + '_' + i;
+            }
         }
         
         jQuery("#" + name3).attr('value', qty);
