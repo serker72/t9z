@@ -123,7 +123,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 
                                                         $return .= '<tr>';
                                                         $return .= '<td>'.$value['name'].'</td>';
-                                                        $return .= '<td><input type="text" id="pages_'.$cart_item['product_id'].'_'.$key.'" name="pages_'.$cart_item['product_id'].'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4" readonly="true"></td>';
+                                                        $return .= '<td><input type="text" id="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="pages_'.$cart_item['product_id'].'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4" readonly="true"></td>';
                                                         $return .= '<td><div class="print-options-photo-upload-image-item-num">';
                                                         $return .= '<span class="print-options-photo-upload-image-item-num-selector">';
                                                         $return .= '<input type="text" step="1" min="1" max="" id="copies_'.$cart_item['product_id'].'_'.$key.'" name="copies_'.$cart_item['product_id'].'_'.$key.'" value="'.esc_attr($value['copies']).'" title="" class="" size="4">';

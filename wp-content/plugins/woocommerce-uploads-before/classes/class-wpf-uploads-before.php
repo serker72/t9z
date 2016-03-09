@@ -296,7 +296,8 @@ class WPF_Uploads_Before extends WPFortune_Base {
         reset($data);
         $unique_key = key($data);
 
-        $this->maybe_set_uploads_quantity($unique_key);
+        //$this->maybe_set_uploads_quantity($unique_key);
+        self::maybe_set_uploads_quantity($unique_key);
 
 
 

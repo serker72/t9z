@@ -385,20 +385,31 @@ function ksk_update_uploads_copies() {
                             'copies' => $value['copies'],
                         ], $value);
                         
-                        $copies = 'copies_'.$cart_item['product_id'].'_'.$key;
+                        $copies = 'copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key;
                         
                         $value['copies'] = isset( $_POST[$copies] ) ? $_POST[$copies] : '';
                         
-                        $upload_data[$cart_item['product_id']][$key]['"'.$value['type'].'"'][$key] = array(
-                            'name' => $value['name'],
-                            'extension' => $value['extension'],
-                            'path' =>  $value['path'],
-                            'thumb' => $value['thumb'],
-                            'status' => $value['status'],
-                            'type' => $value['type'],
-                            'pages' => $value['pages'],
-                            'copies' => $value['copies'],
-                        );
+                        //$upload_data[$cart_item['product_id']][$key]['"'.$value['type'].'"'][$key] = array(
+                        //$upload_data[$cart_item['product_id']][$key][1][$key] = array(
+                        $upload_data = [];
+                        $upload_data[] = [
+                            (!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']) => [
+                                $key => [
+                                    1 => [
+                                        $key => [
+                                            'name' => $value['name'],
+                                            'extension' => $value['extension'],
+                                            'path' =>  $value['path'],
+                                            'thumb' => $value['thumb'],
+                                            'status' => $value['status'],
+                                            'type' => $value['type'],
+                                            'pages' => $value['pages'],
+                                            'copies' => $value['copies'],
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ];
                         
                         WPF_Uploads_Before::save_temp_upload_data($upload_data);
                     }
