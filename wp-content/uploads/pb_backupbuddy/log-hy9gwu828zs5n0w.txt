@@ -1,0 +1,2 @@
+[Mar 10, 2016 17:09:38 3-error] [ayz3ob18th] Unable to create schedule as wp_schedule_single_event() returned false. A plugin may have prevented it.
+[Mar 10, 2016 17:09:38 3-error] [ayz3ob18th] Unable to schedule next cron step. Verify that another plugin is not preventing / conflicting.

@@ -1,0 +1,2 @@
+1457629778|~|2.26|~|27.09|~|error|~|Unable to create schedule as wp_schedule_single_event() returned false. A plugin may have prevented it.
+1457629778|~|2.29|~|27.09|~|error|~|Unable to schedule next cron step. Verify that another plugin is not preventing / conflicting.
