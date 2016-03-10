@@ -38,7 +38,17 @@
 		locationSelectorParent.removeClass('active')
 	})
 
-
+        // ksk
+        $('.print-options-item').each(function(){
+            var selector = $(this),
+                selectorField = selector.find('div.print-options-photo-upload-image-item-num');
+            
+            if (selectorField != undefined) {
+                selectorField.hide();
+            }
+        });
+        // ksk
+        
 	// Items num selector
 	$('.print-options-photo-upload-image-item-num-selector').each(function(){
 		var selector = $(this),

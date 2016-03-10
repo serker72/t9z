@@ -229,6 +229,6 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 <?php do_action( 'woocommerce_after_cart' ); ?>
 <?php
-echo '<pre>';
-print_r($_SESSION['wpf_umf_temp_data']);
-echo '</pre>';
+//echo '<pre>';
+//print_r($_SESSION['wpf_umf_temp_data']);
+//echo '</pre>';
