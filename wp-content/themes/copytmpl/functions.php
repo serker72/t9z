@@ -334,35 +334,32 @@ add_shortcode( 'mini_cart', 'copytmpl_woocommerce_mini_cart_shortcode_func' );
 
 // KSK - start
 
+//-----------------------------------------------------------
 // Добавить произвольное поле на вкладку «вариативный товар»
-//Выводим поля
-add_action( 'woocommerce_product_after_variable_attributes', 'ksk_variable_fields', 10, 2 );
-//Сохраняем вариативные поля
-add_action( 'woocommerce_process_product_meta_variable', 'ksk_variable_fields_process', 10, 1 );
-
-function ksk_variable_fields( $loop, $variation_data ) {
-?>  
-    <tr>
-        <td>
-            <div>
-                    <label>Варианты стоимости</label>
-                    <input type="text" size="15" name="ksk_var_price[]" value=""/>
-            </div>
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            <div>
-                    <label></label>
-            </div>
-        </td>
-    </tr>
-<?php
+//-----------------------------------------------------------
+// Выводим произвольные поля
+add_action( 'woocommerce_product_after_variable_attributes', 'ksk_variable_fields', 10, 3 );
+function ksk_variable_fields( $loop, $variation_data, $variation ) {
+    // Textarea
+    woocommerce_wp_textarea_input( 
+        array( 
+            'id'          => '_ksk_var_price[' . $variation->ID . ']', 
+            'label'       => 'Варианты стоимости в зависимости от количества страниц:', 
+            'placeholder' => '', 
+            'description' => '',
+            'value'       => get_post_meta( $variation->ID, '_ksk_var_price', true ),
+        )
+    );
+    /*echo '<p><pre>';
+    print_r($variation_data);
+    print_r($variation);
+    echo '</pre></p>';*/
 }
 
-function ksk_variable_fields_process( $post_id ) {
-    if (isset( $_POST['variable_sku'] ) ) {
+//Сохраняем вариативные поля
+add_action( 'woocommerce_save_product_variation', 'ksk_variable_fields_save', 10, 2 );
+function ksk_variable_fields_save( $post_id ) {
+    /*if (isset( $_POST['variable_sku'] ) ) {
         $variable_sku = $_POST['variable_sku'];
         $variable_post_id = $_POST['variable_post_id'];
         $variable_custom_field = $_POST['ksk_var_price'];
@@ -372,19 +369,52 @@ function ksk_variable_fields_process( $post_id ) {
                 update_post_meta( $variation_id, '_ksk_var_price', stripslashes( $variable_custom_field[$i] ) );
             }
         }
-    }
+    }*/
+
+    // Textarea
+    $textarea = $_POST['_ksk_var_price'][ $post_id ];
+    if( ! empty( $textarea ) ) {
+            update_post_meta( $post_id, '_ksk_var_price', esc_attr( $textarea ) );
+    }    
 }
 
 // Изменение стоимости заказа
-add_action( 'woocommerce_before_calculate_totals', 'add_custom_price' );
-
-function add_custom_price( $cart_object ) {
-    $discount_percent = [
-        56 => [0.1, 0.2],
-        70 => [0.125, 0.25],
-    ];
-    
+add_action( 'woocommerce_before_calculate_totals', 'ksk_add_custom_price' );
+function ksk_add_custom_price( $cart_object ) {
     foreach ( $cart_object->cart_contents as $key => $value ) {
+        $pr_attributes = (array) maybe_unserialize( get_post_meta( $value['product_id'], '_product_attributes', true ) );
+        $var_ksk_prices = get_post_meta( $value['variation_id'], '_ksk_var_price', true );
+        
+        $pr_quantity = explode('|', $pr_attributes['kolichestvo']['value']);
+        $var_ksk_prices = explode('|', $var_ksk_prices);
+        
+        for ($i=0;$i < count($pr_quantity); $i++) {
+            $pr_quantity[$i] = explode('-', $pr_quantity[$i]);
+        }
+        
+        /*echo '<p><pre>';
+        print_r($pr_attributes);
+        print_r($pr_quantity);
+        print_r($var_ksk_prices);
+        echo '</pre></p>';*/
+
+        for ($i=0;$i < count($pr_quantity); $i++) {
+            $orig_price = (int)$value['data']->price;
+            $calc_price = $var_ksk_prices[$i];
+            
+            if (count($pr_quantity[$i]) == 2) {
+                if ($value['quantity']>=$pr_quantity[$i][0] && $value['quantity']<=$pr_quantity[$i][1]) {
+                    $value['data']->price = $var_ksk_prices[$i];
+                }
+            } else {
+                if ($value['quantity']>=$pr_quantity[$i][0]) {
+                    $value['data']->price = $var_ksk_prices[$i];
+                }
+            }
+        }
+        
+        /*$quntity = get_post_meta($value['product_id'], 'disc_qty', 1);
+        
         $a1 = $discount_percent[$value['product_id']][0];
         $a2 = $discount_percent[$value['product_id']][1];
         $b1 = $value['data']->price;
@@ -396,13 +426,12 @@ function add_custom_price( $cart_object ) {
         elseif ($value['quantity']>500) {
             $discount = $value['data']->price * $discount_percent[$value['product_id']][1];
             $value['data']->price = round($value['data']->price - $discount, 1);
-       } else { ''; }
+       } else { ''; }*/
     }
 }
 
 // Обновление кол-ва копий и страниц в данных загрузок
 add_action( 'woocommerce_after_cart_item_quantity_update', 'ksk_update_uploads_copies' );
-
 function ksk_update_uploads_copies() {
     $cart_totals  = isset( $_POST['cart'] ) ? $_POST['cart'] : '';
     if ( ! WC()->cart->is_empty() && is_array( $cart_totals ) ) {
