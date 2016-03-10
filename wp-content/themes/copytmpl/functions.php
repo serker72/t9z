@@ -333,6 +333,49 @@ function copytmpl_woocommerce_mini_cart_shortcode_func(){
 add_shortcode( 'mini_cart', 'copytmpl_woocommerce_mini_cart_shortcode_func' );
 
 // KSK - start
+
+// Добавить произвольное поле на вкладку «вариативный товар»
+//Выводим поля
+add_action( 'woocommerce_product_after_variable_attributes', 'ksk_variable_fields', 10, 2 );
+//Сохраняем вариативные поля
+add_action( 'woocommerce_process_product_meta_variable', 'ksk_variable_fields_process', 10, 1 );
+
+function ksk_variable_fields( $loop, $variation_data ) {
+?>  
+    <tr>
+        <td>
+            <div>
+                    <label>Варианты стоимости</label>
+                    <input type="text" size="15" name="ksk_var_price[]" value=""/>
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <div>
+                    <label></label>
+            </div>
+        </td>
+    </tr>
+<?php
+}
+
+function ksk_variable_fields_process( $post_id ) {
+    if (isset( $_POST['variable_sku'] ) ) {
+        $variable_sku = $_POST['variable_sku'];
+        $variable_post_id = $_POST['variable_post_id'];
+        $variable_custom_field = $_POST['ksk_var_price'];
+        for ( $i = 0; $i < sizeof( $variable_sku ); $i++ ) {
+            $variation_id = (int) $variable_post_id[$i];
+            if ( isset( $variable_custom_field[$i] ) ) {
+                update_post_meta( $variation_id, '_ksk_var_price', stripslashes( $variable_custom_field[$i] ) );
+            }
+        }
+    }
+}
+
+// Изменение стоимости заказа
 add_action( 'woocommerce_before_calculate_totals', 'add_custom_price' );
 
 function add_custom_price( $cart_object ) {
@@ -357,6 +400,7 @@ function add_custom_price( $cart_object ) {
     }
 }
 
+// Обновление кол-ва копий и страниц в данных загрузок
 add_action( 'woocommerce_after_cart_item_quantity_update', 'ksk_update_uploads_copies' );
 
 function ksk_update_uploads_copies() {
