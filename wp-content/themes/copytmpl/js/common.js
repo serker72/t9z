@@ -1,4 +1,11 @@
 (function($){
+        // KSK
+	$(document).ready(function(){
+            checkout_href = $("a.checkout-button").attr("href");
+            $('#natsenka-30').on('click', function(){ kskNatsenkaClick(); });
+            kskNatsenkaClick();
+        });
+        
 	// Mobile menu
 	var headerMenuWrap = $('.top-panel-menu-wrap')
 
@@ -38,7 +45,20 @@
 		locationSelectorParent.removeClass('active')
 	})
 
-        // ksk
+        // KSK
+	function kskNatsenkaClick() {
+            // Отмечена наценка
+            if ($('#natsenka-30').is(':checked')) {
+                url_add = 'natsenka-30=on';
+            } else {
+                url_add = '';
+            }
+            
+            // Обновим URL
+            checkout_href_new = checkout_href + '?' + url_add;
+            $("a.checkout-button").attr("href", checkout_href_new);
+	}
+        
         $('.print-options-item').each(function(){
             var selector = $(this),
                 selectorField = selector.find('div.print-options-photo-upload-image-item-num');
@@ -47,7 +67,7 @@
                 selectorField.hide();
             }
         });
-        // ksk
+        // KSK
         
 	// Items num selector
 	$('.print-options-photo-upload-image-item-num-selector').each(function(){

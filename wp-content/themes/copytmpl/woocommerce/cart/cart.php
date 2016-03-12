@@ -48,13 +48,13 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 					<td class="product-remove">
 						<?php
-							echo apply_filters( 'woocommerce_cart_item_remove_link', sprintf(
-								'<a href="%s" class="remove" title="%s" data-product_id="%s" data-product_sku="%s">&times;</a>',
-								esc_url( WC()->cart->get_remove_url( $cart_item_key ) ),
-								__( 'Remove this item', 'woocommerce' ),
-								esc_attr( $product_id ),
-								esc_attr( $_product->get_sku() )
-							), $cart_item_key );
+                                                    echo apply_filters( 'woocommerce_cart_item_remove_link', sprintf(
+                                                            '<a href="%s" class="remove" title="%s" data-product_id="%s" data-product_sku="%s">&times;</a>',
+                                                            esc_url( WC()->cart->get_remove_url( $cart_item_key ) ),
+                                                            __( 'Remove this item', 'woocommerce' ),
+                                                            esc_attr( $product_id ),
+                                                            esc_attr( $_product->get_sku() )
+                                                    ), $cart_item_key );
 						?>
 					</td>
 
@@ -88,18 +88,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                               $url_args['vpid'] = $cart_item['variation_id'];
                                             }
                                             $url_args['ck'] = $cart_item_key;
-                                            ?>
-                                            <div class="wpf-umf-cart-uploaded-files-label"><?php echo __('Uploaded files:', 'woocommerce-uploads-before'); ?></div>
-                                            <table class="ksk_cart_file" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Имя файла</th>
-                                                        <th width="20%">Кол-во страниц</th>
-                                                        <th width="30%">Кол-во копий</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                            <?php
+                                            
                                             if (!empty($cart_item['variation_id'])) {
                                                 $need_uploads = WPF_Uploads::product_needs_upload($cart_item['variation_id'], true);
                                             } else {
@@ -107,6 +96,19 @@ do_action( 'woocommerce_before_cart' ); ?>
                                             }
 
                                             if ($need_uploads) {
+                                                ?>
+                                                <div class="wpf-umf-cart-uploaded-files-label"><?php echo __('Uploaded files:', 'woocommerce-uploads-before'); ?></div>
+                                                <table class="ksk_cart_file" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Имя файла</th>
+                                                            <th width="20%">Кол-во страниц</th>
+                                                            <th width="30%">Кол-во копий</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                <?php
+                                                
                                                 $return = '';
                                                 $current_uploads = WPF_Uploads_Before::get_cart_item_uploads($cart_item, $cart_item_key);
 
@@ -132,17 +134,17 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                         $return .= '</tr>';
                                                     }
                                                 }
+                                            
+                                                //$return .= '<div style="clear: both;margin-bottom: 10px;"></div>';
+                                                $return .= '<tr><td colspan="3">';
+                                                $return .= '<div class="wpf-umf-cart-upload-button-container"><a href="'.add_query_arg($url_args, get_post_permalink($cart_data->post->ID)).'" class="wpf-umf-cart-upload-button button">'.__('Upload / View files', 'woocommerce-uploads-before').'</a></div>';
+                                                $return .= '</td></tr>';
+                                                $return .= '<div style="clear: both;margin-bottom: 10px;"></div>';
+
+                                                $return .= '</tbody></table>';
+
+                                                echo $return;
                                             }
-                                            
-                                            //$return .= '<div style="clear: both;margin-bottom: 10px;"></div>';
-                                            $return .= '<tr><td colspan="3">';
-                                            $return .= '<div class="wpf-umf-cart-upload-button-container"><a href="'.add_query_arg($url_args, get_post_permalink($cart_data->post->ID)).'" class="wpf-umf-cart-upload-button button">'.__('Upload / View files', 'woocommerce-uploads-before').'</a></div>';
-                                            $return .= '</td></tr>';
-                                            $return .= '<div style="clear: both;margin-bottom: 10px;"></div>';
-                                            
-                                            $return .= '</tbody></table>';
-                                            
-                                            echo $return;
                                             // KSK ==========================
 
                                             // Backorder notification
@@ -175,7 +177,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 							echo apply_filters( 'woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item );*/
                                                         //echo '<div style="text-align: center;">'.$cart_item['quantity'].'</div>';
-                                                        echo '<input type="text" id="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'" name="cart['.$cart_item_key.'][qty]" value="'.esc_attr($cart_item['quantity']).'" title="" class="" size="4" readonly="true">';
+                                                        echo '<input type="text" id="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'" name="cart['.$cart_item_key.'][qty]" value="'.esc_attr($cart_item['quantity']).'" title="" class="qty" size="4" readonly="true">';
                                                         // cart[e8e81f480b531104a8061f4830f4bcf5][qty]
                                                         // cart[e5d7437f14963440287972fa09e63d36][qty]
 						?>
@@ -216,7 +218,12 @@ do_action( 'woocommerce_before_cart' ); ?>
 		<?php do_action( 'woocommerce_after_cart_contents' ); ?>
 	</tbody>
 </table>
-
+<div class="print-cart-urgently">
+    <label>
+        <input type="checkbox" id="natsenka-30" name="natsenka-30" <?php echo isset($_SESSION['natsenka-30']) ? 'checked="checked"' : ''; ?> >
+        Срочное выполнение, наценка 30%
+    </label>
+</div>
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
 
 </form>
