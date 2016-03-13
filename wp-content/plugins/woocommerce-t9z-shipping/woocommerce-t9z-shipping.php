@@ -26,11 +26,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                  * @return void
                  */
                 public function __construct() {
+                    $this->id = 't9z-shipping'; // Id for your shipping method. Should be uunique.
                     $this->plugin_id = 'woocommerce-t9z-shipping'; // Id for your shipping method. Should be uunique.
                     $this->plugin_slug = 'woocommerce_t9z_shipping';
-                    $this->method_title = __( 'T9Z' );  // Title shown in admin
-                    $this->method_description = __( 'Доставка T9Z' ); // Description shown in admin
-                    $this->sanitized_fields = array();
+                    $this->method_title = 'T9Z';  // Title shown in admin
+                    $this->method_description = 'Доставка T9Z'; // Description shown in admin
+                    $this->settings = array();
 
                     $this->init();
                 }
@@ -47,8 +48,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     $this->init_settings(); // This is part of the settings API. Loads settings you previously init.
 
                     // Define user set variables
-                    //$this->enabled = $this->get_option($this->plugin_slug . '_enabled', 1);
-                    //$this->title = $this->get_option($this->plugin_slug . '_title', "Доставка T9Z");
+                    $this->enabled = $this->settings['enabled'] ? 'yes' : 'no';
+                    $this->title = $this->settings['title'];
 
                     // Save settings in admin if you have any defined
                     //add_action( 'woocommerce_update_options_shipping_' . $this->plugin_slug, array( $this, 'process_admin_options' ) );
@@ -136,6 +137,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         $this->process_admin_options();
                     }
                     
+                    // IP
+                    include_once WP_PLUGIN_DIR . '/' . $this->plugin_id . '/geo.php';
+                    $geo = new Geo(['ip' => '77.66.129.10']); // запускаем класс
+                    $data_geo = $geo->get_value();
+                    
                     wp_nonce_field($this->plugin_slug.'_post'); 
 ?>
 <input type="hidden" name="<?php echo $this->plugin_slug; ?>_page" value="settings" />
@@ -214,6 +220,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             <div class="clear"></div>
         </div>
     </div>
+</div>
+<div>
+    <pre>
+        <?php //print_r($data_geo); ?>
+        <?php echo 'Ваш город: '.$data_geo['city']; ?>
+    </pre>
 </div>
                     <?php
                 }

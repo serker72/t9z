@@ -233,6 +233,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 	<?php do_action( 'woocommerce_cart_collaterals' ); ?>
 
 </div>
+<p>Ваш IP: <?php echo get_the_user_ip(); ?></p>
 
 <?php do_action( 'woocommerce_after_cart' ); ?>
 <?php
