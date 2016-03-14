@@ -59,6 +59,7 @@ class Geo {
         }
         $data = $this->get_geobase_data();
         if (!empty($data)) {
+            error_reporting(0);
             setcookie('geobase', serialize($data), time() + 3600 * 24 * 7, '/'); //устанавливаем куки на неделю
         }
         return $data;

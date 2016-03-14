@@ -224,6 +224,51 @@ do_action( 'woocommerce_before_cart' ); ?>
         Срочное выполнение, наценка 30%
     </label>
 </div>
+<!-- Выбор способа доставки -->
+<div class="print-cart-item">
+    <h3>Способ получения:</h3>
+    <?php
+    $user_geo_data = get_the_user_geo_data();
+    $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+    if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
+        $key = array_search($user_geo_data['city'], $shipping_settings['shipping_sets']);
+        if ($key) { ?>
+    <div class="print-cart-item-field">
+        <label><input type="radio" name="t9z_shipping_1">Доставка по г.<strong><?php echo $shipping_settings['shipping_sets'][$key]['city']; ?></strong></label>
+    </div>
+        <?php } else {
+            
+        }
+    } else { ?>
+    <div class="woocommerce-error">Необходимо активировать метод доставки "T9Z" и выполнить настройку хотя бы для одного города.</div>
+    <?php } ?>
+    <div class="print-cart-item-field">
+        <label><input type="radio" name="t9z_shipping_1"> Доставка при заказе от 5000 руб. <b>Бесплатно</b></label>
+    </div>
+    <div class="print-cart-item-field">
+        <label><input type="radio" name="t9z_shipping_1"> Доставка курьером в пределах КАД <b>500 руб.</b></label>
+    </div>
+    <div class="print-cart-item-field">
+        <label><input type="radio" name="t9z_shipping_1" checked="checked"> Получение в офисе <b>Бесплатно</b></label> 
+        <div class="print-cart-item-subfields">
+                <div class="print-cart-item-field"><label><input type="radio" name="t9z_shipping_2"> Санкт-Петербург, Кантемировская 34, офис 206, <a href="/">на карте</a></label></div>
+                <div class="print-cart-item-field"><label><input type="radio" name="t9z_shipping_2" checked="checked"> Санкт-Петербург, Невский пр-т 144, литера А, <a href="/">на карте</a></label></div>
+        </div>
+    </div>
+</div>
+<!-- Выбор способа оплаты -->
+<div class="print-cart-item">
+    <h3>Способ оплаты:</h3>
+    <div class="print-cart-item-field"><label><input type="radio" name="field3"> Наличные при получении</label></div>
+    <div class="print-cart-item-field"><label><input type="radio" name="field3" checked="checked"> Банковской картой, электронные кошельки Яндекс.Деньги, Webmoney и пр.</label></div>
+</div>
+<!-- Стоимость заказа -->
+<div class="print-cart-item">
+    <h3>Стоимость заказа с учётом доставки:</h3>
+    <div class="print-cart-sum">450 руб.</div>
+    <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> 22,5 бонусов</div>
+</div>
+
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
 
 </form>
@@ -233,7 +278,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 	<?php do_action( 'woocommerce_cart_collaterals' ); ?>
 
 </div>
-<p>Ваш IP: <?php echo get_the_user_ip(); ?></p>
+<p><?php echo 'Ваш город: ' . get_the_user_geo_data('city'); ?></p>
 
 <?php do_action( 'woocommerce_after_cart' ); ?>
 <?php

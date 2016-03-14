@@ -4,7 +4,7 @@
  * Plugin Name: WooCommerce T9Z Shipping
  * Description: Shipping method plugin for T9Z
  * Version: 1.0.0
- * Author: Sergey Kerimov
+ * Author: KSK
  */
 
 /**
@@ -137,11 +137,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         $this->process_admin_options();
                     }
                     
-                    // IP
-                    include_once WP_PLUGIN_DIR . '/' . $this->plugin_id . '/geo.php';
-                    $geo = new Geo(['ip' => '77.66.129.10']); // запускаем класс
-                    $data_geo = $geo->get_value();
-                    
                     wp_nonce_field($this->plugin_slug.'_post'); 
 ?>
 <input type="hidden" name="<?php echo $this->plugin_slug; ?>_page" value="settings" />
@@ -220,12 +215,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             <div class="clear"></div>
         </div>
     </div>
-</div>
-<div>
-    <pre>
-        <?php //print_r($data_geo); ?>
-        <?php echo 'Ваш город: '.$data_geo['city']; ?>
-    </pre>
 </div>
                     <?php
                 }

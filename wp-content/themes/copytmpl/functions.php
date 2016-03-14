@@ -481,19 +481,22 @@ function ksk_woocommerce_custom_surcharge() {
     } 
 }
 
-// Определение IP-адреса пользователя
-function get_the_user_ip() {
-    if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-        //check ip from share internet
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-        //to check ip is pass from proxy
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
+include_once ABSPATH . '/wp-content/themes/copytmpl/geo.php';
+
+/**
+ * функция возвращет конкретное значение из полученного массива данных по ip
+ * @param string - ключ массива. Если интересует конкретное значение. 
+ * Ключ может быть равным 'inetnum', 'country', 'city', 'region', 'district', 'lat', 'lng'
+ * @param bolean - устанавливаем хранить данные в куки или нет
+ * Если true, то в куки будут записаны данные по ip и повторные запросы на ipgeobase происходить не будут.
+ * Если false, то данные постоянно будут запрашиваться с ipgeobase
+ * @return array OR string - дополнительно читайте комментарии внутри функции.
+ */
+function get_the_user_geo_data($key = null, $cookie = true) {
+    $geo = new Geo(['ip' => '77.66.129.10']); // запускаем класс
+    $data_geo = $geo->get_value($key, $cookie);
     
-    return apply_filters( 'wpb_get_ip', $ip );
+    return $data_geo;
 }
 
 // KSK - end
