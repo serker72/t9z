@@ -481,6 +481,30 @@ function ksk_woocommerce_custom_surcharge() {
     } 
 }
 
+// Выбор списка городов из настроек метода доставки 'woocommerce_t9z_shipping_settings'
+function ksk_get_shipping_cities() {
+    $cities = array();
+    $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+    if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
+        $cities = $shipping_settings['shipping_sets'];
+    }
+    
+    return $cities;
+}
+
+// Запись выбранного города в $_SESSION
+function ksk_shipping_city_session_set() {
+    $shipping_city = isset($_POST['shipping_city']) && is_string($_POST['shipping_city']) ? $_POST['shipping_city'] : '';
+    
+    if (!isset($_SESSION['shipping_city']) || ($_SESSION['shipping_city'] != $shipping_city)) {
+        $_SESSION['shipping_city'] = $shipping_city;
+    }
+        
+    wp_die();
+}
+add_action("wp_ajax_ksk_shipping_city_session_set", "ksk_shipping_city_session_set");
+add_action("wp_ajax_nopriv_ksk_shipping_city_session_set", "ksk_shipping_city_session_set");
+
 include_once ABSPATH . '/wp-content/themes/copytmpl/geo.php';
 
 /**

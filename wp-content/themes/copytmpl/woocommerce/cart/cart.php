@@ -228,33 +228,45 @@ do_action( 'woocommerce_before_cart' ); ?>
 <div class="print-cart-item">
     <h3>Способ получения:</h3>
     <?php
-    $user_geo_data = get_the_user_geo_data();
+    //$user_geo_data = get_the_user_geo_data();
+    $city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : '';
     $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
     if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
-        $key = array_search($user_geo_data['city'], $shipping_settings['shipping_sets']);
-        if ($key) { ?>
-    <div class="print-cart-item-field">
-        <label><input type="radio" name="t9z_shipping_1">Доставка по г.<strong><?php echo $shipping_settings['shipping_sets'][$key]['city']; ?></strong></label>
-    </div>
-        <?php } else {
-            
+        //$key = array_search($user_geo_data['city'], $shipping_settings['shipping_sets']);
+        $key = null;
+        foreach ($shipping_settings['shipping_sets'] AS $id => $data) {
+            if ($data['city'] == $city) {
+                $key = $id;
+                break;
+            }
         }
-    } else { ?>
-    <div class="woocommerce-error">Необходимо активировать метод доставки "T9Z" и выполнить настройку хотя бы для одного города.</div>
+        
+        if ($key) { 
+            $total = WC()->cart->get_cart_total();
+            if ($total >= (int)$shipping_settings['free_shipping_amount']) { ?>
+                <div class="print-cart-item-field">
+                    <label><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" checked="checked"> Доставка при заказе от <?php echo $shipping_settings['free_shipping_amount']; ?> руб. <strong>Бесплатно</strong></label>
+                </div>
+            <?php } else { ?>
+                <div class="print-cart-item-field">
+                    <label><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" checked="checked">Доставка по <strong>г.<?php echo $shipping_settings['shipping_sets'][$key]['city'].' '.$shipping_settings['shipping_sets'][$key]['amount'].' руб.'; ?></strong></label>
+                </div>
+            <?php } ?>
+    
+            <div class="print-cart-item-field">
+                <label><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1"> Получение в офисе <b>Бесплатно</b></label> 
+                <div class="print-cart-item-subfields" style="display: none;">
+                    <?php
+                    $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
+                    foreach ($office as $value) { ?>
+                        <div class="print-cart-item-field"><label><input type="radio" name="t9z_shipping_2"><?php echo $shipping_settings['shipping_sets'][$key]['city']; ?>, <?php echo $value; ?>, <a href="/">на карте</a></label></div>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
+    <?php } else { ?>
+        <div class="woocommerce-error">Необходимо активировать метод доставки "T9Z" и выполнить настройку хотя бы для одного города.</div>
     <?php } ?>
-    <div class="print-cart-item-field">
-        <label><input type="radio" name="t9z_shipping_1"> Доставка при заказе от 5000 руб. <b>Бесплатно</b></label>
-    </div>
-    <div class="print-cart-item-field">
-        <label><input type="radio" name="t9z_shipping_1"> Доставка курьером в пределах КАД <b>500 руб.</b></label>
-    </div>
-    <div class="print-cart-item-field">
-        <label><input type="radio" name="t9z_shipping_1" checked="checked"> Получение в офисе <b>Бесплатно</b></label> 
-        <div class="print-cart-item-subfields">
-                <div class="print-cart-item-field"><label><input type="radio" name="t9z_shipping_2"> Санкт-Петербург, Кантемировская 34, офис 206, <a href="/">на карте</a></label></div>
-                <div class="print-cart-item-field"><label><input type="radio" name="t9z_shipping_2" checked="checked"> Санкт-Петербург, Невский пр-т 144, литера А, <a href="/">на карте</a></label></div>
-        </div>
-    </div>
 </div>
 <!-- Выбор способа оплаты -->
 <div class="print-cart-item">

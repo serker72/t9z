@@ -10,10 +10,24 @@
 	<div class="header">
 		<div class="wrap cf">
 			<div class="header-logo">
-				<a href="/"><span class="header-logo-title"><?php _e( 'Copy Center', 'copytmpl' ); ?></span> <span class="header-logo-descr"><?php _e( 'operational polygraphy', 'copytmpl' ); ?></span></a>
+                            <a href="/"><span class="header-logo-title"><?php _e( 'Copy Center', 'copytmpl' ); ?></span> <span class="header-logo-descr"><?php _e( 'operational polygraphy', 'copytmpl' ); ?></span></a>
 			</div>
+                        <?php $city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : ''; ?>
+                        <div class="header-location-select-wrap">
+                            <div class="header-location-select-toggle"><span class="pseudo-link">Выберите Ваш город</span></div>
+                            <div class="header-location-select-v"><?php echo $city; ?></div>
+                            <ul class="header-location-select-opts">
+                                <?php
+                                $cities = ksk_get_shipping_cities();
+                                foreach ($cities as $key => $value) {
+                                    echo '<li '.(($value['city'] == $city) ? 'class="active"' : '').'>'.$value['city'].'</li>';
+                                }
+                                ?>
+                            </ul>
+                        </div>
 			<?php if ( is_active_sidebar( 'header-area' ) ) : ?>
-				<?php dynamic_sidebar( 'header-area' ); ?>
+				<?php //dynamic_sidebar( 'header-area' ); 
+                                echo copytmpl_header_user_nav_shortcode_func(null); ?>
 			<?php endif; ?>
 		</div>
 	</div>

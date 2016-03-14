@@ -3,6 +3,14 @@
 	$(document).ready(function(){
             checkout_href = $("a.checkout-button").attr("href");
             $('#natsenka-30').on('click', function(){ kskNatsenkaClick(); });
+            $('input[name=t9z_shipping_1]').on('click', function(e){
+                var id = e.target.id;
+                if (id == 't9z_shipping_1_office') {
+                    jQuery('div.print-cart-item-subfields').show();
+                } else {
+                    jQuery('div.print-cart-item-subfields').hide();
+                }
+            });
             kskNatsenkaClick();
         });
         
@@ -38,6 +46,21 @@
 		item.addClass('active')
 		itemSiblings.removeClass('active')
 		locationValue.text(itemValue)
+                
+                // KSK
+                jQuery.ajax({
+                    url: "/wp-admin/admin-ajax.php?action=ksk_shipping_city_session_set",
+                    type: "POST",
+                    data: "shipping_city="+itemValue,
+                    success: function(data){
+                        //alert(data);
+                    },
+                    error: function(data){
+                        if (data.responseText !== undefined) {
+                            //alert('Ошибка записи города доставки: ' + data.responseText);
+                        }
+                    }			
+                });
 	})
 
 	// Hide location selector
