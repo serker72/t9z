@@ -3,6 +3,8 @@
 	$(document).ready(function(){
             checkout_href = $("a.checkout-button").attr("href");
             $('#natsenka-30').on('click', function(){ kskNatsenkaClick(); });
+            
+            // Скрытие/отображение пунктов доставки
             $('input[name=t9z_shipping_1]').on('click', function(e){
                 var id = e.target.id;
                 if (id == 't9z_shipping_1_office') {
@@ -48,19 +50,25 @@
 		locationValue.text(itemValue)
                 
                 // KSK
-                jQuery.ajax({
+                /*jQuery.ajax({
                     url: "/wp-admin/admin-ajax.php?action=ksk_shipping_city_session_set",
                     type: "POST",
                     data: "shipping_city="+itemValue,
                     success: function(data){
-                        //alert(data);
+                        alert(data);
                     },
                     error: function(data){
-                        if (data.responseText !== undefined) {
-                            //alert('Ошибка записи города доставки: ' + data.responseText);
+                        if ((data.responseText != undefined) && (data.responseText != '')) {
+                            alert('Ошибка записи города доставки: ' + data.responseText);
+                        }
+                        
+                        if ((data.statusText != undefined) && (data.statusText != '')) {
+                            alert('Ошибка записи города доставки: ' + data.statusText);
                         }
                     }			
-                });
+                });*/
+                
+                ksk_wc_t9z_shipping_cart_print("shipping_city="+itemValue);
 	})
 
 	// Hide location selector
@@ -202,4 +210,27 @@ function ksk_cart_quantity_calc(id) {
         
         jQuery("#" + name3).attr('value', qty);
     }
+}
+
+function ksk_wc_t9z_shipping_cart_print(shipping_city) {
+    jQuery("#woocommerce_t9z_shipping_settings").html('<div class="woocommerce-info">Подождите...Выполняется обновление способов доставки после смены города...</div>');
+                
+    jQuery.ajax({
+        url: "/wp-admin/admin-ajax.php?action=ksk_wc_t9z_shipping_cart_print",
+        type: "POST",
+        data: shipping_city,
+        dataType: 'json',
+        success: function(data){
+            if ((data.shipping_method != undefined) && (data.shipping_method != '')) {
+                jQuery("#woocommerce_t9z_shipping_settings").html(data.shipping_method);
+            }
+            //alert(data);
+        },
+        error: function(data){
+            if ((data.responseText != undefined) && (data.responseText != '')) {
+                jQuery("#woocommerce_t9z_shipping_settings").html('<div class="woocommerce-error">' + data.responseText + '</div>');
+                //alert('Ошибка записи города доставки: ' + data.responseText);
+            }
+        }		
+    });
 }
