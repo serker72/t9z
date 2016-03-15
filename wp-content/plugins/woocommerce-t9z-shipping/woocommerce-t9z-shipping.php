@@ -72,7 +72,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             'free_shipping_amount' => 5000,
                             'shipping_sets' => array(
                                 '1' => array(
-                                    'city' => 'Ростов',
+                                    'city' => 'Ростов-на-Дону',
                                     'amount' => 600,
                                     'offices' => 'Офис 1 | Офис 2',
                                 ),
@@ -95,7 +95,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST[$this->plugin_slug . '_page']) && $_POST[$this->plugin_slug . '_page'] == 'settings') {
                         //if (check_admin_referer($this->plugin_slug.'_post')) {
                         //if (check_admin_referer()) {
-                        $this->settings['enabled'] = isset( $_POST['enabled'] ) ? $_POST['enabled'] : '0'; 
+                        $this->settings['enabled'] = isset( $_POST['enabled'] ) ? '1' : '0'; 
                         $this->settings['title'] = isset( $_POST['title'] ) ? $_POST['title'] : ''; 
                         $this->settings['bonus_rate'] = isset( $_POST['bonus_rate'] ) ? $_POST['bonus_rate'] : ''; 
                         $this->settings['free_shipping_amount'] = isset( $_POST['free_shipping_amount'] ) ? $_POST['free_shipping_amount'] : ''; 
@@ -140,7 +140,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     if ( ! empty( $_POST ) ) {
                         $this->process_admin_options();
                     }
-                    
+                    /*value="<?php echo $this->settings['enabled']; ?>"  */
                     wp_nonce_field($this->plugin_slug.'_post'); 
 ?>
 <input type="hidden" name="<?php echo $this->plugin_slug; ?>_page" value="settings" />
@@ -157,7 +157,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         <fieldset>
                             <legend class="screen-reader-text"><span>Включить/Выключить</span></legend>
                             <label for="enabled">
-                            <input  class="" type="checkbox" name="enabled" id="<?php echo $this->plugin_slug; ?>_enabled" style="" value="<?php echo $this->settings['enabled']; ?>"  <?php echo $this->settings['enabled'] ? 'checked="checked"' : ''; ?>/> Активировать доставку T9Z</label><br/>
+                            <input  class="" type="checkbox" name="enabled" id="<?php echo $this->plugin_slug; ?>_enabled" style="" <?php echo $this->settings['enabled'] == '1' ? 'checked="checked"' : ''; ?>/> Активировать доставку T9Z</label><br/>
                         </fieldset>
                     </td>
                 </tr>
@@ -255,11 +255,27 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                  * @return void
                  */
                 public function calculate_shipping( $package ) {
+                    $shipping_cost = '0.00';
+                    $total = WC()->cart->subtotal;
+                    if ($total < (int)$shipping_settings['free_shipping_amount']) {
+                        $city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : (isset($_POST['shipping_city']) ? $_POST['shipping_city'] : '');
+                        $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+
+                        if (($city != '') && (count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
+                            foreach ($shipping_settings['shipping_sets'] as $key => $value) {
+                                if ($value['city'] == $city) {
+                                    $shipping_cost = number_format($value['amount'], 2);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
                     $rate = array(
-                            'id' => $this->plugin_id,
-                            'label' => $this->title,
-                            'cost' => '10.99',
-                            'calc_tax' => 'per_item'
+                        'id' => $this->plugin_id,
+                        'label' => $this->title,
+                        'cost' => '12.55',
+                        'calc_tax' => 'per_item'
                     );
 
                     // Register the rate

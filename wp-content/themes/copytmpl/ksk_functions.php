@@ -68,6 +68,8 @@ function ksk_add_custom_price( $cart_object ) {
 
         $cart_amount = $cart_amount + ((int)$value['data']->price * (int)$value['quantity']);
     }
+    
+    WC()->cart->add_fee( __('Shipping Cost', 'woocommerce'), 35);
 }
 
 // Обновление кол-ва копий и страниц в данных загрузок
@@ -210,6 +212,7 @@ add_action("wp_ajax_nopriv_ksk_wc_t9z_shipping_cart_print", "ksk_wc_t9z_shipping
 // Вывод способов доставки в корзине
 function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     $output = '';
+    $shipping_cost = 0;
     
     //$user_geo_data = get_the_user_geo_data();
     $city = isset($city) ? $city : (isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : '');
@@ -230,13 +233,15 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         }
         
         if ($key) { 
-            $total = WC()->cart->get_cart_total();
+            //$total = WC()->cart->get_cart_total();
+            $total = WC()->cart->subtotal;
             if ($total >= (int)$shipping_settings['free_shipping_amount']) {
                 $output .= '
                 <div class="print-cart-item-field">
-                    <label><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" checked="checked"> Доставка при заказе от '.$shipping_settings['free_shipping_amount'].' руб. <strong>Бесплатно</strong></label>
+                    <label><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" checked="checked"> Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)</label>
                 </div>';
             } else {
+                $shipping_cost = $shipping_settings['shipping_sets'][$key]['amount'];
                 $output .= '
                 <div class="print-cart-item-field">
                     <label><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" checked="checked">Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong></label>
@@ -245,7 +250,7 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     
             $output .= '
             <div class="print-cart-item-field">
-                <label><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office"> Получение в офисе <b>Бесплатно</b></label> 
+                <label><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office"> Получение в офисе - <strong>Бесплатно</strong></label> 
                 <div class="print-cart-item-subfields" style="display: none;">';
                     
                     $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
@@ -258,5 +263,15 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         $output .= '<div class="woocommerce-error">Необходимо активировать метод доставки "T9Z" и выполнить настройку хотя бы для одного города.</div>';
     } 
     
+    WC()->cart->add_fee( 'Доставка', $shipping_cost, true, '' );
+    //$output .= '<div>';
+    //$fee = WC()->cart->get_fees();
+    //$output .= print_r($fee);
+    //$output .= '</div>';
+    
+    //WC_AJAX::update_shipping_method();
+    //WC_T9z_Shipping::calculate_shipping();
+    do_action( 'woocommerce_shipping_init');
+   
     return $output;
 }

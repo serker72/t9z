@@ -5,14 +5,8 @@
             $('#natsenka-30').on('click', function(){ kskNatsenkaClick(); });
             
             // Скрытие/отображение пунктов доставки
-            $('input[name=t9z_shipping_1]').on('click', function(e){
-                var id = e.target.id;
-                if (id == 't9z_shipping_1_office') {
-                    jQuery('div.print-cart-item-subfields').show();
-                } else {
-                    jQuery('div.print-cart-item-subfields').hide();
-                }
-            });
+            $('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
+            
             kskNatsenkaClick();
         });
         
@@ -212,6 +206,15 @@ function ksk_cart_quantity_calc(id) {
     }
 }
 
+function kskT9zShippingClick(e) {
+    var id = e.target.id;
+    if (id == 't9z_shipping_1_office') {
+        jQuery('div.print-cart-item-subfields').show();
+    } else {
+        jQuery('div.print-cart-item-subfields').hide();
+    }
+}
+
 function ksk_wc_t9z_shipping_cart_print(shipping_city) {
     jQuery("#woocommerce_t9z_shipping_settings").html('<div class="woocommerce-info">Подождите...Выполняется обновление способов доставки после смены города...</div>');
                 
@@ -223,6 +226,8 @@ function ksk_wc_t9z_shipping_cart_print(shipping_city) {
         success: function(data){
             if ((data.shipping_method != undefined) && (data.shipping_method != '')) {
                 jQuery("#woocommerce_t9z_shipping_settings").html(data.shipping_method);
+                // Скрытие/отображение пунктов доставки
+                jQuery('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
             }
             //alert(data);
         },
