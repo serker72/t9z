@@ -218,20 +218,20 @@ do_action( 'woocommerce_before_cart' ); ?>
 		<?php do_action( 'woocommerce_after_cart_contents' ); ?>
 	</tbody>
 </table>
+<?php $output = ksk_woocommerce_t9z_shipping_cart_print(); ?>
+<div class="woocommerce-info" id="ksk_woocommerce_t9z_shipping_info" style="display: none;"></div>
+<div class="woocommerce-error" id="ksk_woocommerce_t9z_shipping_error" style="display: none;"></div>
 <div class="print-cart-urgently">
     <label>
         <input type="checkbox" id="natsenka-30" name="natsenka-30" <?php echo isset($_SESSION['natsenka-30']) ? 'checked="checked"' : ''; ?> >
-        Срочное выполнение, наценка 30%
+        Срочное выполнение, наценка 30% - <strong><span id="natsenka-30-amount"><?php echo $output['surcharge']; ?></span></strong>
     </label>
 </div>
 <!-- Выбор способа доставки -->
 <div class="print-cart-item">
     <h3>Способ получения:</h3>
     <div id="woocommerce_t9z_shipping_settings">
-    <?php 
-        $output = ksk_woocommerce_t9z_shipping_cart_print();
-        echo $output['shipping_method'];
-    ?>
+    <?php echo $output['shipping_method']; ?>
     </div>
 </div>
 <!-- Выбор способа оплаты -->
@@ -243,10 +243,18 @@ do_action( 'woocommerce_before_cart' ); ?>
 <!-- Стоимость заказа -->
 <div class="print-cart-item">
     <h3>Стоимость заказа с учётом доставки<?php echo (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) ? ' и наценки за срочность' : ''; ?>:</h3>
-    <div class="print-cart-sum"><?php echo $output['total']; ?> руб.</div>
+    <div class="print-cart-sum"><?php echo $output['total'].' руб.'; ?></div>
     <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> <span id="bonus_amount" style="font-weight: bold;"><?php echo $output['bonus_amount']; ?></span> бонусов</div>
 </div>
 
+<input type="hidden" id="natsenka-amount" name="natsenka-amount" value="<?php echo $output['surcharge']; ?>">
+<input type="hidden" id="natsenka-percent" name="natsenka-percent" value="<?php echo $output['natsenka_percent']; ?>">
+<input type="hidden" id="shipping-amount" name="shipping-amount" value="<?php echo $output['shipping_cost']; ?>">
+<input type="hidden" id="subtotal-amount" name="subtotal-amount" value="<?php echo WC()->cart->subtotal; ?>">
+<input type="hidden" id="total-amount" name="total-amount" value="<?php echo $output['total']; ?>">
+<input type="hidden" id="bonus-amount" name="bonus-amount" value="<?php echo $output['bonus_amount']; ?>">
+<input type="hidden" id="bonus-percent" name="bonus-percent" value="<?php echo $output['bonus_percent']; ?>">
+       
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
 
 </form>

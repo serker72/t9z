@@ -12,7 +12,8 @@
 			<div class="header-logo">
                             <a href="/"><span class="header-logo-title"><?php _e( 'Copy Center', 'copytmpl' ); ?></span> <span class="header-logo-descr"><?php _e( 'operational polygraphy', 'copytmpl' ); ?></span></a>
 			</div>
-                        <?php $city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : ''; ?>
+                        <?php $city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : (isset($_POST['shipping_city']) ? $_POST['shipping_city'] : ''); ?>
+                        <?php //$city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : ''; ?>
                         <div class="header-location-select-wrap">
                             <div class="header-location-select-toggle"><span class="pseudo-link">Выберите Ваш город</span></div>
                             <div class="header-location-select-v"><?php echo $city; ?></div>

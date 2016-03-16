@@ -17,7 +17,6 @@
  *
  * @package WordPress
  */
-
 // KSK - Start session
 if (!session_id()) {
     session_start();

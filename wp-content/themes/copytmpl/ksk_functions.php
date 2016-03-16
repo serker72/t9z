@@ -147,7 +147,7 @@ function ksk_woocommerce_custom_surcharge() {
         $_SESSION['natsenka-30'] = 'on';
     }
     
-    if (isset($_SESSION['natsenka-30']) == 'on') {
+    if (isset($_SESSION['natsenka-30']) && ($_SESSION['natsenka-30']== 'on')) {
         $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
         if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
             $percentage = (int)$shipping_settings['natsenka_rate'] / 100;
@@ -159,7 +159,12 @@ function ksk_woocommerce_custom_surcharge() {
 	$woocommerce->cart->add_fee( 'Срочное выполнение', $surcharge, true, '' );
     }
     
-    $shipping_cost = ksk_shipping_cost_calc();
+    if (isset($_POST['shipping_cost'])) {
+        $shipping_cost = $_POST['shipping_cost'];
+    } else {
+        $shipping_cost = ksk_shipping_cost_calc();
+    }
+    
     $woocommerce->cart->add_fee( 'Стоимость доставки', $shipping_cost, true, '' );
 }
 
@@ -238,6 +243,29 @@ function ksk_wc_t9z_shipping_cart_print() {
 add_action("wp_ajax_ksk_wc_t9z_shipping_cart_print", "ksk_wc_t9z_shipping_cart_print");
 add_action("wp_ajax_nopriv_ksk_wc_t9z_shipping_cart_print", "ksk_wc_t9z_shipping_cart_print");
 
+// Обновление блока с методами доставки с помощью Ajax
+function ksk_wc_t9z_shipping_cart_calc() {
+    global $woocommerce;
+    
+    do_action('woocommerce_cart_calculate_fees');
+    do_action('woocommerce_cart_total');
+    
+    ob_start();
+    do_action( 'woocommerce_after_cart_table' );
+    do_action( 'woocommerce_cart_collaterals' );
+    do_action( 'woocommerce_after_cart' ); 
+    $after_cart_html = ob_get_clean();
+        
+    $output = array(
+        'total' => number_format($woocommerce->cart->total, 2, '.', ' ').' руб.',
+        'after_cart_html' => $after_cart_html,
+    );
+    echo json_encode($output);
+    wp_die();
+}
+add_action("wp_ajax_ksk_wc_t9z_shipping_cart_calc", "ksk_wc_t9z_shipping_cart_calc");
+add_action("wp_ajax_nopriv_ksk_wc_t9z_shipping_cart_calc", "ksk_wc_t9z_shipping_cart_calc");
+
 // Вывод способов доставки в корзине
 function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     global $woocommerce;
@@ -274,19 +302,19 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             if ($total >= (int)$shipping_settings['free_shipping_amount']) {
                 $output .= '
                 <div class="print-cart-item-field">
-                    <label><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" checked="checked"> Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)</label>
+                    <label><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" checked="checked" data-cost="0"> Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)</label>
                 </div>';
             } else {
                 $shipping_cost = $shipping_settings['shipping_sets'][$key]['amount'];
                 $output .= '
                 <div class="print-cart-item-field">
-                    <label><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" checked="checked">Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong></label>
+                    <label><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" checked="checked" data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'">Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong></label>
                 </div>';
             }
     
             $output .= '
             <div class="print-cart-item-field">
-                <label><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office"> Получение в офисе - <strong>Бесплатно</strong></label> 
+                <label><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" data-cost="0"> Получение в офисе - <strong>Бесплатно</strong></label> 
                 <div class="print-cart-item-subfields" style="display: none;">';
                     
                     $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
@@ -312,11 +340,22 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     //WC_T9z_Shipping::calculate_shipping();
     //do_action( 'woocommerce_shipping_init');
     do_action('woocommerce_cart_calculate_fees');
-   
+    do_action('woocommerce_cart_total');
+    
+    ob_start();
+    do_action( 'woocommerce_after_cart_table' );
+    do_action( 'woocommerce_cart_collaterals' );
+    do_action( 'woocommerce_after_cart' ); 
+    $after_cart_html = ob_get_clean();
+        
     return array(
         'shipping_method' => $output,
+        'shipping_cost' => $shipping_cost,
         'bonus_amount' => $bonus_amount,
+        'bonus_percent' => (int)$shipping_settings['bonus_rate'],
         'surcharge' => $surcharge,
-        'total' => number_format($woocommerce->cart->total, 2, '.', ' '),
+        'natsenka_percent' => (int)$shipping_settings['natsenka_rate'],
+        'total' => $woocommerce->cart->total,
+        'after_cart_html' => $after_cart_html,
     );
 }
