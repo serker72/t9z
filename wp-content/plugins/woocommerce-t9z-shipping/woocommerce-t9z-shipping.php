@@ -68,8 +68,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         $this->settings = array(
                             'enabled' => 1,
                             'title' => "Доставка T9Z",
-                            'bonus_rate' => 5,
                             'free_shipping_amount' => 5000,
+                            'bonus_rate' => 5,
+                            'natsenka_rate' => 30,
                             'shipping_sets' => array(
                                 '1' => array(
                                     'city' => 'Ростов-на-Дону',
@@ -97,8 +98,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         //if (check_admin_referer()) {
                         $this->settings['enabled'] = isset( $_POST['enabled'] ) ? '1' : '0'; 
                         $this->settings['title'] = isset( $_POST['title'] ) ? $_POST['title'] : ''; 
-                        $this->settings['bonus_rate'] = isset( $_POST['bonus_rate'] ) ? $_POST['bonus_rate'] : ''; 
                         $this->settings['free_shipping_amount'] = isset( $_POST['free_shipping_amount'] ) ? $_POST['free_shipping_amount'] : ''; 
+                        $this->settings['bonus_rate'] = isset( $_POST['bonus_rate'] ) ? $_POST['bonus_rate'] : ''; 
+                        $this->settings['natsenka_rate'] = isset( $_POST['natsenka_rate'] ) ? $_POST['natsenka_rate'] : ''; 
                         
                         foreach ($this->settings['shipping_sets'] AS $id => $data) {
                             $this->settings['shipping_sets'][$id] = array(
@@ -194,6 +196,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             <fieldset>
                                 <legend class="screen-reader-text"><span>% от суммы заказа для расчета бонусов</span></legend>
                                 <input class="input-text regular-input " type="text" name="bonus_rate" id="<?php echo $this->plugin_slug; ?>_bonus_rate" style="" value="<?php echo $this->settings['bonus_rate']; ?>" placeholder=""/>
+                            </fieldset>
+			</td>
+		</tr>                 
+                <tr valign="top">
+			<th scope="row" class="titledesc">
+                            <label for="natsenka_rate">Наценка за срочное выполнение заказа</label>
+                            <span class="woocommerce-help-tip" data-tip="Процент от суммы заказа для расчета наценки за срочное выполнение заказа."></span>
+                        </th>
+			<td class="forminp">
+                            <fieldset>
+                                <legend class="screen-reader-text"><span>% от суммы заказа для расчета бонусов</span></legend>
+                                <input class="input-text regular-input " type="text" name="natsenka_rate" id="<?php echo $this->plugin_slug; ?>_natsenka_rate" style="" value="<?php echo $this->settings['natsenka_rate']; ?>" placeholder=""/>
                             </fieldset>
 			</td>
 		</tr>                 

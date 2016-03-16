@@ -69,7 +69,7 @@ function ksk_add_custom_price( $cart_object ) {
         $cart_amount = $cart_amount + ((int)$value['data']->price * (int)$value['quantity']);
     }
     
-    WC()->cart->add_fee( __('Shipping Cost', 'woocommerce'), 35);
+    //WC()->cart->add_fee( __('Shipping Cost', 'woocommerce'), 35);
 }
 
 // Обновление кол-ва копий и страниц в данных загрузок
@@ -148,11 +148,19 @@ function ksk_woocommerce_custom_surcharge() {
     }
     
     if (isset($_SESSION['natsenka-30']) == 'on') {
-        $percentage = 0.3;
+        $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+        if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
+            $percentage = (int)$shipping_settings['natsenka_rate'] / 100;
+        } else {
+            $percentage = 0.3;
+        }
 	//$surcharge = ( $woocommerce->cart->cart_contents_total + $woocommerce->cart->shipping_total ) * $percentage;	
 	$surcharge = $woocommerce->cart->cart_contents_total * $percentage;	
 	$woocommerce->cart->add_fee( 'Срочное выполнение', $surcharge, true, '' );
-    } 
+    }
+    
+    $shipping_cost = ksk_shipping_cost_calc();
+    $woocommerce->cart->add_fee( 'Стоимость доставки', $shipping_cost, true, '' );
 }
 
 // Выбор списка городов из настроек метода доставки 'woocommerce_t9z_shipping_settings'
@@ -164,6 +172,27 @@ function ksk_get_shipping_cities() {
     }
     
     return $cities;
+}
+
+// Расчет стоимости доставки в зависимости от выбранного города из списка настроек метода доставки 'woocommerce_t9z_shipping_settings'
+function ksk_shipping_cost_calc() {
+    global $woocommerce;
+ 
+    $shipping_cost = 0;
+    $total = $woocommerce->cart->subtotal;
+    $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+    $city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : (isset($_POST['shipping_city']) ? $_POST['shipping_city'] : '');
+    
+    if ($shipping_settings && ($total < (int)$shipping_settings['free_shipping_amount']) && ($city != '') && (count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
+        foreach ($shipping_settings['shipping_sets'] as $key => $value) {
+            if ($value['city'] == $city) {
+                $shipping_cost = (float)$value['amount'];
+                break;
+            }
+        }
+    }
+    
+    return $shipping_cost;
 }
 
 // Запись выбранного города в $_SESSION
@@ -202,7 +231,7 @@ function ksk_wc_t9z_shipping_cart_print() {
     if (isset($_SESSION['shipping_city']) && isset($_POST['shipping_city']) && ($_SESSION['shipping_city'] != $_POST['shipping_city'])) {
         $_SESSION['shipping_city'] = $_POST['shipping_city'];
     }
-    $output = array('shipping_method' => ksk_woocommerce_t9z_shipping_cart_print($_POST['shipping_city']));
+    $output = ksk_woocommerce_t9z_shipping_cart_print($_POST['shipping_city']);
     echo json_encode($output);
     wp_die();
 }
@@ -211,8 +240,12 @@ add_action("wp_ajax_nopriv_ksk_wc_t9z_shipping_cart_print", "ksk_wc_t9z_shipping
 
 // Вывод способов доставки в корзине
 function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
+    global $woocommerce;
+    
     $output = '';
     $shipping_cost = 0;
+    $bonus_amount = 0;
+    $surcharge = 0;
     
     //$user_geo_data = get_the_user_geo_data();
     $city = isset($city) ? $city : (isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : '');
@@ -234,7 +267,10 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         
         if ($key) { 
             //$total = WC()->cart->get_cart_total();
-            $total = WC()->cart->subtotal;
+            $total = $woocommerce->cart->subtotal;
+            $bonus_amount = round(($total * (int)$shipping_settings['bonus_rate']) / 100, 2);
+            $surcharge = $woocommerce->cart->cart_contents_total * (int)$shipping_settings['natsenka_rate'] / 100;
+                    
             if ($total >= (int)$shipping_settings['free_shipping_amount']) {
                 $output .= '
                 <div class="print-cart-item-field">
@@ -263,7 +299,10 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         $output .= '<div class="woocommerce-error">Необходимо активировать метод доставки "T9Z" и выполнить настройку хотя бы для одного города.</div>';
     } 
     
-    WC()->cart->add_fee( 'Доставка', $shipping_cost, true, '' );
+    //$a1 = WC()->cart;
+    //WC()->cart->shipping_total = $shipping_cost;
+    //$a2 = WC()->cart;
+    //$woocommerce->cart->add_fee( 'Стоимость доставки', $shipping_cost, true, '' );
     //$output .= '<div>';
     //$fee = WC()->cart->get_fees();
     //$output .= print_r($fee);
@@ -271,7 +310,13 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     
     //WC_AJAX::update_shipping_method();
     //WC_T9z_Shipping::calculate_shipping();
-    do_action( 'woocommerce_shipping_init');
+    //do_action( 'woocommerce_shipping_init');
+    do_action('woocommerce_cart_calculate_fees');
    
-    return $output;
+    return array(
+        'shipping_method' => $output,
+        'bonus_amount' => $bonus_amount,
+        'surcharge' => $surcharge,
+        'total' => number_format($woocommerce->cart->total, 2, '.', ' '),
+    );
 }

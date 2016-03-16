@@ -229,6 +229,10 @@ function ksk_wc_t9z_shipping_cart_print(shipping_city) {
                 // Скрытие/отображение пунктов доставки
                 jQuery('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
             }
+            if ((data.bonus_amount != undefined) && (data.bonus_amount != '')) {
+                jQuery("#bonus_amount").html(data.bonus_amount);
+            }
+            
             //alert(data);
         },
         error: function(data){

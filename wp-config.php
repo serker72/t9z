@@ -18,6 +18,11 @@
  * @package WordPress
  */
 
+// KSK - Start session
+if (!session_id()) {
+    session_start();
+}
+
 // ** Параметры MySQL: Эту информацию можно получить у вашего хостинг-провайдера ** //
 /** Имя базы данных для WordPress */
 define('DB_NAME', 't9z');

@@ -228,7 +228,10 @@ do_action( 'woocommerce_before_cart' ); ?>
 <div class="print-cart-item">
     <h3>Способ получения:</h3>
     <div id="woocommerce_t9z_shipping_settings">
-    <?php echo ksk_woocommerce_t9z_shipping_cart_print(); ?>
+    <?php 
+        $output = ksk_woocommerce_t9z_shipping_cart_print();
+        echo $output['shipping_method'];
+    ?>
     </div>
 </div>
 <!-- Выбор способа оплаты -->
@@ -239,9 +242,9 @@ do_action( 'woocommerce_before_cart' ); ?>
 </div>
 <!-- Стоимость заказа -->
 <div class="print-cart-item">
-    <h3>Стоимость заказа с учётом доставки:</h3>
-    <div class="print-cart-sum">450 руб.</div>
-    <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> 22,5 бонусов</div>
+    <h3>Стоимость заказа с учётом доставки<?php echo (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) ? ' и наценки за срочность' : ''; ?>:</h3>
+    <div class="print-cart-sum"><?php echo $output['total']; ?> руб.</div>
+    <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> <span id="bonus_amount" style="font-weight: bold;"><?php echo $output['bonus_amount']; ?></span> бонусов</div>
 </div>
 
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
@@ -253,10 +256,5 @@ do_action( 'woocommerce_before_cart' ); ?>
 	<?php do_action( 'woocommerce_cart_collaterals' ); ?>
 
 </div>
-<p><?php echo 'Ваш город: ' . get_the_user_geo_data('city'); ?></p>
 
 <?php do_action( 'woocommerce_after_cart' ); ?>
-<?php
-//echo '<pre>';
-//print_r($_SESSION['wpf_umf_temp_data']);
-//echo '</pre>';
