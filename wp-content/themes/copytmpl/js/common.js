@@ -3,11 +3,11 @@
 	$(document).ready(function(){
             checkout_href = $("a.checkout-button").attr("href");
             //$('#natsenka-30').on('click', function(){ kskNatsenkaClick(); });
-            $('#natsenka-30').on('click', function(e){ ksk_wc_cart_add_amount_calc(e); });
+            $('#natsenka-30').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
             
             // Скрытие/отображение пунктов доставки
             //$('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
-            $('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(e); });
+            $('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
             
             //kskNatsenkaClick();
         });
@@ -46,25 +46,42 @@
 		locationValue.text(itemValue)
                 
                 // KSK
-                /*jQuery.ajax({
+                data_str = "shipping_city=" + itemValue;
+                //alert('data_str=' + data_str);
+                
+                // Если мы в корзине
+                if (jQuery("table").is(".cart")) {
+                    data_str = data_str + "&cart=1";
+                }
+                
+                jQuery.ajax({
                     url: "/wp-admin/admin-ajax.php?action=ksk_shipping_city_session_set",
                     type: "POST",
-                    data: "shipping_city="+itemValue,
+                    data: data_str,
+                    dataType: 'json',
                     success: function(data){
-                        alert(data);
+                        if ((data.shipping_method != undefined) && (data.shipping_method != '')) {
+                            jQuery("#shipping-amount").attr("value", data.shipping_cost);
+                            jQuery("#woocommerce_t9z_shipping_settings").html(data.shipping_method);
+                            // Скрытие/отображение пунктов доставки
+                            jQuery('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
+                        }
+                        //alert(data);
+                        ksk_wc_cart_add_amount_calc();
                     },
                     error: function(data){
                         if ((data.responseText != undefined) && (data.responseText != '')) {
-                            alert('Ошибка записи города доставки: ' + data.responseText);
+                            //alert('Ошибка записи города доставки: ' + data.responseText);
                         }
                         
                         if ((data.statusText != undefined) && (data.statusText != '')) {
-                            alert('Ошибка записи города доставки: ' + data.statusText);
+                            //alert('Ошибка записи города доставки: ' + data.statusText);
                         }
                     }			
-                });*/
+                });
                 
-                ksk_wc_t9z_shipping_cart_print("shipping_city="+itemValue);
+                //jQuery('input[name=t9z_shipping_1]').click();
+                //ksk_wc_t9z_shipping_cart_print("shipping_city="+itemValue);
 	})
 
 	// Hide location selector
@@ -279,9 +296,9 @@ function ksk_wc_t9z_shipping_cart_print(shipping_city) {
     });
 }
 
-function ksk_wc_cart_add_amount_calc(e) {
-    var id = e.target.id;
-    var cost = e.target.dataset.cost;
+function ksk_wc_cart_add_amount_calc() {
+    //var id = e.target.id;
+    //var cost = e.target.dataset.cost;
         
     d1 = jQuery("#subtotal-amount").attr("value");
     d3 = jQuery("#shipping-amount").attr("value");
@@ -291,8 +308,10 @@ function ksk_wc_cart_add_amount_calc(e) {
     
     if (jQuery('#natsenka-30').is(':checked')) {
         d2 = (d1 * p2)/100;
+        jQuery('#total-amount-label').html('и наценки за срочность');
     } else {
         d2 = 0;
+        jQuery('#total-amount-label').html('');
     }
     
     if (jQuery('#t9z_shipping_1_office').is(':checked')) {
@@ -309,7 +328,9 @@ function ksk_wc_cart_add_amount_calc(e) {
     
     d4 = d1*1 + d2*1 + d3*1;
     d5 = (d1 * p5)/100;
-    
+
+    //alert('d1='+d1+', d2='+d2+', d3='+d3+', d4='+d4+', d5='+d5);
+
     jQuery("#natsenka-amount").attr("value", d2);
     jQuery("#shipping-amount").attr("value", d3);
     jQuery("#total-amount").attr("value", d4);
@@ -318,4 +339,5 @@ function ksk_wc_cart_add_amount_calc(e) {
     jQuery("#natsenka-30-amount").html(d2 + ' руб.');
     jQuery("#bonus_amount").html(d5);
     jQuery(".print-cart-sum").html(d4 + ' руб.');
+    
 }

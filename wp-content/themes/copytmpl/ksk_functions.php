@@ -207,6 +207,12 @@ function ksk_shipping_city_session_set() {
     if (!isset($_SESSION['shipping_city']) || ($_SESSION['shipping_city'] != $shipping_city)) {
         $_SESSION['shipping_city'] = $shipping_city;
     }
+    
+    // Если мы в корзине, то нужно вернуть стоимость доставки и перестроить список
+    if (isset($_POST['cart']) && ($_POST['cart'] == '1')) {
+        $output = ksk_woocommerce_t9z_shipping_cart_print($_POST['shipping_city']);
+        echo json_encode($output);
+    }
         
     wp_die();
 }
@@ -339,14 +345,14 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     //WC_AJAX::update_shipping_method();
     //WC_T9z_Shipping::calculate_shipping();
     //do_action( 'woocommerce_shipping_init');
-    do_action('woocommerce_cart_calculate_fees');
+    /*do_action('woocommerce_cart_calculate_fees');
     do_action('woocommerce_cart_total');
     
     ob_start();
     do_action( 'woocommerce_after_cart_table' );
     do_action( 'woocommerce_cart_collaterals' );
     do_action( 'woocommerce_after_cart' ); 
-    $after_cart_html = ob_get_clean();
+    $after_cart_html = ob_get_clean();*/
         
     return array(
         'shipping_method' => $output,
@@ -355,7 +361,7 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         'bonus_percent' => (int)$shipping_settings['bonus_rate'],
         'surcharge' => $surcharge,
         'natsenka_percent' => (int)$shipping_settings['natsenka_rate'],
-        'total' => $woocommerce->cart->total,
-        'after_cart_html' => $after_cart_html,
+        'total' => ($total + $surcharge + $shipping_cost),
+        //'after_cart_html' => $after_cart_html,
     );
 }

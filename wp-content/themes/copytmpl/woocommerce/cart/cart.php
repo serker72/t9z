@@ -224,7 +224,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 <div class="print-cart-urgently">
     <label>
         <input type="checkbox" id="natsenka-30" name="natsenka-30" <?php echo isset($_SESSION['natsenka-30']) ? 'checked="checked"' : ''; ?> >
-        Срочное выполнение, наценка 30% - <strong><span id="natsenka-30-amount"><?php echo $output['surcharge']; ?></span></strong>
+        Срочное выполнение, наценка 30% - <strong><span id="natsenka-30-amount"><?php echo $output['surcharge'].' руб.'; ?></span></strong>
     </label>
 </div>
 <!-- Выбор способа доставки -->
@@ -242,7 +242,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 </div>
 <!-- Стоимость заказа -->
 <div class="print-cart-item">
-    <h3>Стоимость заказа с учётом доставки<?php echo (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) ? ' и наценки за срочность' : ''; ?>:</h3>
+    <h3>Стоимость заказа с учётом доставки<span id="total-amount-label"><?php echo (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) ? ' и наценки за срочность' : ''; ?></span>:</h3>
     <div class="print-cart-sum"><?php echo $output['total'].' руб.'; ?></div>
     <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> <span id="bonus_amount" style="font-weight: bold;"><?php echo $output['bonus_amount']; ?></span> бонусов</div>
 </div>
@@ -259,10 +259,12 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 </form>
 
-<div class="cart-collaterals">
+<div class="cart-collaterals" style="display: none;">
 
 	<?php do_action( 'woocommerce_cart_collaterals' ); ?>
 
 </div>
+
+<?php do_action( 'woocommerce_proceed_to_checkout'); ?>
 
 <?php do_action( 'woocommerce_after_cart' ); ?>
