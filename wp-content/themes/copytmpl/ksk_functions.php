@@ -159,13 +159,16 @@ function ksk_woocommerce_custom_surcharge() {
 	$woocommerce->cart->add_fee( 'Срочное выполнение', $surcharge, true, '' );
     }
     
-    if (isset($_POST['shipping_cost'])) {
-        $shipping_cost = $_POST['shipping_cost'];
+    if (isset($_POST['shipping_cost']) || isset($_POST['shipping-amount']) || isset($_SESSION['shipping-amount'])) {
+        $_SESSION['shipping-amount'] = isset($_POST['shipping-amount']) ? $_POST['shipping-amount'] : (isset($_POST['shipping_cost']) ? $_POST['shipping_cost'] : $_SESSION['shipping-amount']);
+        $shipping_cost = isset($_SESSION['shipping-amount']) ? $_SESSION['shipping-amount'] : $_POST['shipping_cost'];
     } else {
         $shipping_cost = ksk_shipping_cost_calc();
     }
     
-    $woocommerce->cart->add_fee( 'Стоимость доставки', $shipping_cost, true, '' );
+    if ($shipping_cost > 0) {
+        $woocommerce->cart->add_fee( 'Стоимость доставки', $shipping_cost, true, '' );
+    }
 }
 
 // Выбор списка городов из настроек метода доставки 'woocommerce_t9z_shipping_settings'
@@ -306,26 +309,30 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             $surcharge = $woocommerce->cart->cart_contents_total * (int)$shipping_settings['natsenka_rate'] / 100;
                     
             if ($total >= (int)$shipping_settings['free_shipping_amount']) {
+                $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)';
                 $output .= '
                 <div class="print-cart-item-field">
-                    <label><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" checked="checked" data-cost="0"> Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)</label>
+                    <label id="l_t9z_shipping_1_free"><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" checked="checked" data-cost="0" data-label="'.$label.'">'.$label.'</label>
                 </div>';
             } else {
                 $shipping_cost = $shipping_settings['shipping_sets'][$key]['amount'];
+                $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong>';
                 $output .= '
                 <div class="print-cart-item-field">
-                    <label><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" checked="checked" data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'">Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong></label>
+                    <label id="l_t9z_shipping_1_city"><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" checked="checked" data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'" data-label="'.$label.'">'.$label.'</label>
                 </div>';
             }
     
+            $label = 'Получение в офисе - <strong>Бесплатно</strong>';
             $output .= '
             <div class="print-cart-item-field">
-                <label><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" data-cost="0"> Получение в офисе - <strong>Бесплатно</strong></label> 
+                <label id="l_t9z_shipping_1_office"><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" data-cost="0" data-label="'.$label.'">'.$label.'</label> 
                 <div class="print-cart-item-subfields" style="display: none;">';
                     
                     $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
                     for($i=0; $i < count($office); $i++) {
-                        $output .= '<div class="print-cart-item-field"><label><input type="radio" name="t9z_shipping_2" value="'.$i.'">г.'.$shipping_settings['shipping_sets'][$key]['city'].', '.$office[$i].', <a href="/">на карте</a></label></div>';
+                        $label = 'Адрес точки самовывоза: г.'.$shipping_settings['shipping_sets'][$key]['city'].', '.$office[$i];
+                        $output .= '<div class="print-cart-item-field"><label id="l_t9z_shipping_2_'.$i.'"><input type="radio" id="t9z_shipping_2_'.$i.'" name="t9z_shipping_2" value="'.$i.'" data-label="'.$label.'">г.'.$shipping_settings['shipping_sets'][$key]['city'].', '.$office[$i].', <a href="/">на карте</a></label></div>';
                     }
             $output .= '</div></div>';
         }

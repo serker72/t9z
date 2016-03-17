@@ -9,6 +9,8 @@
             //$('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
             $('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
             
+            jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ ksk_wc_proceed_to_checkout(e); });
+            
             //kskNatsenkaClick();
         });
         
@@ -52,6 +54,8 @@
                 // Если мы в корзине
                 if (jQuery("table").is(".cart")) {
                     data_str = data_str + "&cart=1";
+                    //jQuery("#ksk_woocommerce_t9z_shipping_info").html('Подождите...Выполняется обновление способов доставки после смены города...');
+                    //jQuery("#ksk_woocommerce_t9z_shipping_info").show();
                 }
                 
                 jQuery.ajax({
@@ -59,12 +63,14 @@
                     type: "POST",
                     data: data_str,
                     dataType: 'json',
+                    //timeout: 27000,
                     success: function(data){
                         if ((data.shipping_method != undefined) && (data.shipping_method != '')) {
                             jQuery("#shipping-amount").attr("value", data.shipping_cost);
                             jQuery("#woocommerce_t9z_shipping_settings").html(data.shipping_method);
                             // Скрытие/отображение пунктов доставки
-                            jQuery('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
+                            //jQuery('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
+                            jQuery('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
                         }
                         //alert(data);
                         ksk_wc_cart_add_amount_calc();
@@ -80,6 +86,11 @@
                     }			
                 });
                 
+                // Если мы в корзине
+                /*if (jQuery("table").is(".print-cart-table")) {
+                    jQuery("#ksk_woocommerce_t9z_shipping_info").html();
+                    jQuery("#ksk_woocommerce_t9z_shipping_info").hide();
+                }*/
                 //jQuery('input[name=t9z_shipping_1]').click();
                 //ksk_wc_t9z_shipping_cart_print("shipping_city="+itemValue);
 	})
@@ -241,17 +252,17 @@ function kskT9zShippingClick(e) {
         dataType: 'json',
         success: function(data){
             if ((data.total != undefined) && (data.total != '')) {
-                jQuery(".print-cart-sum").html(data.total);
+                //jQuery(".print-cart-sum").html(data.total);
             }
             if ((data.after_cart_html != undefined) && (data.after_cart_html != '')) {
-                jQuery(".cart-collaterals").html(data.after_cart_html);
+                //jQuery(".cart-collaterals").html(data.after_cart_html);
             }
         },
         error: function(data){
-            jQuery("#ksk_woocommerce_t9z_shipping_info").html();
+            //jQuery("#ksk_woocommerce_t9z_shipping_info").html();
             if ((data.responseText != undefined) && (data.responseText != '')) {
-                jQuery("#ksk_woocommerce_t9z_shipping_error").html(data.responseText);
-                jQuery("#ksk_woocommerce_t9z_shipping_error").show();
+                //jQuery("#ksk_woocommerce_t9z_shipping_error").html(data.responseText);
+                //jQuery("#ksk_woocommerce_t9z_shipping_error").show();
             }
         }		
     });
@@ -340,4 +351,28 @@ function ksk_wc_cart_add_amount_calc() {
     jQuery("#bonus_amount").html(d5);
     jQuery(".print-cart-sum").html(d4 + ' руб.');
     
+}
+
+function ksk_wc_proceed_to_checkout(e) {
+    var id = e.target.id;
+    
+    if (jQuery('#t9z_shipping_1_free').is(':checked')) {
+        jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_free')[0].dataset.label);
+        jQuery("#shipping-text-2").attr("value", "");
+    }
+    
+    if (jQuery('#t9z_shipping_1_city').is(':checked')) {
+        jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_city')[0].dataset.label);
+        jQuery("#shipping-text-2").attr("value", "");
+    }
+    
+    if (jQuery('#t9z_shipping_1_office').is(':checked')) {
+        jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_office')[0].dataset.label);
+        id2 = jQuery("input[name=t9z_shipping_2]").attr("value");
+        jQuery("#shipping-text-2").attr("value", jQuery('#t9z_shipping_2_' + id2)[0].dataset.label);
+    }
+     
+    
+    jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
+    jQuery("#ksk_wc_cart_form").submit();
 }

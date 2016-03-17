@@ -5,6 +5,9 @@
 
 /** @global WC_Checkout $checkout */
 
+//    do_action('woocommerce_cart_calculate_fees');
+//    do_action('woocommerce_cart_total');
+
 ?>
 <div class="woocommerce-billing-fields">
 	<?php if ( wc_ship_to_billing_address_only() && WC()->cart->needs_shipping() ) : ?>
