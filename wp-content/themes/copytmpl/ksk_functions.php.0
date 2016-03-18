@@ -145,8 +145,6 @@ function ksk_woocommerce_custom_surcharge() {
 
     if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30'])) {
         $_SESSION['natsenka-30'] = 'on';
-    } else {
-        unset($_SESSION['natsenka-30']);
     }
     
     if (isset($_SESSION['natsenka-30']) && ($_SESSION['natsenka-30']== 'on')) {
@@ -182,24 +180,6 @@ function ksk_get_shipping_cities() {
     }
     
     return $cities;
-}
-
-// Выбор города по умолчанию из настроек метода доставки 'woocommerce_t9z_shipping_settings'
-function ksk_get_shipping_default_city() {
-    $city = '';
-    $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
-    if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
-        foreach ($shipping_settings['shipping_sets'] as $key => $value) {
-            //echo '<br>$shipping_settings[default_city] = '.$shipping_settings['default_city'];
-            //echo '<br>$value[city] = '.$value['city'];
-            if ($value['city'] == $shipping_settings['default_city']) {
-                $city = $value['city'];
-                break;
-            }
-        }
-    }
-    
-    return $city;
 }
 
 // Расчет стоимости доставки в зависимости от выбранного города из списка настроек метода доставки 'woocommerce_t9z_shipping_settings'
@@ -326,29 +306,27 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             //$total = WC()->cart->get_cart_total();
             $total = $woocommerce->cart->subtotal;
             $bonus_amount = round(($total * (int)$shipping_settings['bonus_rate']) / 100, 2);
-            if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) {
-                $surcharge = $woocommerce->cart->cart_contents_total * (int)$shipping_settings['natsenka_rate'] / 100;
-            }
+            $surcharge = $woocommerce->cart->cart_contents_total * (int)$shipping_settings['natsenka_rate'] / 100;
                     
             if ($total >= (int)$shipping_settings['free_shipping_amount']) {
                 $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)';
                 $output .= '
                 <div class="print-cart-item-field">
-                    <label id="l_t9z_shipping_1_free"><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'free')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'">'.$label.'</label>
+                    <label id="l_t9z_shipping_1_free"><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" checked="checked" data-cost="0" data-label="'.$label.'">'.$label.'</label>
                 </div>';
             } else {
                 $shipping_cost = $shipping_settings['shipping_sets'][$key]['amount'];
                 $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong>';
                 $output .= '
                 <div class="print-cart-item-field">
-                    <label id="l_t9z_shipping_1_city"><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'city')) ? 'checked="checked"' : '').' data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'" data-label="'.$label.'">'.$label.'</label>
+                    <label id="l_t9z_shipping_1_city"><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" checked="checked" data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'" data-label="'.$label.'">'.$label.'</label>
                 </div>';
             }
     
             $label = 'Получение в офисе - <strong>Бесплатно</strong>';
             $output .= '
             <div class="print-cart-item-field">
-                <label id="l_t9z_shipping_1_office"><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" '.((isset($_POST['t9z_shipping_1']) && ($_POST['t9z_shipping_1'] == 'office')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'">'.$label.'</label> 
+                <label id="l_t9z_shipping_1_office"><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" data-cost="0" data-label="'.$label.'">'.$label.'</label> 
                 <div class="print-cart-item-subfields" style="display: none;">';
                     
                     $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
@@ -393,98 +371,4 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         'total' => ($total + $surcharge + $shipping_cost),
         //'after_cart_html' => $after_cart_html,
     );
-}
-
-function pdfCount ($filename) {
-//Получаем количество страниц из заголовка с помощью регулярного выражения
-    $fp = fopen($filename, 'r');
-    if ($fp) {
-        $count = 0;
-        while(!feof($fp)) {
-            $line = fgets($fp,255);
-            if (preg_match('|/Count [0-9]+|', $line, $matches)){
-                preg_match('|[0-9]+|', $matches[0], $matches2);
-                if ($count < $matches2[0]) {
-                    $count = trim($matches2[0]);
-                }
-            }
-        }
-        fclose($fp);
-        return $count;
-    }
-}
-
-function txtCount ($filename) {
-    $handle = @fopen($filename, "r");
-    $i = 0; $kol_page = 0;
-    if ($handle) {
-        while (($buffer = fgets($handle)) !== false) {
-            $i++;
-            if ($i == 66){
-                $kol_page++;
-                $i = 0;
-            }
-        }
-        if (($kol_page == 0) && ($i <=66)) $kol_page = 1;
-        if (!feof($handle)) {
-            echo "Error: unexpected fgets() fail\n";
-        }
-        fclose($handle);
-    }
-    return $kol_page;
-}
-
-function docxCount ($filename) {
-    // Создаёт "реинкарнацию" zip-архива...
-    $zip = new ZipArchive;
-    // И пытаемся открыть переданный zip-файл
-    if ($zip->open($filename)) {
-        // В случае успеха ищем в архиве файл с данными
-        if (($index = $zip->locateName("docProps/app.xml")) !== false) {
-            // Если находим, то читаем его в строку
-            $content = $zip->getFromIndex($index);
-            // Закрываем zip-архив, он нам больше не нужен
-            $zip->close();
-            //$dom = simplexml_load_string($content);
-           /* libxml_use_internal_errors(true);
-            $dom = simplexml_load_string($content);
-            foreach( libxml_get_errors() as $error ) {
-
-                return $error;
-
-                }*/
-            $page_str = explode ("<Pages>", $content);
-            $page_str = explode ("</Pages>", $page_str[1]);
-            $pages = $page_str[0];
-            //$pages = $dom->Pages; // Получаем элемента
-            //$pages = strlen($content);
-            return $pages;
-        }
- 
-    }
-    else return $pages = 99999;
-
-    
-}
-function xlsCount ($filename){
-    require_once '/classes/PHPExcel/IOFactory.php';
-    require_once '/classes/ChunkReadFilter.php';
-
-    $objReader = PHPExcel_IOFactory::createReader(PHPExcel_IOFactory::identify($filename));
-
-    $spreadsheetInfo = $objReader->listWorksheetInfo($filename);
-
-    // Загружаем файл XLS
-    $objPHPExcel = $objReader->load($filename);
-
-    $totalRows = $spreadsheetInfo[0]['totalRows'];
-
-    if ($totalRows > 62) {
-        $kolPages = ceil($totalRows / 62);
-    }
-    else $kolPages = 1;
-
-    return $kolPages;
-
-
 }

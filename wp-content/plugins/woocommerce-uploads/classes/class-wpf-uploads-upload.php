@@ -202,6 +202,18 @@ class WPF_Uploads_Upload {
 
                 // Save to database
                 $upload_data = new WPF_Uploads_Data($this->plugin_id);
+                $file = basename($this->full_file_path);
+                $file_ext = explode(".", $file);
+                switch ($file_ext[1]) {
+                        case 'docx': $pages = docxCount($this->full_file_path); break;
+                        case 'xlsx': $pages = xlsCount($this->full_file_path); break;
+                        case 'xls': $pages = xlsCount($this->full_file_path); break;
+                        case 'txt': $pages = txtCount($this->full_file_path); break;
+                        case 'pdf': $pages = pdfCount($this->full_file_path); break;
+                        default: $pages = 1; break;
+                }
+
+                
                 $upload_data->meta_data[$this->product_id][$this->product_item_number][$this->upload_type][$this->file_number] = array(
                     'name' => $this->file_main_name,
                     'extension' => strtolower($this->file_extension),
@@ -210,7 +222,7 @@ class WPF_Uploads_Upload {
                     'status' => 'on-hold',
                     'type' => $upload_type_name,
                     // KSK - добавим новые поля для загрузок
-                    'pages' => 1,
+                    'pages' => $pages,
                     'copies' => 1,
                     // KSK =================================
                 );
@@ -221,7 +233,16 @@ class WPF_Uploads_Upload {
         }
 
         if ($this->mode == 'before') {
-
+             $file = basename($this->full_file_path);
+                $file_ext = explode(".", $file);
+                switch ($file_ext[1]) {
+                        case 'docx': $pages = docxCount($this->full_file_path); break;
+                        case 'xlsx': $pages = xlsCount($this->full_file_path); break;
+                        case 'xls': $pages = xlsCount($this->full_file_path); break;
+                        case 'txt': $pages = txtCount($this->full_file_path); break;
+                        case 'pdf': $pages = pdfCount($this->full_file_path); break;
+                        default: $pages = 1; break;
+                }
             $upload_data[$this->product_id][$this->product_item_number][$this->upload_type][$this->file_number] = array(
                     'name' => $this->file_main_name,
                     'extension' => strtolower($this->file_extension),
@@ -230,7 +251,7 @@ class WPF_Uploads_Upload {
                     'status' => 'on-hold',
                     'type' => $upload_type_name,
                     // KSK - добавим новые поля для загрузок
-                    'pages' => 1,
+                    'pages' => $pages,
                     'copies' => 1,
                     // KSK =================================
             );

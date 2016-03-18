@@ -127,7 +127,12 @@
 	// Items num selector
 	$('.print-options-photo-upload-image-item-num-selector').each(function(){
 		var selector = $(this),
-			selectorField = selector.find('input[type="text"]')
+			selectorField = selector.find('input[type="text"]'),
+                                togglerId = selectorField[0].id
+
+                        if ((togglerId.indexOf('copies_') > -1) || (togglerId.indexOf('pages_') > -1)) {
+                            ksk_cart_quantity_calc(togglerId)
+                        }
 
 		selector.append('<span class="selector-minus selector" data-type="minus"/><span class="selector-plus selector" data-type="plus"/>')
 
@@ -136,8 +141,7 @@
 		selectorToggler.on('click', function(){
 			var toggler = $(this),
 				valueCurrent = Number( selectorField.val() ),
-				toggleType = toggler.data('type'),
-                                togglerId = selectorField[0].id
+				toggleType = toggler.data('type')
                                 
                                 //alert('togglerId='+togglerId);
 

@@ -230,14 +230,14 @@ do_action( 'woocommerce_before_cart' ); ?>
 <div class="print-cart-urgently">
     <label>
         <input type="checkbox" id="natsenka-30" name="natsenka-30" <?php echo isset($_SESSION['natsenka-30']) ? 'checked="checked"' : ''; ?> >
-        Срочное выполнение, наценка 30% - <strong><span id="natsenka-30-amount"><?php echo $output['surcharge'].' руб.'; ?></span></strong>
+        Срочное выполнение, наценка 30% - <strong><span id="natsenka-30-amount"><?php echo (isset($output['surcharge']) ? $output['surcharge'] : '0').' руб.'; ?></span></strong>
     </label>
 </div>
 <!-- Выбор способа доставки -->
 <div class="print-cart-item">
     <h3>Способ получения:</h3>
     <div id="woocommerce_t9z_shipping_settings">
-    <?php echo $output['shipping_method']; ?>
+    <?php echo isset($output['shipping_method']) ? $output['shipping_method'] : ''; ?>
     </div>
 </div>
 <!-- Выбор способа оплаты -->
@@ -249,17 +249,17 @@ do_action( 'woocommerce_before_cart' ); ?>
 <!-- Стоимость заказа -->
 <div class="print-cart-item">
     <h3>Стоимость заказа с учётом доставки<span id="total-amount-label"><?php echo (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) ? ' и наценки за срочность' : ''; ?></span>:</h3>
-    <div class="print-cart-sum"><?php echo $output['total'].' руб.'; ?></div>
-    <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> <span id="bonus_amount" style="font-weight: bold;"><?php echo $output['bonus_amount']; ?></span> бонусов</div>
+    <div class="print-cart-sum"><?php echo (isset($output['total']) ? $output['total'] : '0').' руб.'; ?></div>
+    <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> <span id="bonus_amount" style="font-weight: bold;"><?php echo isset($output['bonus_amount']) ? $output['bonus_amount'] : '0'; ?></span> бонусов</div>
 </div>
 
-<input type="hidden" id="natsenka-amount" name="natsenka-amount" value="<?php echo $output['surcharge']; ?>">
-<input type="hidden" id="natsenka-percent" name="natsenka-percent" value="<?php echo $output['natsenka_percent']; ?>">
-<input type="hidden" id="shipping-amount" name="shipping-amount" value="<?php echo $output['shipping_cost']; ?>">
+<input type="hidden" id="natsenka-amount" name="natsenka-amount" value="<?php echo isset($output['surcharge']) ? $output['surcharge'] : '0'; ?>">
+<input type="hidden" id="natsenka-percent" name="natsenka-percent" value="<?php echo isset($output['natsenka_percent']) ? $output['natsenka_percent'] : '0'; ?>">
+<input type="hidden" id="shipping-amount" name="shipping-amount" value="<?php echo isset($output['shipping_cost']) ? $output['shipping_cost'] : '0'; ?>">
 <input type="hidden" id="subtotal-amount" name="subtotal-amount" value="<?php echo WC()->cart->subtotal; ?>">
-<input type="hidden" id="total-amount" name="total-amount" value="<?php echo $output['total']; ?>">
-<input type="hidden" id="bonus-amount" name="bonus-amount" value="<?php echo $output['bonus_amount']; ?>">
-<input type="hidden" id="bonus-percent" name="bonus-percent" value="<?php echo $output['bonus_percent']; ?>">
+<input type="hidden" id="total-amount" name="total-amount" value="<?php echo isset($output['total']) ? $output['total'] : '0'; ?>">
+<input type="hidden" id="bonus-amount" name="bonus-amount" value="<?php echo isset($output['bonus_amount']) ? $output['bonus_amount'] : '0'; ?>">
+<input type="hidden" id="bonus-percent" name="bonus-percent" value="<?php echo isset($output['bonus_percent']) ? $output['bonus_percent'] : '0'; ?>">
 <input type="hidden" id="shipping-text-1" name="shipping-text-1" value="">
 <input type="hidden" id="shipping-text-2" name="shipping-text-2" value="">
        
