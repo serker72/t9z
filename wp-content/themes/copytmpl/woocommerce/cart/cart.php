@@ -17,6 +17,8 @@
 
 wc_print_notices();
 
+$file_ext_work = array('pdf', 'docx', 'txt');
+
 do_action( 'woocommerce_before_cart' ); ?>
 <div class="print-cart">
 <form id="ksk_wc_cart_form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
@@ -96,7 +98,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                     <thead>
                                                         <tr>
                                                             <th>Имя файла</th>
-                                                            <th width="20%">Кол-во страниц</th>
+                                                            <th width="20%"<?php echo ($cart_data->post->post_title == "Фотографии") ? ' style="display: none;"' : ''; ?> >Кол-во страниц</th>
                                                             <th width="30%">Кол-во копий</th>
                                                         </tr>
                                                     </thead>
@@ -113,13 +115,16 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                             'pages' => $value['pages'],
                                                             'copies' => $value['copies'],
                                                         ], $value);
+                                                        
+                                                        $file_ext = explode(".", $value['name']);
+                                                        $file_ext = $file_ext[1];
 
                                                         $return .= '<tr>';
                                                         $return .= '<td>'.$value['name'].'</td>';
                                                         //$return .= '<td><input type="text" id="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4" readonly="true"></td>';
-                                                        $return .= '<td><div class="print-options-photo-upload-image-item-num">';
-                                                        $return .= '<span class="print-options-photo-upload-image-item-num-selector">';
-                                                        $return .= '<input type="text" step="1" min="1" max="" id="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4">';
+                                                        $return .= '<td'.(($cart_data->post->post_title == "Фотографии") ? ' style="display: none;"' : '').'><div class="print-options-photo-upload-image-item-num">';
+                                                        $return .= '<span'.(!in_array($file_ext, $file_ext_work) ? ' class="print-options-photo-upload-image-item-num-selector"' : '').'>';
+                                                        $return .= '<input type="text" step="1" min="1" max="" id="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4"'.(in_array($file_ext, $file_ext_work) ? ' readonly="readonly"' : '').'>';
                                                         $return .= '</span></div></td>';
                                                         $return .= '<td><div class="print-options-photo-upload-image-item-num">';
                                                         $return .= '<span class="print-options-photo-upload-image-item-num-selector">';
@@ -233,6 +238,18 @@ do_action( 'woocommerce_before_cart' ); ?>
         Срочное выполнение, наценка 30% - <strong><span id="natsenka-30-amount"><?php echo (isset($output['surcharge']) ? $output['surcharge'] : '0').' руб.'; ?></span></strong>
     </label>
 </div>
+<?php if (is_user_logged_in()) { ?>
+<div class="print-cart-urgently">
+    <label>
+        <input type="checkbox" id="user-bonus" name="user-bonus" <?php echo isset($_SESSION['user-bonus']) ? 'checked="checked"' : ''; ?> >
+        Использовать бонусы для частичной оплаты заказа - <strong><span id="user-bonus-amount-label">
+            <?php 
+            $user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true); 
+            echo (!empty($user_bonus_amount) ? $user_bonus_amount : '0').' руб.'; 
+            ?></span></strong>
+    </label>
+</div>
+<?php } ?>
 <!-- Выбор способа доставки -->
 <div class="print-cart-item">
     <h3>Способ получения:</h3>
@@ -243,8 +260,8 @@ do_action( 'woocommerce_before_cart' ); ?>
 <!-- Выбор способа оплаты -->
 <div class="print-cart-item">
     <h3>Способ оплаты:</h3>
-    <div class="print-cart-item-field"><label><input type="radio" name="pay-method-1"> Наличные при получении</label></div>
-    <div class="print-cart-item-field"><label><input type="radio" name="pay-method-2" checked="checked"> Банковской картой, электронные кошельки Яндекс.Деньги, Webmoney и пр.</label></div>
+    <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="1"> Наличные при получении</label></div>
+    <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="2" checked="checked"> Банковской картой, электронные кошельки Яндекс.Деньги, Webmoney и пр.</label></div>
 </div>
 <!-- Стоимость заказа -->
 <div class="print-cart-item">
@@ -262,7 +279,10 @@ do_action( 'woocommerce_before_cart' ); ?>
 <input type="hidden" id="bonus-percent" name="bonus-percent" value="<?php echo isset($output['bonus_percent']) ? $output['bonus_percent'] : '0'; ?>">
 <input type="hidden" id="shipping-text-1" name="shipping-text-1" value="">
 <input type="hidden" id="shipping-text-2" name="shipping-text-2" value="">
-       
+<?php if (is_user_logged_in()) { ?>
+<input type="hidden" id="user-bonus-amount" name="user-bonus-amount" value="<?php echo !empty($user_bonus_amount) ? $user_bonus_amount : '0'; ?>">
+<?php } ?>
+
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
 
 <div class="form-item form-item-submit">

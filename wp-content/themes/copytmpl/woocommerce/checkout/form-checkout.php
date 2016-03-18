@@ -21,8 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 wc_print_notices();
 
+$file_ext_work = array('pdf', 'docx', 'txt');
+
 //do_action('woocommerce_cart_calculate_fees');
 //do_action('woocommerce_cart_total');
+//WC()->cart->calculate_totals();
 
 //do_action( 'woocommerce_before_checkout_form', $checkout );
 
@@ -52,7 +55,6 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
 
 <h1>Оформление заказа</h1>
 <div class="print-checkout">
-        <form action="/">
                 <div class="print-checkout-item">
                         <h3 class="print-checkout-item-title">Проверьте выбранные товары и опции по доставке и оплате</h3>
                         <table>
@@ -96,7 +98,7 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                                                     <thead>
                                                         <tr>
                                                             <th>Имя файла</th>
-                                                            <th width="20%">Кол-во страниц</th>
+                                                            <th width="20%"<?php echo ($cart_data->post->post_title == "Фотографии") ? ' style="display: none;"' : ''; ?> >Кол-во страниц</th>
                                                             <th width="30%">Кол-во копий</th>
                                                         </tr>
                                                     </thead>
@@ -114,16 +116,19 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                                                             'copies' => $value['copies'],
                                                         ], $value);
 
+                                                        $file_ext = explode(".", $value['name']);
+                                                        $file_ext = $file_ext[1];
+
                                                         $return .= '<tr>';
                                                         $return .= '<td>'.$value['name'].'</td>';
                                                         //$return .= '<td><input type="text" id="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4" readonly="true"></td>';
-                                                        $return .= '<td><div class="print-options-photo-upload-image-item-num">';
+                                                        $return .= '<td'.(($cart_data->post->post_title == "Фотографии") ? ' style="display: none;"' : '').'><div class="print-options-photo-upload-image-item-num">';
                                                         $return .= '<span class="">';
-                                                        $return .= '<input type="text" step="1" min="1" max="" id="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4" readonly="readonly">';
+                                                        $return .= '<input type="text" id="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['pages']).'" title="" class="" size="4" readonly="readonly">';
                                                         $return .= '</span></div></td>';
                                                         $return .= '<td><div class="print-options-photo-upload-image-item-num">';
                                                         $return .= '<span class="">';
-                                                        $return .= '<input type="text" step="1" min="1" max="" id="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['copies']).'" title="" class="" size="4" readonly="readonly">';
+                                                        $return .= '<input type="text" id="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['copies']).'" title="" class="" size="4" readonly="readonly">';
                                                         $return .= '</span></div></td>';
                                                         $return .= '</tr>';
                                                     }
@@ -198,7 +203,7 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                 </div>
                 <div class="print-checkout-item">
                         <h3 class="print-checkout-item-title">Способ оплаты:</h3>
-                        <p><b><?php echo isset($_POST['pay-method-1']) ? 'Банковской картой, электронные кошельки Яндекс-Деньги, Webmoney и пр.' : (isset($_POST['pay-method-2']) ? 'Наличные при получении' : ''); ?></b></p>
+                        <p><b><?php echo (isset($_POST['pay-method']) && ($_POST['pay-method'] == 2)) ? 'Банковской картой, электронные кошельки Яндекс-Деньги, Webmoney и пр.' : ((isset($_POST['pay-method']) && ($_POST['pay-method'] == 1)) ? 'Наличные при получении' : ''); ?></b></p>
                 </div>
                 <div class="print-checkout-item">
                         <h3 class="print-checkout-item-title">Стоимость заказа с учётом доставки<?php echo (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) ? ' и наценки за срочность' : ''; ?>:</h3>
@@ -209,6 +214,10 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                         <div class="form-item">
                                 <label class="form-label">Ваше имя</label>
                                 <input type="text" class="input-text" name="billing_first_name" id="billing_first_name" placeholder=""  value="<?php echo $checkout->get_value('billing_first_name'); ?>">
+                        </div>
+                        <div class="form-item">
+                                <label class="form-label">Ваша фамилия</label>
+                                <input type="text" class="input-text" name="billing_last_name" id="billing_last_name" placeholder=""  value="<?php echo $checkout->get_value('billing_last_name'); ?>">
                         </div>
                         <div class="form-item">
                                 <label class="form-label">Телефон для связи</label>
@@ -222,23 +231,22 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                                 <input type="submit" value="Подтвердить заказ">
                         </div>
                 </div>
-        </form>
 </div>
                 
 		<?php //do_action( 'woocommerce_checkout_after_customer_details' ); ?>
 
 	<?php endif; ?>
 
-	<h3 id="order_review_heading"><?php _e( 'Your order', 'woocommerce' ); ?></h3>
+	<h3 id="order_review_heading"><?php //_e( 'Your order', 'woocommerce' ); ?></h3>
 
-	<?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
+	<?php //do_action( 'woocommerce_checkout_before_order_review' ); ?>
 
 	<div id="order_review" class="woocommerce-checkout-review-order">
 		<?php do_action( 'woocommerce_checkout_order_review' ); ?>
 	</div>
 
-	<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
+	<?php //do_action( 'woocommerce_checkout_after_order_review' ); ?>
 
 </form>
 
-<?php do_action( 'woocommerce_after_checkout_form', $checkout ); ?>
+<?php //do_action( 'woocommerce_after_checkout_form', $checkout ); ?>

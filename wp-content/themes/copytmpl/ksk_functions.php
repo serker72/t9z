@@ -133,6 +133,12 @@ function ksk_update_uploads_copies() {
         } else {
             unset($_SESSION['natsenka-30']);
         }
+        
+        if (isset($_POST['user-bonus']) || isset($_GET['user-bonus'])) {
+            $_SESSION['user-bonus'] = 'on';
+        } else {
+            unset($_SESSION['user-bonus']);
+        }
     }
 }
 
@@ -146,7 +152,7 @@ function ksk_woocommerce_custom_surcharge() {
     if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30'])) {
         $_SESSION['natsenka-30'] = 'on';
     } else {
-        unset($_SESSION['natsenka-30']);
+        //unset($_SESSION['natsenka-30']);
     }
     
     if (isset($_SESSION['natsenka-30']) && ($_SESSION['natsenka-30']== 'on')) {
@@ -159,6 +165,18 @@ function ksk_woocommerce_custom_surcharge() {
 	//$surcharge = ( $woocommerce->cart->cart_contents_total + $woocommerce->cart->shipping_total ) * $percentage;	
 	$surcharge = $woocommerce->cart->cart_contents_total * $percentage;	
 	$woocommerce->cart->add_fee( 'Срочное выполнение', $surcharge, true, '' );
+    }
+    
+    if (isset($_POST['user-bonus']) || isset($_GET['user-bonus'])) {
+        $_SESSION['user-bonus'] = 'on';
+    } else {
+        //unset($_SESSION['user-bonus']);
+    }
+    
+    if (is_user_logged_in() && isset($_SESSION['user-bonus']) && ($_SESSION['user-bonus']== 'on')) {
+        $user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true);
+        $user_bonus_amount = !empty($user_bonus_amount) ? $user_bonus_amount : 0;
+	$woocommerce->cart->add_fee( 'Использование бонусов', ($user_bonus_amount * (-1)), true, '' );
     }
     
     if (isset($_POST['shipping_cost']) || isset($_POST['shipping-amount']) || isset($_SESSION['shipping-amount'])) {
@@ -303,6 +321,7 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     $shipping_cost = 0;
     $bonus_amount = 0;
     $surcharge = 0;
+    $user_bonus_amount = 0; 
     
     //$user_geo_data = get_the_user_geo_data();
     $city = isset($city) ? $city : (isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : '');
@@ -328,6 +347,12 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             $bonus_amount = round(($total * (int)$shipping_settings['bonus_rate']) / 100, 2);
             if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) {
                 $surcharge = $woocommerce->cart->cart_contents_total * (int)$shipping_settings['natsenka_rate'] / 100;
+            }
+            
+            if (isset($_POST['user-bonus']) || isset($_GET['user-bonus']) || isset($_SESSION['user-bonus'])) {
+                $user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true);
+                $user_bonus_amount = !empty($user_bonus_amount) ? $user_bonus_amount : 0;
+                $total = $total - $user_bonus_amount;
             }
                     
             if ($total >= (int)$shipping_settings['free_shipping_amount']) {
@@ -394,6 +419,34 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         //'after_cart_html' => $after_cart_html,
     );
 }
+
+// Remove some checkout billing fields
+function ksk_wc_filter_billing_fields($fields){
+    unset( $fields["billing_country"] );
+    unset( $fields["billing_company"] );
+    unset( $fields["billing_address_1"] );
+    unset( $fields["billing_address_2"] );
+    unset( $fields["billing_city"] );
+    unset( $fields["billing_state"] );
+    unset( $fields["billing_postcode"] );
+    unset( $fields["billing_phone"] );
+    return $fields;
+}
+add_filter( 'woocommerce_billing_fields', 'ksk_wc_filter_billing_fields' );
+
+// Обновление бонусов
+function ksk_wc_order_status_completed( $order_id ) {
+    $order = new WC_Order($order_id);
+    $user_id = (int)$order->user_id;
+    $order_total = $order->get_total();
+    $user_bonus_amount = get_user_meta($user_id, 'bonus_amount', true);
+    $user_bonus_amount = !empty($bonus_amount) ? $bonus_amount : 0;
+    $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+    $order_bonus_amount = round(($order_total * (int)$shipping_settings['bonus_rate']) / 100, 2);
+    $user_bonus_amount = $user_bonus_amount + $order_bonus_amount;
+    update_user_meta($user_id, 'bonus_amount', $user_bonus_amount);
+}
+add_action( 'woocommerce_order_status_completed', 'ksk_wc_order_status_completed' );
 
 function pdfCount ($filename) {
 //Получаем количество страниц из заголовка с помощью регулярного выражения

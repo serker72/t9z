@@ -4,6 +4,7 @@
             checkout_href = $("a.checkout-button").attr("href");
             //$('#natsenka-30').on('click', function(){ kskNatsenkaClick(); });
             $('#natsenka-30').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
+            $('#user-bonus').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
             
             // Скрытие/отображение пунктов доставки
             //$('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
@@ -329,6 +330,14 @@ function ksk_wc_cart_add_amount_calc() {
         jQuery('#total-amount-label').html('');
     }
     
+    if (jQuery('#user-bonus').is(':checked')) {
+        d6 = jQuery("#user-bonus-amount").attr("value");;
+        //jQuery('#user-bonus-amount-label').html(d6);
+    } else {
+        d6 = 0;
+        //jQuery('#user-bonus-amount-label').html('0');
+    }
+    
     if (jQuery('#t9z_shipping_1_office').is(':checked')) {
         jQuery('div.print-cart-item-subfields').show();
     } else {
@@ -341,7 +350,7 @@ function ksk_wc_cart_add_amount_calc() {
         d3 = 0;
     }
     
-    d4 = d1*1 + d2*1 + d3*1;
+    d4 = d1*1 + d2*1 + d3*1 - d6*1;
     d5 = (d1 * p5)/100;
 
     //alert('d1='+d1+', d2='+d2+', d3='+d3+', d4='+d4+', d5='+d5);
@@ -378,5 +387,6 @@ function ksk_wc_proceed_to_checkout(e) {
      
     
     jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
+    //jQuery('#ksk_wc_cart_form').append('<input type="hidden" name="proceed" value="1" />');
     jQuery("#ksk_wc_cart_form").submit();
 }

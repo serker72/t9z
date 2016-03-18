@@ -3,6 +3,11 @@
  * Edit account form
  */
 
+$bonus_amount = get_user_meta($user->id, 'bonus_amount', true);
+if (empty($bonus_amount)) {
+    $bonus_amount = 0;
+    update_user_meta($user->id, 'bonus_amount', 0);
+}
 ?>
 
 <?php wc_print_notices(); ?>
@@ -63,7 +68,7 @@
 	<div class="lk-info-col">
 		<div class="lk-info-bonus">
 			<div class="lk-info-bonus-label"><?php _e( 'Bonus', 'copytmpl' ); ?>:</div>
-			<div class="lk-info-bonus-value">0</div>
+			<div class="lk-info-bonus-value"><?php echo $bonus_amount; ?></div>
 			<div class="lk-info-bonus-info"><?php _e( 'You can use them in the following order, offsetting the amount of the order by the number of bonuses.', 'copytmpl' ); ?></div>
 		</div>
 	</div>
