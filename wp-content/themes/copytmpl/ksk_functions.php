@@ -128,7 +128,7 @@ function ksk_update_uploads_copies() {
         }
         
         // Добавим надбавку
-        if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30'])) {
+        /*if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30'])) {
             $_SESSION['natsenka-30'] = 'on';
         } else {
             unset($_SESSION['natsenka-30']);
@@ -138,24 +138,29 @@ function ksk_update_uploads_copies() {
             $_SESSION['user-bonus'] = 'on';
         } else {
             unset($_SESSION['user-bonus']);
-        }
+        }*/
     }
 }
 
 add_action( 'woocommerce_cart_calculate_fees', 'ksk_woocommerce_custom_surcharge' );
 function ksk_woocommerce_custom_surcharge() {
     global $woocommerce;
- 
+    
     if ( is_admin() && ! defined( 'DOING_AJAX' ) )
         return;
 
-    if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30'])) {
+    $surcharge = 0;
+    $shipping_cost = 0;
+    $subtotal = $woocommerce->cart->subtotal;
+ 
+    /*if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30'])) {
         $_SESSION['natsenka-30'] = 'on';
     } else {
         //unset($_SESSION['natsenka-30']);
-    }
+    }*/
     
-    if (isset($_SESSION['natsenka-30']) && ($_SESSION['natsenka-30']== 'on')) {
+    //if (isset($_SESSION['natsenka-30']) && ($_SESSION['natsenka-30']== 'on')) {
+    if (ksk_check_var_in_session_post_get('natsenka-30', 'on')) {
         $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
         if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
             $percentage = (int)$shipping_settings['natsenka_rate'] / 100;
@@ -164,30 +169,36 @@ function ksk_woocommerce_custom_surcharge() {
         }
 	//$surcharge = ( $woocommerce->cart->cart_contents_total + $woocommerce->cart->shipping_total ) * $percentage;	
 	$surcharge = $woocommerce->cart->cart_contents_total * $percentage;	
-	$woocommerce->cart->add_fee( 'Срочное выполнение', $surcharge, true, '' );
+	$woocommerce->cart->add_fee( 'Наценка за срочное выполнение', $surcharge, true, '' );
     }
     
-    if (isset($_POST['user-bonus']) || isset($_GET['user-bonus'])) {
-        $_SESSION['user-bonus'] = 'on';
-    } else {
-        //unset($_SESSION['user-bonus']);
-    }
-    
-    if (is_user_logged_in() && isset($_SESSION['user-bonus']) && ($_SESSION['user-bonus']== 'on')) {
-        $user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true);
-        $user_bonus_amount = !empty($user_bonus_amount) ? $user_bonus_amount : 0;
-	$woocommerce->cart->add_fee( 'Использование бонусов', ($user_bonus_amount * (-1)), true, '' );
-    }
-    
-    if (isset($_POST['shipping_cost']) || isset($_POST['shipping-amount']) || isset($_SESSION['shipping-amount'])) {
-        $_SESSION['shipping-amount'] = isset($_POST['shipping-amount']) ? $_POST['shipping-amount'] : (isset($_POST['shipping_cost']) ? $_POST['shipping_cost'] : $_SESSION['shipping-amount']);
-        $shipping_cost = isset($_SESSION['shipping-amount']) ? $_SESSION['shipping-amount'] : $_POST['shipping_cost'];
+    if (ksk_check_var_in_session_post_get('shipping-amount')) {
+        //$_SESSION['shipping-amount'] = isset($_POST['shipping-amount']) ? $_POST['shipping-amount'] : (isset($_POST['shipping_cost']) ? $_POST['shipping_cost'] : $_SESSION['shipping-amount']);
+        $shipping_cost = ksk_get_var_from_session_post_get('shipping-amount', 0);
     } else {
         $shipping_cost = ksk_shipping_cost_calc();
     }
     
     if ($shipping_cost > 0) {
         $woocommerce->cart->add_fee( 'Стоимость доставки', $shipping_cost, true, '' );
+    }
+    /*if (isset($_POST['user-bonus']) || isset($_GET['user-bonus'])) {
+        $_SESSION['user-bonus'] = 'on';
+    } else {
+        //unset($_SESSION['user-bonus']);
+    }*/
+    
+    //if (is_user_logged_in() && isset($_SESSION['user-bonus']) && ($_SESSION['user-bonus']== 'on')) {
+    if (is_user_logged_in() && ksk_check_var_in_session_post_get('user-bonus', 'on')) {
+        $user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true);
+        $user_bonus_amount = !empty($user_bonus_amount) ? $user_bonus_amount : 0;
+        $total = $subtotal + $surcharge + $shipping_cost;
+        if ($total > $user_bonus_amount) {
+            $order_bonus_amount = $user_bonus_amount;
+        } else {
+            $order_bonus_amount = $user_bonus_amount - $total;
+        }
+	$woocommerce->cart->add_fee( 'Сумма бонусов, использованных для оплаты', ($order_bonus_amount * (-1)), true, '' );
     }
 }
 
@@ -227,7 +238,7 @@ function ksk_shipping_cost_calc() {
     $shipping_cost = 0;
     $total = $woocommerce->cart->subtotal;
     $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
-    $city = isset($_SESSION['shipping_city']) ? $_SESSION['shipping_city'] : (isset($_POST['shipping_city']) ? $_POST['shipping_city'] : '');
+    $city = ksk_get_var_from_session_post_get('shipping_city', '');
     
     if ($shipping_settings && ($total < (int)$shipping_settings['free_shipping_amount']) && ($city != '') && (count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
         foreach ($shipping_settings['shipping_sets'] as $key => $value) {
@@ -260,8 +271,6 @@ function ksk_shipping_city_session_set() {
 add_action("wp_ajax_ksk_shipping_city_session_set", "ksk_shipping_city_session_set");
 add_action("wp_ajax_nopriv_ksk_shipping_city_session_set", "ksk_shipping_city_session_set");
 
-include_once ABSPATH . '/wp-content/themes/copytmpl/geo.php';
-
 /**
  * функция возвращет конкретное значение из полученного массива данных по ip
  * @param string - ключ массива. Если интересует конкретное значение. 
@@ -272,6 +281,8 @@ include_once ABSPATH . '/wp-content/themes/copytmpl/geo.php';
  * @return array OR string - дополнительно читайте комментарии внутри функции.
  */
 function get_the_user_geo_data($key = null, $cookie = true) {
+    include_once ABSPATH . '/wp-content/themes/copytmpl/geo.php';
+    
     $geo = new Geo(['ip' => '77.66.129.10']); // запускаем класс
     $data_geo = $geo->get_value($key, $cookie);
     
@@ -345,11 +356,11 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             //$total = WC()->cart->get_cart_total();
             $total = $woocommerce->cart->subtotal;
             $bonus_amount = round(($total * (int)$shipping_settings['bonus_rate']) / 100, 2);
-            if (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) {
+            if (ksk_check_var_in_session_post_get('natsenka-30', 'on')) {
                 $surcharge = $woocommerce->cart->cart_contents_total * (int)$shipping_settings['natsenka_rate'] / 100;
             }
             
-            if (isset($_POST['user-bonus']) || isset($_GET['user-bonus']) || isset($_SESSION['user-bonus'])) {
+            if (ksk_check_var_in_session_post_get('user-bonus', 'on')) {
                 $user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true);
                 $user_bonus_amount = !empty($user_bonus_amount) ? $user_bonus_amount : 0;
                 $total = $total - $user_bonus_amount;
@@ -410,7 +421,7 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
         
     return array(
         'shipping_method' => $output,
-        'shipping_cost' => $shipping_cost,
+        'shipping_amount' => $shipping_cost,
         'bonus_amount' => $bonus_amount,
         'bonus_percent' => (int)$shipping_settings['bonus_rate'],
         'surcharge' => $surcharge,
@@ -434,20 +445,268 @@ function ksk_wc_filter_billing_fields($fields){
 }
 add_filter( 'woocommerce_billing_fields', 'ksk_wc_filter_billing_fields' );
 
-// Обновление бонусов
+/*
+ * Заказ выполнен - статус complete
+ * Обновление суммы бонусов в аккаунте пользователя
+ * @param int $order_id
+ */
 function ksk_wc_order_status_completed( $order_id ) {
     $order = new WC_Order($order_id);
     $user_id = (int)$order->user_id;
     $order_total = $order->get_total();
+    
     $user_bonus_amount = get_user_meta($user_id, 'bonus_amount', true);
     $user_bonus_amount = !empty($bonus_amount) ? $bonus_amount : 0;
-    $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
-    $order_bonus_amount = round(($order_total * (int)$shipping_settings['bonus_rate']) / 100, 2);
+    
+    //$shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+    //$order_bonus_amount = round(($order_total * (int)$shipping_settings['bonus_rate']) / 100, 2);
+    $order_bonus_amount = get_post_meta($order_id, 'ksk_wc_order_bonus-amount', true);
+    $order_bonus_amount = !empty($order_bonus_amount) ? $order_bonus_amount : 0;
+    
     $user_bonus_amount = $user_bonus_amount + $order_bonus_amount;
+    
+    // Обновление суммы бонусов в аккаунте пользователя
     update_user_meta($user_id, 'bonus_amount', $user_bonus_amount);
 }
 add_action( 'woocommerce_order_status_completed', 'ksk_wc_order_status_completed' );
 
+
+/*
+ * Заказ на удержании - статус on-hold
+ * Добавим meta-поля заказа, спишем сумму использованных бонусов в аккаунте пользователя
+ * @param int $order_id
+ */
+function ksk_wc_order_status_hold( $order_id ) {
+    $order = new WC_Order($order_id);
+    $user_id = (int)$order->user_id;
+    $order_total = $order->get_total();
+    
+    $order_last_number = (int)get_option('ksk_wc_order_last_number', 0);
+    $order_number = $order_last_number + 1;
+    update_option('ksk_wc_order_last_number', $order_number);
+    
+    $shipping_city = ksk_get_var_from_session_post_get('shipping_city');
+    $shipping_method = ksk_get_var_from_session_post_get('t9z_shipping_1');
+    $shipping_punkt = (int)ksk_get_var_from_session_post_get('t9z_shipping_2') + 1;
+    $order_number_txt = mb_substr($shipping_city, 0, 1, 'UTF-8');
+    $order_number_txt .= ($shipping_method === 'office' ? $shipping_punkt : '');
+    $order_number_txt .= '-'.$order_number;
+    
+    // Запишем meta-поля заказа
+    update_post_meta($order_id, 'ksk_wc_order_number', $order_number_txt);
+    update_post_meta($order_id, 'ksk_wc_order_natsenka-30', ksk_get_var_from_session_post_get('natsenka-30'));
+    update_post_meta($order_id, 'ksk_wc_order_natsenka-amount', ksk_get_var_from_session_post_get('natsenka-amount'));
+    update_post_meta($order_id, 'ksk_wc_order_natsenka-percent', ksk_get_var_from_session_post_get('natsenka-percent'));
+    update_post_meta($order_id, 'ksk_wc_order_user-bonus', ksk_get_var_from_session_post_get('user-bonus'));
+    update_post_meta($order_id, 'ksk_wc_order_bonus-amount', ksk_get_var_from_session_post_get('bonus-amount'));
+    update_post_meta($order_id, 'ksk_wc_order_bonus-percent', ksk_get_var_from_session_post_get('bonus-percent'));
+    update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_1', ksk_get_var_from_session_post_get('t9z_shipping_1'));
+    update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_2', ksk_get_var_from_session_post_get('t9z_shipping_2'));
+    update_post_meta($order_id, 'ksk_wc_order_shipping_city', $shipping_city);
+    update_post_meta($order_id, 'ksk_wc_order_shipping-amount', ksk_get_var_from_session_post_get('shipping-amount'));
+    update_post_meta($order_id, 'ksk_wc_order_shipping-office', ksk_get_var_from_session_post_get('shipping-office'));
+    update_post_meta($order_id, 'ksk_wc_order_pay-method', ksk_get_var_from_session_post_get('pay-method'));
+    
+    // Если выбран пункт списания бонусов в оплату заказа
+    if (ksk_check_var_in_session_post_get('user-bonus', 'on')) {
+        $user_bonus_amount = get_user_meta($user_id, 'bonus_amount', true);
+        $user_bonus_amount = !empty($bonus_amount) ? $bonus_amount : 0;
+        
+        $order_total_real = (int)ksk_get_var_from_session_post_get('subtotal-amount') + (int)ksk_get_var_from_session_post_get('natsenka-amount') + (int)ksk_get_var_from_session_post_get('shipping-amount');
+        
+        if ($order_total_real >= $user_bonus_amount) {
+            $order_bonus_amount = $user_bonus_amount;
+            $user_bonus_amount = 0;
+        } else {
+            $order_bonus_amount = $order_total_real;
+            $user_bonus_amount = $user_bonus_amount - $order_total_real;
+        }
+        
+        update_post_meta($order_id, 'ksk_wc_order_bonus-amount-use', $order_bonus_amount);
+        
+        // Обновление суммы бонусов в аккаунте пользователя
+        update_user_meta($user_id, 'bonus_amount', $user_bonus_amount);
+    }
+    
+    // Очистим поля в $_SESSION
+    ksk_clear_t9z_cart_new_field_from_session();
+}
+add_action( 'woocommerce_order_status_on-hold', 'ksk_wc_order_status_hold' );
+
+/*
+ * Заказ отменен - статус cancelled
+ * Обновление суммы бонусов в аккаунте пользователя
+ * @param int $order_id
+ */
+function ksk_wc_order_status_cancelled( $order_id ) {
+    $order = new WC_Order($order_id);
+    $user_id = (int)$order->user_id;
+    $order_total = $order->get_total();
+    
+    $user_bonus_amount = get_user_meta($user_id, 'bonus_amount', true);
+    $user_bonus_amount = !empty($bonus_amount) ? $bonus_amount : 0;
+    
+    //$shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+    //$order_bonus_amount = round(($order_total * (int)$shipping_settings['bonus_rate']) / 100, 2);
+    $order_bonus_amount = get_post_meta($order_id, 'ksk_wc_order_bonus-amount', true);
+    $order_bonus_amount = !empty($order_bonus_amount) ? $order_bonus_amount : 0;
+    
+    $order_bonus_amount_use = get_post_meta($order_id, 'ksk_wc_order_bonus-amount-use', true);
+    $order_bonus_amount_use = !empty($order_bonus_amount_use) ? $order_bonus_amount_use : 0;
+    
+    $user_bonus_amount = $user_bonus_amount + $order_bonus_amount_use - $order_bonus_amount;
+    
+    // Обновление суммы бонусов в аккаунте пользователя
+    update_user_meta($user_id, 'bonus_amount', $user_bonus_amount);
+}
+add_action( 'woocommerce_order_status_completed', 'ksk_wc_order_status_completed' );
+
+/*
+ * Формирование номера заказа
+ * @param int $oldnumber
+ * @param object $order
+ */
+function ksk_wc_order_number( $oldnumber, $order ) {
+    $order_id = (int)$order->id;
+    $order_number = get_post_meta($order_id, 'ksk_wc_order_number', true);
+    return empty($order_number) ? $oldnumber : $order_number;
+}
+add_filter( 'woocommerce_order_number', 'ksk_wc_order_number', 1, 2 );
+
+/* 
+ * Поиск переменной в массивах $_SESSION, $_POST, $_GET
+ * @param string $name
+ * @param $value_default
+ * return $_SESSION[$name] OR $_POST[$name] OR $_GET[$name] OR $value_default
+ */
+function ksk_get_var_from_session_post_get($name, $value_default) {
+    if (!isset($name) || ($name == '')) {
+        $value = $value_default;
+    } elseif (isset($_SESSION[$name])) {
+        $value = $_SESSION[$name];
+    } elseif (isset($_POST[$name])) {
+        $value = $_POST[$name];
+    } elseif (isset($_GET[$name])) {
+        $value = $_GET[$name];
+    } else {
+        $value = $value_default;
+    }
+    
+    return $value;
+}
+
+/* 
+ * Поиск переменной в массивах $_SESSION, $_POST, $_GET и проверка ее значения с заданным
+ * @param string $name
+ * @param $value_check
+ * return bool
+ */
+function ksk_check_var_in_session_post_get($name, $value_check=null) {
+    if (!isset($name) || !is_string($name) ||($name == '')) {
+        return false;
+    } 
+    
+    if (!isset($value_check)) {
+        $value = (isset($_SESSION[$name]) || isset($_POST[$name]) || isset($_GET[$name]));
+    } else {
+        $value = ((isset($_SESSION[$name]) && ($_SESSION[$name] === $value_check)) || (isset($_POST[$name]) && ($_POST[$name] === $value_check)) || (isset($_GET[$name]) && ($_GET[$name] === $value_check)));
+    }
+    
+    return $value;
+}
+
+
+/* 
+ * Сохранение значения переменной в $_SESSION, если оно установлено в $_POST
+ * @param string $name
+ */
+function ksk_set_var_from_post_to_session($name) {
+    if (isset($name) && is_string($name) && ($name != '') && isset($_POST[$name]) && (!isset($_SESSION[$name]) || ($_SESSION[$name] != $_POST[$name]))) {
+        $_SESSION[$name] = $_POST[$name];
+    }
+}
+
+/* 
+ * Сохранение значения переменных в $_SESSION, если они установлены в $_POST
+ * @param string OR array $names
+ */
+function ksk_set_vars_from_post_to_session($names) {
+    if (!isset($names) || !is_array($names) || !is_string($names)) {
+        return;
+    }
+    
+    if (is_string($names) && ($names != '')) {
+        ksk_set_var_from_post_to_session($names);
+    } elseif (is_array($names) && (count($names) > 0)) {
+        foreach ($names as $key) {
+            ksk_set_var_from_post_to_session($key);
+        }
+    }
+}
+
+/*
+ * Сохранение значения новых полей формы в корзине из $_POST в $_SESSION
+ */
+function ksk_save_t9z_cart_new_field_to_session() {
+    $names = array(
+        'natsenka-30' => 'off',
+        'natsenka-amount' => 0,
+        'natsenka-percent' => 0,
+        'user-bonus' => 'off',
+        'bonus-amount' => 0,
+        'bonus-percent' => 0,
+        't9z_shipping_1' => 'city',
+        't9z_shipping_2' => 0,
+        'shipping-amount' => 0,
+        'shipping-office' => isset($_POST['shipping-text-2']) ? $_POST['shipping-text-2'] : '',
+        'pay-method' => 2,
+        'subtotal-amount' => 0,
+        'total-amount' => 0,
+    );
+    
+    foreach ($names as $key => $value) {
+        if (isset($_POST[$key])) {
+            ksk_set_var_from_post_to_session($key);
+        } else {
+            $_SESSION[$key] = $value;
+        }
+    }
+}
+add_action("wp_ajax_ksk_save_t9z_cart_new_field_to_session", "ksk_save_t9z_cart_new_field_to_session");
+add_action("wp_ajax_nopriv_ksk_save_t9z_cart_new_field_to_session", "ksk_save_t9z_cart_new_field_to_session");
+
+/*
+ * Удаление значений новых полей формы в корзине из $_SESSION
+ */
+function ksk_clear_t9z_cart_new_field_from_session() {
+    $names = array(
+        'natsenka-30' => 'off',
+        'natsenka-amount' => 0,
+        'natsenka-percent' => 0,
+        'user-bonus' => 'off',
+        'bonus-amount' => 0,
+        'bonus-percent' => 0,
+        't9z_shipping_1' => 'city',
+        't9z_shipping_2' => 0,
+        'shipping-amount' => 0,
+        'shipping-office' => '',
+        'pay-method' => 2,
+        'subtotal-amount' => 0,
+        'total-amount' => 0,
+    );
+    
+    foreach ($names as $key => $value) {
+        if (isset($_SESSION[$key])) {
+            unset($_SESSION[$key]);
+        }
+    }
+}
+
+
+
+/****************************************************************************************
+ * Desi4ik
+ ****************************************************************************************/
 function pdfCount ($filename) {
 //Получаем количество страниц из заголовка с помощью регулярного выражения
     $fp = fopen($filename, 'r');

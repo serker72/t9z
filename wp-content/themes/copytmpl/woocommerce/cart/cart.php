@@ -234,21 +234,20 @@ do_action( 'woocommerce_before_cart' ); ?>
 <div class="woocommerce-error" id="ksk_woocommerce_t9z_shipping_error" style="display: none;"></div>
 <div class="print-cart-urgently">
     <label>
-        <input type="checkbox" id="natsenka-30" name="natsenka-30" <?php echo isset($_SESSION['natsenka-30']) ? 'checked="checked"' : ''; ?> >
-        Срочное выполнение, наценка 30% - <strong><span id="natsenka-30-amount"><?php echo (isset($output['surcharge']) ? $output['surcharge'] : '0').' руб.'; ?></span></strong>
+        <input type="checkbox" id="natsenka-30" name="natsenka-30" <?php echo ksk_check_var_in_session_post_get('natsenka-30', 'on') ? 'checked="checked"' : ''; ?> >
+        Срочное выполнение, наценка <span id="natsenka_percent_label"><?php echo (isset($output['natsenka_percent']) ? $output['natsenka_percent'] : '0'); ?></span>% - <strong><span id="natsenka-30-amount"><?php echo (isset($output['surcharge']) ? $output['surcharge'] : '0').' руб.'; ?></span></strong>
     </label>
 </div>
-<?php if (is_user_logged_in()) { ?>
-<div class="print-cart-urgently">
-    <label>
-        <input type="checkbox" id="user-bonus" name="user-bonus" <?php echo isset($_SESSION['user-bonus']) ? 'checked="checked"' : ''; ?> >
-        Использовать бонусы для частичной оплаты заказа - <strong><span id="user-bonus-amount-label">
-            <?php 
-            $user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true); 
-            echo (!empty($user_bonus_amount) ? $user_bonus_amount : '0').' руб.'; 
-            ?></span></strong>
-    </label>
-</div>
+<?php 
+$user_bonus_amount = get_user_meta(get_current_user_id(), 'bonus_amount', true); 
+$user_bonus_amount = !empty($user_bonus_amount) ? $user_bonus_amount : 0; 
+if (is_user_logged_in() && ($user_bonus_amount > 0)) { ?>
+    <div class="print-cart-urgently">
+        <label>
+            <input type="checkbox" id="user-bonus" name="user-bonus" <?php echo ksk_check_var_in_session_post_get('user-bonus', 'on') ? 'checked="checked"' : ''; ?> >
+            Использовать бонусы для частичной оплаты заказа - <strong><span id="user-bonus-amount-label"><?php echo $user_bonus_amount.' руб.'; ?></span></strong>
+        </label>
+    </div>
 <?php } ?>
 <!-- Выбор способа доставки -->
 <div class="print-cart-item">
@@ -265,14 +264,14 @@ do_action( 'woocommerce_before_cart' ); ?>
 </div>
 <!-- Стоимость заказа -->
 <div class="print-cart-item">
-    <h3>Стоимость заказа с учётом доставки<span id="total-amount-label"><?php echo (isset($_POST['natsenka-30']) || isset($_GET['natsenka-30']) || isset($_SESSION['natsenka-30'])) ? ' и наценки за срочность' : ''; ?></span>:</h3>
+    <h3>Стоимость заказа с учётом доставки<span id="total-amount-label"><?php echo ksk_check_var_in_session_post_get('natsenka-30', 'on') ? ' и наценки за срочность' : ''; ?></span>:</h3>
     <div class="print-cart-sum"><?php echo (isset($output['total']) ? $output['total'] : '0').' руб.'; ?></div>
     <div class="print-cart-sum-bonus"><span class="print-cart-sum-bonus-label">За этот заказ Вам будет начислено:</span> <span id="bonus_amount" style="font-weight: bold;"><?php echo isset($output['bonus_amount']) ? $output['bonus_amount'] : '0'; ?></span> бонусов</div>
 </div>
 
 <input type="hidden" id="natsenka-amount" name="natsenka-amount" value="<?php echo isset($output['surcharge']) ? $output['surcharge'] : '0'; ?>">
 <input type="hidden" id="natsenka-percent" name="natsenka-percent" value="<?php echo isset($output['natsenka_percent']) ? $output['natsenka_percent'] : '0'; ?>">
-<input type="hidden" id="shipping-amount" name="shipping-amount" value="<?php echo isset($output['shipping_cost']) ? $output['shipping_cost'] : '0'; ?>">
+<input type="hidden" id="shipping-amount" name="shipping-amount" value="<?php echo isset($output['shipping_amount']) ? $output['shipping_amount'] : '0'; ?>">
 <input type="hidden" id="subtotal-amount" name="subtotal-amount" value="<?php echo WC()->cart->subtotal; ?>">
 <input type="hidden" id="total-amount" name="total-amount" value="<?php echo isset($output['total']) ? $output['total'] : '0'; ?>">
 <input type="hidden" id="bonus-amount" name="bonus-amount" value="<?php echo isset($output['bonus_amount']) ? $output['bonus_amount'] : '0'; ?>">

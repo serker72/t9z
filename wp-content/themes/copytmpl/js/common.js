@@ -350,8 +350,16 @@ function ksk_wc_cart_add_amount_calc() {
         d3 = 0;
     }
     
-    d4 = d1*1 + d2*1 + d3*1 - d6*1;
+    d4 = d1*1 + d2*1 + d3*1;
     d5 = (d1 * p5)/100;
+    
+    if (d6 > 0) {
+        if (d4 > d6) {
+            d4 = d4 - d6*1;
+        } else {
+            d4 = 0;
+        }
+    }
 
     //alert('d1='+d1+', d2='+d2+', d3='+d3+', d4='+d4+', d5='+d5);
 
@@ -385,8 +393,27 @@ function ksk_wc_proceed_to_checkout(e) {
         jQuery("#shipping-text-2").attr("value", jQuery('#t9z_shipping_2_' + id2)[0].dataset.label);
     }
      
-    
-    jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
+    // Сохранима новые поля формы в $_SESSION
+    formData = jQuery("#ksk_wc_cart_form").serialize();
+    //alert('formData = ' + formData);
+    jQuery.ajax({
+        url: "/wp-admin/admin-ajax.php?action=ksk_save_t9z_cart_new_field_to_session",
+        type: "POST",
+        data: formData,
+        timeout: 25000,
+        success: function(data){
+            //alert('Успешно записаны поля: ' + data);
+            jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
+            jQuery("#ksk_wc_cart_form").submit();
+        },
+        error: function(data){
+            if ((data.responseText != undefined) && (data.responseText != '')) {
+                alert('Ошибка записи полей: ' + data.responseText);
+            }
+        }
+    });
+   
+    //jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
     //jQuery('#ksk_wc_cart_form').append('<input type="hidden" name="proceed" value="1" />');
-    jQuery("#ksk_wc_cart_form").submit();
+    //jQuery("#ksk_wc_cart_form").submit();
 }
