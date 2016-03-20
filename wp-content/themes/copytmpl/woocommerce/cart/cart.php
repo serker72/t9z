@@ -272,6 +272,7 @@ if (is_user_logged_in() && ($user_bonus_amount > 0)) { ?>
 <input type="hidden" id="natsenka-amount" name="natsenka-amount" value="<?php echo isset($output['surcharge']) ? $output['surcharge'] : '0'; ?>">
 <input type="hidden" id="natsenka-percent" name="natsenka-percent" value="<?php echo isset($output['natsenka_percent']) ? $output['natsenka_percent'] : '0'; ?>">
 <input type="hidden" id="shipping-amount" name="shipping-amount" value="<?php echo isset($output['shipping_amount']) ? $output['shipping_amount'] : '0'; ?>">
+<input type="hidden" id="free-shipping-amount" name="free-shipping-amount" value="<?php echo isset($output['free_shipping_amount']) ? $output['free_shipping_amount'] : '0'; ?>">
 <input type="hidden" id="subtotal-amount" name="subtotal-amount" value="<?php echo WC()->cart->subtotal; ?>">
 <input type="hidden" id="total-amount" name="total-amount" value="<?php echo isset($output['total']) ? $output['total'] : '0'; ?>">
 <input type="hidden" id="bonus-amount" name="bonus-amount" value="<?php echo isset($output['bonus_amount']) ? $output['bonus_amount'] : '0'; ?>">

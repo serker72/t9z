@@ -14,7 +14,7 @@
       <?php endforeach; ?>
       </ul>
 
-      <?php _e('Please upload your files before proceeding to checkout'); ?>
+      <?php _e('Please upload your files before proceeding to checkout', $this->plugin_id); ?>
 
     </div>
 

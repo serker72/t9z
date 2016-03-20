@@ -367,19 +367,21 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             }
                     
             if ($total >= (int)$shipping_settings['free_shipping_amount']) {
-                $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)';
-                $output .= '
-                <div class="print-cart-item-field">
-                    <label id="l_t9z_shipping_1_free"><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'free')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'">'.$label.'</label>
-                </div>';
             } else {
                 $shipping_cost = $shipping_settings['shipping_sets'][$key]['amount'];
-                $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong>';
-                $output .= '
-                <div class="print-cart-item-field">
-                    <label id="l_t9z_shipping_1_city"><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'city')) ? 'checked="checked"' : '').' data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'" data-label="'.$label.'">'.$label.'</label>
-                </div>';
             }
+            
+            $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)';
+            $output .= '
+            <div class="print-cart-item-field">
+                <label id="l_t9z_shipping_1_free"><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'free')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'" '.(($total < (int)$shipping_settings['free_shipping_amount']) ? 'disabled="disabled"' : '').'>'.$label.'</label>
+            </div>';
+
+            $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong>';
+            $output .= '
+            <div class="print-cart-item-field">
+                <label id="l_t9z_shipping_1_city"><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'city')) ? 'checked="checked"' : '').' data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'" data-label="'.$label.'"'.(($total >= (int)$shipping_settings['free_shipping_amount']) ? 'disabled="disabled"' : '').'>'.$label.'</label>
+            </div>';
     
             $label = 'Получение в офисе - <strong>Бесплатно</strong>';
             $output .= '
@@ -422,6 +424,7 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
     return array(
         'shipping_method' => $output,
         'shipping_amount' => $shipping_cost,
+        'free_shipping_amount' => (int)$shipping_settings['free_shipping_amount'],
         'bonus_amount' => $bonus_amount,
         'bonus_percent' => (int)$shipping_settings['bonus_rate'],
         'surcharge' => $surcharge,
@@ -440,7 +443,7 @@ function ksk_wc_filter_billing_fields($fields){
     unset( $fields["billing_city"] );
     unset( $fields["billing_state"] );
     unset( $fields["billing_postcode"] );
-    unset( $fields["billing_phone"] );
+    //unset( $fields["billing_phone"] );
     return $fields;
 }
 add_filter( 'woocommerce_billing_fields', 'ksk_wc_filter_billing_fields' );

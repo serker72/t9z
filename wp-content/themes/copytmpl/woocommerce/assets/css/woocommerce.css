@@ -1120,7 +1120,8 @@ p.demo_store a {
     cursor: pointer;
     margin: 0
 }
-.woocommerce form .form-row .required {
+.woocommerce form .form-row .required,
+.woocommerce form .form-item .required{
     color: red;
     font-weight: 700;
     border: 0

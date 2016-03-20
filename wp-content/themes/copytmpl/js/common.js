@@ -12,7 +12,18 @@
             
             jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ ksk_wc_proceed_to_checkout(e); });
             
-            //kskNatsenkaClick();
+            // Если мы в корзине
+            ksk_free_shipping_check();
+            
+            // Оформление заказа
+            if (jQuery("input").is("#place_order") && jQuery("div").is("#ksk-checkout-submit")) {
+                jQuery("#place_order").appendTo("#ksk-checkout-submit");
+                //jQuery("#payment_method_cod").attr("disabled", "disabled");
+                //jQuery("#payment_method_robokassa").attr("disabled", "disabled");
+                jQuery('#payment_method_cod').prop('checked', (jQuery('#pay-method').attr("value") == 1));
+                jQuery('#payment_method_robokassa').prop('checked', (jQuery('#pay-method').attr("value") == 2));
+                jQuery('#payment').hide();
+            }
         });
         
 	// Mobile menu
@@ -315,6 +326,7 @@ function ksk_wc_t9z_shipping_cart_print(shipping_city) {
 function ksk_wc_cart_add_amount_calc() {
     //var id = e.target.id;
     //var cost = e.target.dataset.cost;
+    ksk_free_shipping_check();
         
     d1 = jQuery("#subtotal-amount").attr("value");
     d3 = jQuery("#shipping-amount").attr("value");
@@ -371,49 +383,72 @@ function ksk_wc_cart_add_amount_calc() {
     jQuery("#natsenka-30-amount").html(d2 + ' руб.');
     jQuery("#bonus_amount").html(d5);
     jQuery(".print-cart-sum").html(d4 + ' руб.');
-    
 }
 
 function ksk_wc_proceed_to_checkout(e) {
     var id = e.target.id;
     
-    if (jQuery('#t9z_shipping_1_free').is(':checked')) {
-        jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_free')[0].dataset.label);
-        jQuery("#shipping-text-2").attr("value", "");
-    }
-    
-    if (jQuery('#t9z_shipping_1_city').is(':checked')) {
-        jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_city')[0].dataset.label);
-        jQuery("#shipping-text-2").attr("value", "");
-    }
-    
-    if (jQuery('#t9z_shipping_1_office').is(':checked')) {
-        jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_office')[0].dataset.label);
-        id2 = jQuery("input[name=t9z_shipping_2]").attr("value");
-        jQuery("#shipping-text-2").attr("value", jQuery('#t9z_shipping_2_' + id2)[0].dataset.label);
-    }
-     
-    // Сохранима новые поля формы в $_SESSION
-    formData = jQuery("#ksk_wc_cart_form").serialize();
-    //alert('formData = ' + formData);
-    jQuery.ajax({
-        url: "/wp-admin/admin-ajax.php?action=ksk_save_t9z_cart_new_field_to_session",
-        type: "POST",
-        data: formData,
-        timeout: 25000,
-        success: function(data){
-            //alert('Успешно записаны поля: ' + data);
-            jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
-            jQuery("#ksk_wc_cart_form").submit();
-        },
-        error: function(data){
-            if ((data.responseText != undefined) && (data.responseText != '')) {
-                alert('Ошибка записи полей: ' + data.responseText);
-            }
+    if (jQuery('input[name="wpf_umf_uploads_needed"]').val() == 1) {
+        e.preventDefault();
+    } else {
+        if (jQuery('#t9z_shipping_1_free').is(':checked')) {
+            jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_free')[0].dataset.label);
+            jQuery("#shipping-text-2").attr("value", "");
         }
-    });
-   
-    //jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
-    //jQuery('#ksk_wc_cart_form').append('<input type="hidden" name="proceed" value="1" />');
-    //jQuery("#ksk_wc_cart_form").submit();
+
+        if (jQuery('#t9z_shipping_1_city').is(':checked')) {
+            jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_city')[0].dataset.label);
+            jQuery("#shipping-text-2").attr("value", "");
+        }
+
+        if (jQuery('#t9z_shipping_1_office').is(':checked')) {
+            jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_office')[0].dataset.label);
+            id2 = jQuery("input[name=t9z_shipping_2]").attr("value");
+            jQuery("#shipping-text-2").attr("value", jQuery('#t9z_shipping_2_' + id2)[0].dataset.label);
+        }
+
+        // Сохранима новые поля формы в $_SESSION
+        formData = jQuery("#ksk_wc_cart_form").serialize();
+        //alert('formData = ' + formData);
+        jQuery.ajax({
+            url: "/wp-admin/admin-ajax.php?action=ksk_save_t9z_cart_new_field_to_session",
+            type: "POST",
+            data: formData,
+            //timeout: 25000,
+            success: function(data){
+                //alert('Успешно записаны поля: ' + data);
+                jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
+                jQuery("#ksk_wc_cart_form").submit();
+            },
+            error: function(data){
+                if ((data.responseText != undefined) && (data.responseText != '')) {
+                    alert('Ошибка записи полей: ' + data.responseText);
+                }
+            }
+        });
+
+        //jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
+        //jQuery('#ksk_wc_cart_form').append('<input type="hidden" name="proceed" value="1" />');
+        //jQuery("#ksk_wc_cart_form").submit();
+    }
+}
+
+function ksk_free_shipping_check() {
+    // Если мы в корзине
+    if (jQuery("table").is(".cart")) {
+        d1 = jQuery("#subtotal-amount").attr("value");
+        d2 = jQuery("#free-shipping-amount").attr("value");
+        
+        if (d1*1 >= d2*1) {
+            //jQuery('#t9z_shipping_1_city').prop('checked', false);
+            jQuery("#t9z_shipping_1_city").attr("disabled", "disabled");
+            jQuery("#t9z_shipping_1_free").removeAttr("disabled");
+            jQuery('#t9z_shipping_1_free').prop('checked', (jQuery('#t9z_shipping_1_office').is(':checked') != true));
+       } else {
+            //jQuery('#t9z_shipping_1_free').prop('checked', false);
+            jQuery("#t9z_shipping_1_free").attr("disabled", "disabled");
+            jQuery("#t9z_shipping_1_city").removeAttr("disabled");
+            jQuery('#t9z_shipping_1_city').prop('checked', (jQuery('#t9z_shipping_1_office').is(':checked') != true));
+        }
+    }
 }

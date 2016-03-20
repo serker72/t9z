@@ -212,25 +212,26 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                 </div>
                 <div class="print-checkout-form">
                         <div class="form-item">
-                                <label class="form-label">Ваше имя</label>
+                                <label class="form-label" for="billing_first_name">Ваше имя <abbr class="required" title="обязательно">*</abbr></label>
                                 <input type="text" class="input-text" name="billing_first_name" id="billing_first_name" placeholder=""  value="<?php echo $checkout->get_value('billing_first_name'); ?>">
                         </div>
                         <div class="form-item">
-                                <label class="form-label">Ваша фамилия</label>
+                                <label class="form-label" for="billing_last_name">Ваша фамилия <abbr class="required" title="обязательно">*</abbr></label>
                                 <input type="text" class="input-text" name="billing_last_name" id="billing_last_name" placeholder=""  value="<?php echo $checkout->get_value('billing_last_name'); ?>">
                         </div>
                         <div class="form-item">
-                                <label class="form-label">Телефон для связи</label>
+                                <label class="form-label" for="billing_phone">Телефон для связи <abbr class="required" title="обязательно">*</abbr></label>
                                 <input type="tel" class="input-text" name="billing_phone" id="billing_phone" placeholder=""  value="<?php echo $checkout->get_value('billing_phone'); ?>">
                         </div>
                         <div class="form-item">
-                                <label class="form-label">E-mail</label>
+                                <label class="form-label" for="billing_email">E-mail <abbr class="required" title="обязательно">*</abbr></label>
                                 <input type="email" class="input-text" name="billing_email" id="billing_email" placeholder=""  value="<?php echo $checkout->get_value('billing_email'); ?>">
                         </div>
-                        <div class="form-item form-item-submit">
-                                <input type="submit" value="Подтвердить заказ">
+                        <div id="ksk-checkout-submit" class="form-item form-item-submit">
+                                <!--input type="submit" value="Подтвердить заказ"-->
                         </div>
                 </div>
+    <input type="hidden" id="pay-method" name="pay-method" value="<?php echo ksk_get_var_from_session_post_get('pay-method', ''); ?>">
 </div>
                 
 		<?php //do_action( 'woocommerce_checkout_after_customer_details' ); ?>
@@ -241,7 +242,7 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
 
 	<?php //do_action( 'woocommerce_checkout_before_order_review' ); ?>
 
-	<div id="order_review" class="woocommerce-checkout-review-order">
+        <div id="order_review" class="woocommerce-checkout-review-order" style="display: none;">
 		<?php do_action( 'woocommerce_checkout_order_review' ); ?>
 	</div>
 
