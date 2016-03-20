@@ -128,7 +128,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                                         $return .= '</span></div></td>';
                                                         $return .= '<td><div class="print-options-photo-upload-image-item-num">';
                                                         $return .= '<span class="print-options-photo-upload-image-item-num-selector">';
-                                                        $return .= '<input type="text" step="1" min="1" max="" id="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['copies']).'" title="" class="" size="4">';
+                                                        $return .= '<input type="text" step="1" min="1" max="" id="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" name="copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key.'" value="'.esc_attr($value['copies']).'" title="" class="" size="4" onChange="ChangeCount(jQuery(this));">';
                                                         $return .= '</span></div></td>';
                                                         $return .= '</tr>';
                                                     }

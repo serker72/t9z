@@ -534,7 +534,10 @@ function ksk_wc_order_status_hold( $order_id ) {
     // Очистим поля в $_SESSION
     ksk_clear_t9z_cart_new_field_from_session();
 }
+add_action( 'woocommerce_order_status_pending', 'ksk_wc_order_status_hold' );
 add_action( 'woocommerce_order_status_on-hold', 'ksk_wc_order_status_hold' );
+add_action( 'woocommerce_order_status_processing', 'ksk_wc_order_status_hold' );
+add_action( 'woocommerce_order_status_completed', 'ksk_wc_order_status_hold' );
 
 /*
  * Заказ отменен - статус cancelled
@@ -725,7 +728,13 @@ function pdfCount ($filename) {
             }
         }
         fclose($fp);
-        return $count;
+        if ((is_numeric($count)) && ($count > 0)) return $count;
+        else {
+            $pdf_content = file_get_contents($filename);
+            $count = preg_match_all("/\/Page\W/", $pdf_content, $matches);
+            //if ((is_numeric($count)) && ($count == 0)) $count = 9999999;
+            return $count;
+        }
     }
 }
 
@@ -781,6 +790,7 @@ function docxCount ($filename) {
 
     
 }
+
 function xlsCount ($filename){
     require_once '/classes/PHPExcel/IOFactory.php';
     require_once '/classes/ChunkReadFilter.php';
@@ -802,4 +812,46 @@ function xlsCount ($filename){
     return $kolPages;
 
 
+}
+
+// on submit AJAX form of the cart
+// after calculate cart form items
+add_action('woocommerce_cart_updated', 'wac_update');
+function wac_update() {
+    // is_wac_ajax: flag defined on wooajaxcart.js
+    
+    if ( !empty($_POST['is_wac_ajax'])) {
+        $resp = array();
+        $resp['update_label'] = __( 'Update Cart', 'woocommerce' );
+        $resp['checkout_label'] = __( 'Proceed to Checkout', 'woocommerce' );
+        $resp['price'] = 0;
+        
+        // render the cart totals (cart-totals.php)
+        ob_start();
+        do_action( 'woocommerce_after_cart_table' );
+        do_action( 'woocommerce_cart_collaterals' );
+        do_action( 'woocommerce_after_cart' );
+        $resp['html'] = ob_get_clean();
+        $resp['price'] = 0;
+        $resp['price_subtotal'] = 0;
+        
+        // calculate the item price
+        if ( !empty($_POST['cart_item_key']) ) {
+            $items = WC()->cart->get_cart();
+            $cart_item_key = $_POST['cart_item_key'];
+            
+            if ( array_key_exists($cart_item_key, $items)) {
+                $cart_item = $items[$cart_item_key];
+                $_product = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+                $price = apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key );
+                $resp['price'] = $price;
+                $product_price = apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
+                $resp['special_price'] = $product_price;
+                $resp['price_subtotal'] = WC()->cart->subtotal;
+            }
+        }
+
+        echo json_encode($resp);
+        exit;
+    }
 }

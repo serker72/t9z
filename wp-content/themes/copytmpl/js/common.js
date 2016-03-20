@@ -13,7 +13,14 @@
             jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ ksk_wc_proceed_to_checkout(e); });
             
             // Если мы в корзине
-            ksk_free_shipping_check();
+            if (jQuery("table").is(".cart")) {
+                //jQuery("table.cart")
+                //kol1 = jQuery("span.amount").html();
+                //kol2 = kol.split(' ');
+                //kol = kol[0];
+                //jQuery("input[name=update_cart]").trigger( "click" );
+                ksk_free_shipping_check();
+            }
             
             // Оформление заказа
             if (jQuery("input").is("#place_order") && jQuery("div").is("#ksk-checkout-submit")) {
@@ -248,7 +255,9 @@ function ksk_cart_quantity_calc(id) {
             }
         }
         
-        jQuery("#" + name3).attr('value', qty);
+        //if (jQuery("#" + name3).attr('value') != qty) {
+            jQuery("#" + name3).attr('value', qty);
+        //}
     }
 }
 
@@ -451,4 +460,66 @@ function ksk_free_shipping_check() {
             jQuery('#t9z_shipping_1_city').prop('checked', (jQuery('#t9z_shipping_1_office').is(':checked') != true));
         }
     }
+}
+
+// Desi4ik
+function SelectorClick (name, idinp) {
+    ksk_cart_quantity_calc(idinp);
+    form = jQuery('#ksk_wc_cart_form');
+    //curel=jQuery('.selector-minus').prev('input');
+    curel = jQuery('#'+name);
+    //alert('!'+name3+'!');
+
+    // emulates button Update cart click
+    jQuery("<input type='hidden' name='update_cart' id='update_cart' value='1'>").appendTo(form);
+
+    // plugin flag
+    jQuery("<input type='hidden' name='is_wac_ajax' id='is_wac_ajax' value='1'>").appendTo(form);
+
+    el_qty = curel;
+    matches = curel.attr('name').match(/cart\[(\w+)\]/);
+    cart_item_key = matches[1];
+    form.append( jQuery("<input type='hidden' name='cart_item_key' id='cart_item_key'>").val(cart_item_key) );
+
+    // get the form data before disable button...
+    formData = form.serialize();
+
+    jQuery("input[name='update_cart']").val('Updating…').prop('disabled', true);
+
+    jQuery("a.checkout-button.wc-forward").addClass('disabled').html('Updating…');
+
+    jQuery.post( form.attr('action'), formData, function(resp) {
+        // ajax response
+        jQuery('.cart-collaterals').html(resp.html);
+
+        el_qty.closest('.cart_item').find('.product-subtotal').html(resp.price);
+
+        jQuery('#update_cart').remove();
+        jQuery('#is_wac_ajax').remove();
+        jQuery('#cart_item_key').remove();
+
+        jQuery("input[name='update_cart']").val(resp.update_label).prop('disabled', false);
+
+        jQuery("a.checkout-button.wc-forward").removeClass('disabled').html(resp.checkout_label);
+        //alert('!'+resp.price_subtotal);
+        jQuery('#subtotal-amount').attr("value", resp.price_subtotal);
+        jQuery('.product-price').html(resp.special_price);
+
+        ksk_wc_cart_add_amount_calc();
+
+        // when changes to 0, remove the product from cart
+        if ( el_qty.val() == 0 ) {
+            el_qty.closest('tr').remove();
+        }
+    },
+    'json'
+    );
+} 
+
+function ChangeCount (obj) {
+    ids = obj.attr('id').split('_');
+    names = ids[0] +'_'+ids[1];
+    obj2 = document.getElementById(obj.attr('id'));
+    obj2.setAttribute('value', obj.val());
+    SelectorClick(names, obj.attr('id'));
 }
