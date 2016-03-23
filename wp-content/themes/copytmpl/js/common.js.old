@@ -13,11 +13,6 @@
             jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ ksk_wc_proceed_to_checkout(e); });
             
             // Если мы в корзине
-            if (jQuery("table").is(".cart")) {
-                jQuery("span.selector-minus.selector").css({'top': '7px'});
-                jQuery("span.selector-plus.selector").css({'top': '7px'});
-            }
-            
             ksk_free_shipping_check();
             
             // Оформление заказа
@@ -29,7 +24,6 @@
                 jQuery('#payment_method_robokassa').prop('checked', (jQuery('#pay-method').attr("value") == 2));
                 jQuery('#payment').hide();
             }
-          
         });
         
 	// Mobile menu
@@ -157,7 +151,6 @@
 		var selectorToggler = selector.find('.selector')
 
 		selectorToggler.on('click', function(){
-                    if ((!jQuery('#is_wac_ajax').val()) && (!jQuery('#update_cart').val())){
 			var toggler = $(this),
 				valueCurrent = Number( selectorField.val() ),
 				toggleType = toggler.data('type')
@@ -176,7 +169,6 @@
                         if ((togglerId.indexOf('copies_') > -1) || (togglerId.indexOf('pages_') > -1)) {
                             ksk_cart_quantity_calc(togglerId)
                         }
-                    }
 		})
 	})
 
@@ -259,7 +251,7 @@ function ksk_cart_quantity_calc(id) {
         //jQuery("#" + name3).attr('value', qty);
         if (jQuery("#" + name3).attr('value') != qty) {
                 jQuery("#" + name3).attr('value', qty);
-                SelectorClick(name3, name3+'_0');
+                SelectorClick(name3);
                 
             }
     }
@@ -449,30 +441,17 @@ function ksk_wc_proceed_to_checkout(e) {
 function ksk_free_shipping_check() {
     // Если мы в корзине
     if (jQuery("table").is(".cart")) {
-	jQuery('input.qty').each(function(){
-            var id = this.id;
-            //alert('id='+id);
-            if (jQuery("input[type=text]").is("#" + id + "_0") == false) {
-                jQuery("#" + id).attr("value", 1);
-                //SelectorClick("#" + id, "#" + id + "_0");
-            }
-        });
-        
         d1 = jQuery("#subtotal-amount").attr("value");
         d2 = jQuery("#free-shipping-amount").attr("value");
         
         if (d1*1 >= d2*1) {
             //jQuery('#t9z_shipping_1_city').prop('checked', false);
             jQuery("#t9z_shipping_1_city").attr("disabled", "disabled");
-            jQuery("#l_t9z_shipping_1_city").hide();
-            jQuery("#l_t9z_shipping_1_free").show();
             jQuery("#t9z_shipping_1_free").removeAttr("disabled");
             jQuery('#t9z_shipping_1_free').prop('checked', (jQuery('#t9z_shipping_1_office').is(':checked') != true));
        } else {
             //jQuery('#t9z_shipping_1_free').prop('checked', false);
             jQuery("#t9z_shipping_1_free").attr("disabled", "disabled");
-            jQuery("#l_t9z_shipping_1_free").hide();
-            jQuery("#l_t9z_shipping_1_city").show();
             jQuery("#t9z_shipping_1_city").removeAttr("disabled");
             jQuery('#t9z_shipping_1_city').prop('checked', (jQuery('#t9z_shipping_1_office').is(':checked') != true));
         }
@@ -480,9 +459,8 @@ function ksk_free_shipping_check() {
 }
 
 // Desi4ik
-function SelectorClick (name, objc) {
+function SelectorClick (name) {
     //alert(name);
-     
     form = jQuery('#ksk_wc_cart_form');
     //curel=jQuery('.selector-minus').prev('input');
     curel = jQuery('#'+name);
@@ -512,30 +490,22 @@ function SelectorClick (name, objc) {
 
         el_qty.closest('.cart_item').find('.product-subtotal').html(resp.price);
 
-        jQuery("input[name='update_cart']").val(resp.update_label).prop('disabled', false);
-
         jQuery('#update_cart').remove();
-        //alert(jQuery('#update_cart').val());
         jQuery('#is_wac_ajax').remove();
-        //alert(jQuery('#is_wac_ajax').val());
         jQuery('#cart_item_key').remove();
-        //alert(jQuery('#cart_item_key').val());
 
-        
+        jQuery("input[name='update_cart']").val(resp.update_label).prop('disabled', false);
 
         jQuery("a.checkout-button.wc-forward").removeClass('disabled').html(resp.checkout_label);
         //alert('!'+resp.price_subtotal);
         jQuery('#subtotal-amount').attr("value", resp.price_subtotal);
         jQuery('.product-price').html(resp.special_price);
-        //jQuery('.selector').removeClass('disabled_selector');
-        //jQuery('.selector').bind('click');
+
         ksk_wc_cart_add_amount_calc();
-       // alert('#'+objc);
-        jQuery('#'+objc).removeClass('disabled');
-        
+
         // when changes to 0, remove the product from cart
         if ( el_qty.val() == 0 ) {
-            //el_qty.closest('tr').remove();
+            el_qty.closest('tr').remove();
         }
     },
     'json'
@@ -543,17 +513,10 @@ function SelectorClick (name, objc) {
 } 
 
 function ChangeCount (obj) {
-    //alert(obj.attr('id'));
     ids = obj.attr('id').split('_');
     names = 'copies' +'_'+ids[1];
     obj2 = document.getElementById(obj.attr('id'));
     obj2.setAttribute('value', obj.val());
-    jQuery('#'+obj.attr('id')).addClass('disabled');
-    obj_id = ids = obj.attr('id');
-    
-        
-    
-    //jQuery('.selector').unbind('click');
     ksk_cart_quantity_calc(obj.attr('id'));
-   // SelectorClick(names, obj_id);
+    SelectorClick(names);
 }
