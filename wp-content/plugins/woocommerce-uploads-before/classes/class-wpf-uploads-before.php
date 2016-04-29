@@ -803,11 +803,11 @@ class WPF_Uploads_Before extends WPFortune_Base {
                         //$return .= '<li class="wpf-cart-uploaded-file">'.$value.'</li>';
                         //
                         // KSK - вывод в корзине
-                        $value = apply_filters('wpf_umf_cart_uploaded_file', [
+                        $value = apply_filters('wpf_umf_cart_uploaded_file', array(
                             'name' => $value['name'],
                             'pages' => $value['pages'],
                             'copies' => $value['copies'],
-                        ], $value);
+                        ), $value);
                         // KSK =================
 
                         $return .= '<li class="wpf-cart-uploaded-file">'.$value['name'].' - pages='.$value['pages'].' - copies='.$value['copies'].'</li>';

@@ -110,11 +110,11 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
 
                                                 if (is_array($current_uploads) && count($current_uploads)) {
                                                     foreach ($current_uploads AS $key => $value) {
-                                                        $value = apply_filters('wpf_umf_cart_uploaded_file', [
+                                                        $value = apply_filters('wpf_umf_cart_uploaded_file', array(
                                                             'name' => $value['name'],
                                                             'pages' => $value['pages'],
                                                             'copies' => $value['copies'],
-                                                        ], $value);
+                                                        ), $value);
 
                                                         $file_ext = explode(".", $value['name']);
                                                         $file_ext = $file_ext[1];

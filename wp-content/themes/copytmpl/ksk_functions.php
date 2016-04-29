@@ -90,7 +90,7 @@ function ksk_update_uploads_copies() {
                 
                 if (is_array($current_uploads) && count($current_uploads)) {
                     foreach ($current_uploads AS $key => $value) {
-                        $value = apply_filters('wpf_umf_cart_uploaded_file', [
+                        $value = apply_filters('wpf_umf_cart_uploaded_file', array(
                             'name' => $value['name'],
                             'extension' => $value['extension'],
                             'path' =>  $value['path'],
@@ -99,7 +99,7 @@ function ksk_update_uploads_copies() {
                             'type' => $value['type'],
                             'pages' => $value['pages'],
                             'copies' => $value['copies'],
-                        ], $value);
+                        ), $value);
                         
                         $pages = 'pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key;
                         $copies = 'copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key;
@@ -283,7 +283,7 @@ add_action("wp_ajax_nopriv_ksk_shipping_city_session_set", "ksk_shipping_city_se
 function get_the_user_geo_data($key = null, $cookie = true) {
     include_once ABSPATH . '/wp-content/themes/copytmpl/geo.php';
     
-    $geo = new Geo(['ip' => '77.66.129.10']); // запускаем класс
+    $geo = new Geo(array('ip' => '77.66.129.10')); // запускаем класс
     $data_geo = $geo->get_value($key, $cookie);
     
     return $data_geo;
@@ -857,3 +857,15 @@ function wac_update() {
         exit;
     }
 }
+
+
+function ksk_custom_redirect()
+{
+    if (isset($_GET['wc-login-before-checkout']) || isset($_POST['wc-login-before-checkout'])) {
+        return esc_url( get_permalink( wc_get_page_id( 'cart' ) ) );
+    } else {
+        return esc_url( get_permalink( wc_get_page_id( 'myaccount' ) ) );
+    }
+}
+add_filter( 'woocommerce_registration_redirect', 'ksk_custom_redirect' );
+add_filter( 'woocommerce_login_redirect', 'ksk_custom_redirect' );

@@ -10,7 +10,13 @@
             //$('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
             $('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
             
-            jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ ksk_wc_proceed_to_checkout(e); });
+            jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ 
+                if (jQuery("input").is("#user-bonus-amount")) {
+                    ksk_wc_proceed_to_checkout(e); 
+                } else {
+                    location.href = "/my-account?wc-login-before-checkout=1";
+                }
+            });
             
             // Если мы в корзине
             if (jQuery("table").is(".cart")) {

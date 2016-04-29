@@ -41,12 +41,6 @@
 							<label for="rememberme" class="inline"><input name="rememberme" type="checkbox" id="rememberme" value="forever" /> <?php _e( 'Remember me', 'woocommerce' ); ?></label>
 						</div>
 
-                                                <?php
-                                                // KSK
-                                                if ((isset($_GET['wc-login-before-checkout']) && ($_GET['wc-login-before-checkout'] == '1')) || (isset($_POST['wc-login-before-checkout']) && ($_POST['wc-login-before-checkout'] == '1'))) {
-                                                    echo '<input type="hidden" id="wc-login-before-checkout" name="wc-login-before-checkout" value="1">';
-                                                }
-                                                ?>
 						<?php do_action( 'woocommerce_login_form_end' ); ?>
 					</form>	
 				</div>
@@ -102,13 +96,6 @@
 							<input type="submit" class="button" name="register" value="<?php esc_attr_e( 'Register', 'woocommerce' ); ?>" />
 						</div>
 
-                                                <?php
-                                                // KSK
-                                                if ((isset($_GET['wc-login-before-checkout']) && ($_GET['wc-login-before-checkout'] == '1')) || (isset($_POST['wc-login-before-checkout']) && ($_POST['wc-login-before-checkout'] == '1'))) {
-                                                    echo '<input type="hidden" id="wc-login-before-checkout" name="wc-login-before-checkout" value="1">';
-                                                }
-                                                ?>
-                                                
 						<?php do_action( 'woocommerce_register_form_end' ); ?>
 					</form>
 				</div>
