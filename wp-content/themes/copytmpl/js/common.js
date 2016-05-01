@@ -32,7 +32,8 @@
                 //jQuery("#payment_method_cod").attr("disabled", "disabled");
                 //jQuery("#payment_method_robokassa").attr("disabled", "disabled");
                 jQuery('#payment_method_cod').prop('checked', (jQuery('#pay-method').attr("value") == 1));
-                jQuery('#payment_method_robokassa').prop('checked', (jQuery('#pay-method').attr("value") == 2));
+                //jQuery('#payment_method_robokassa').prop('checked', (jQuery('#pay-method').attr("value") == 2));
+                jQuery('#payment_method_bank').prop('checked', (jQuery('#pay-method').attr("value") == 2));
                 jQuery('#payment').hide();
             }
           
@@ -436,8 +437,12 @@ function ksk_wc_proceed_to_checkout(e) {
             //timeout: 25000,
             success: function(data){
                 //alert('Успешно записаны поля: ' + data);
-                jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
-                jQuery("#ksk_wc_cart_form").submit();
+                //if (jQuery("input").is("#user-bonus-amount")) {
+                    jQuery("#ksk_wc_cart_form").attr("action", "/checkout");
+                    jQuery("#ksk_wc_cart_form").submit();
+                //} else {
+                //    location.href = "/my-account?wc-login-before-checkout=1";
+                //}
             },
             error: function(data){
                 if ((data.responseText != undefined) && (data.responseText != '')) {
@@ -481,6 +486,10 @@ function ksk_free_shipping_check() {
             jQuery("#l_t9z_shipping_1_city").show();
             jQuery("#t9z_shipping_1_city").removeAttr("disabled");
             jQuery('#t9z_shipping_1_city').prop('checked', (jQuery('#t9z_shipping_1_office').is(':checked') != true));
+        }
+        
+        if (jQuery("input").is("#wc-login-before-checkout")) {
+            //jQuery("#ksk-wc-proceed-to-checkout").trigger('click');
         }
     }
 }

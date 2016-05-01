@@ -282,6 +282,9 @@ if (is_user_logged_in() && ($user_bonus_amount > 0)) { ?>
 <?php if (is_user_logged_in()) { ?>
 <input type="hidden" id="user-bonus-amount" name="user-bonus-amount" value="<?php echo !empty($user_bonus_amount) ? $user_bonus_amount : '0'; ?>">
 <?php } ?>
+<?php if ((isset($_GET['wc-login-before-checkout']) && ($_GET['wc-login-before-checkout'] == '1')) || (isset($_POST['wc-login-before-checkout']) && ($_POST['wc-login-before-checkout'] == '1'))) { ?>
+<input type="hidden" id="wc-login-before-checkout" name="wc-login-before-checkout" value="1">
+<?php } ?>
 
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
 

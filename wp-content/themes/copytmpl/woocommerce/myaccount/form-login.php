@@ -13,6 +13,12 @@
 		$registration_page = ( empty($part) || $part == 'registration' )? true : false;
 	?>
 
+        <?php if ((isset($_GET['wc-login-before-checkout']) && ($_GET['wc-login-before-checkout'] == '1')) || (isset($_POST['wc-login-before-checkout']) && ($_POST['wc-login-before-checkout'] == '1'))) { ?>
+            <div id="wpf-umf-before-uploads-needed" style="display: block;">
+                <p>Пожалуйста, <strong>войдите</strong> или <strong>зарегистрируйтесь</strong>, прежде чем приступить к оформлению заказа.</p>
+            </div>
+        <?php } ?>
+
 	<?php if ( $login_page ) : ?>
 		<div class="my-account-login">
 			<h2 class="my-account-title-or"><?php _e( 'Login', 'copytmpl' ) ?></h2>

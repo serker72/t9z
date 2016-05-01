@@ -929,7 +929,7 @@ msgstr "Максимальное количество загрузок:"
 
 #: pages/frontend/upload-boxes.php:142
 msgid "Max. filesize:"
-msgstr "Максимальный размер файла:"
+msgstr "Максимальный размер:"
 
 #: pages/frontend/upload-boxes.php:144
 msgid "Min. width:"

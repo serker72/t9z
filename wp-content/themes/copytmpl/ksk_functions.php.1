@@ -62,12 +62,12 @@ function ksk_add_custom_price( $cart_object ) {
 
             if (count($pr_quantity[$i]) == 2) {
                 if ($value['quantity']>=$pr_quantity[$i][0] && $value['quantity']<=$pr_quantity[$i][1]) {
-                    $value['data']->price = $var_ksk_prices[$i];
+                    $value['data']->price = (float)$var_ksk_prices[$i];
                     break;
                 }
             } else {
                 if ($value['quantity']>=$pr_quantity[$i][0]) {
-                    $value['data']->price = $var_ksk_prices[$i];
+                    $value['data']->price = (float)$var_ksk_prices[$i];
                     break;
                 }
             }
@@ -97,7 +97,7 @@ function ksk_update_uploads_copies() {
                 
                 if (is_array($current_uploads) && count($current_uploads)) {
                     foreach ($current_uploads AS $key => $value) {
-                        $value = apply_filters('wpf_umf_cart_uploaded_file', array(
+                        $value = apply_filters('wpf_umf_cart_uploaded_file', [
                             'name' => $value['name'],
                             'extension' => $value['extension'],
                             'path' =>  $value['path'],
@@ -106,7 +106,7 @@ function ksk_update_uploads_copies() {
                             'type' => $value['type'],
                             'pages' => $value['pages'],
                             'copies' => $value['copies'],
-                        ), $value);
+                        ], $value);
                         
                         $pages = 'pages_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key;
                         $copies = 'copies_'.(!empty($cart_item['variation_id']) ? $cart_item['variation_id'] : $cart_item['product_id']).'_'.$key;
@@ -290,7 +290,7 @@ add_action("wp_ajax_nopriv_ksk_shipping_city_session_set", "ksk_shipping_city_se
 function get_the_user_geo_data($key = null, $cookie = true) {
     include_once ABSPATH . '/wp-content/themes/copytmpl/geo.php';
     
-    $geo = new Geo(array('ip' => '77.66.129.10')); // запускаем класс
+    $geo = new Geo(['ip' => '77.66.129.10']); // запускаем класс
     $data_geo = $geo->get_value($key, $cookie);
     
     return $data_geo;
@@ -495,34 +495,34 @@ function ksk_wc_order_status_hold( $order_id ) {
     $order_number = $order_last_number + 1;
     update_option('ksk_wc_order_last_number', $order_number);
     
-    $shipping_city = ksk_get_var_from_session_post_get('shipping_city', '');
-    $shipping_method = ksk_get_var_from_session_post_get('t9z_shipping_1', 0);
-    $shipping_punkt = (int)ksk_get_var_from_session_post_get('t9z_shipping_2', 0) + 1;
+    $shipping_city = ksk_get_var_from_session_post_get('shipping_city');
+    $shipping_method = ksk_get_var_from_session_post_get('t9z_shipping_1');
+    $shipping_punkt = (int)ksk_get_var_from_session_post_get('t9z_shipping_2') + 1;
     $order_number_txt = mb_substr($shipping_city, 0, 1, 'UTF-8');
     $order_number_txt .= ($shipping_method === 'office' ? $shipping_punkt : '');
     $order_number_txt .= '-'.$order_number;
     
     // Запишем meta-поля заказа
     update_post_meta($order_id, 'ksk_wc_order_number', $order_number_txt);
-    update_post_meta($order_id, 'ksk_wc_order_natsenka-30', ksk_get_var_from_session_post_get('natsenka-30', 0));
-    update_post_meta($order_id, 'ksk_wc_order_natsenka-amount', ksk_get_var_from_session_post_get('natsenka-amount', 0));
-    update_post_meta($order_id, 'ksk_wc_order_natsenka-percent', ksk_get_var_from_session_post_get('natsenka-percent', 0));
-    update_post_meta($order_id, 'ksk_wc_order_user-bonus', ksk_get_var_from_session_post_get('user-bonus', 0));
-    update_post_meta($order_id, 'ksk_wc_order_bonus-amount', ksk_get_var_from_session_post_get('bonus-amount', 0));
-    update_post_meta($order_id, 'ksk_wc_order_bonus-percent', ksk_get_var_from_session_post_get('bonus-percent', 0));
-    update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_1', ksk_get_var_from_session_post_get('t9z_shipping_1', ''));
-    update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_2', ksk_get_var_from_session_post_get('t9z_shipping_2', ''));
+    update_post_meta($order_id, 'ksk_wc_order_natsenka-30', ksk_get_var_from_session_post_get('natsenka-30'));
+    update_post_meta($order_id, 'ksk_wc_order_natsenka-amount', ksk_get_var_from_session_post_get('natsenka-amount'));
+    update_post_meta($order_id, 'ksk_wc_order_natsenka-percent', ksk_get_var_from_session_post_get('natsenka-percent'));
+    update_post_meta($order_id, 'ksk_wc_order_user-bonus', ksk_get_var_from_session_post_get('user-bonus'));
+    update_post_meta($order_id, 'ksk_wc_order_bonus-amount', ksk_get_var_from_session_post_get('bonus-amount'));
+    update_post_meta($order_id, 'ksk_wc_order_bonus-percent', ksk_get_var_from_session_post_get('bonus-percent'));
+    update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_1', ksk_get_var_from_session_post_get('t9z_shipping_1'));
+    update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_2', ksk_get_var_from_session_post_get('t9z_shipping_2'));
     update_post_meta($order_id, 'ksk_wc_order_shipping_city', $shipping_city);
-    update_post_meta($order_id, 'ksk_wc_order_shipping-amount', ksk_get_var_from_session_post_get('shipping-amount', 0));
-    update_post_meta($order_id, 'ksk_wc_order_shipping-office', ksk_get_var_from_session_post_get('shipping-office', ''));
-    update_post_meta($order_id, 'ksk_wc_order_pay-method', ksk_get_var_from_session_post_get('pay-method', 0));
+    update_post_meta($order_id, 'ksk_wc_order_shipping-amount', ksk_get_var_from_session_post_get('shipping-amount'));
+    update_post_meta($order_id, 'ksk_wc_order_shipping-office', ksk_get_var_from_session_post_get('shipping-office'));
+    update_post_meta($order_id, 'ksk_wc_order_pay-method', ksk_get_var_from_session_post_get('pay-method'));
     
     // Если выбран пункт списания бонусов в оплату заказа
     if (ksk_check_var_in_session_post_get('user-bonus', 'on')) {
         $user_bonus_amount = get_user_meta($user_id, 'bonus_amount', true);
         $user_bonus_amount = !empty($bonus_amount) ? $bonus_amount : 0;
         
-        $order_total_real = (int)ksk_get_var_from_session_post_get('subtotal-amount', 0) + (int)ksk_get_var_from_session_post_get('natsenka-amount', 0) + (int)ksk_get_var_from_session_post_get('shipping-amount', 0);
+        $order_total_real = (int)ksk_get_var_from_session_post_get('subtotal-amount') + (int)ksk_get_var_from_session_post_get('natsenka-amount') + (int)ksk_get_var_from_session_post_get('shipping-amount');
         
         if ($order_total_real >= $user_bonus_amount) {
             $order_bonus_amount = $user_bonus_amount;
@@ -864,54 +864,3 @@ function wac_update() {
         exit;
     }
 }
-
-
-function ksk_custom_redirect()
-{
-    if (isset($_GET['wc-login-before-checkout']) || isset($_POST['wc-login-before-checkout'])) {
-        return esc_url( get_permalink( wc_get_page_id( 'cart' ) ). '?wc-login-before-checkout=1' );
-        //return esc_url( get_permalink( wc_get_page_id( 'checkout' ) ) );
-    } else {
-        return esc_url( get_permalink( wc_get_page_id( 'myaccount' ) ) );
-    }
-}
-add_filter( 'woocommerce_registration_redirect', 'ksk_custom_redirect' );
-add_filter( 'woocommerce_login_redirect', 'ksk_custom_redirect' );
-
-function ksk_get_variation_price_html($variation_id)
-{
-    $ret_str = '';
-    $ret_str1 = '';
-    $ret_str2 = '';
-    $product_id = wp_get_post_parent_id($variation_id);
-    
-    if (($product_id > 0) && ($variation_id > 0)) {
-        $ret_str .= '<table>';
-        
-        $locale_info = localeconv();
-        
-        $pr_attributes = (array) maybe_unserialize( get_post_meta( $product_id, '_product_attributes', true ) );
-        $pr_quantity = explode('|', $pr_attributes['kolichestvo']['value']);
-        
-        $var_ksk_prices = get_post_meta( $variation_id, '_ksk_var_price', true );
-        $var_ksk_prices = explode('|', $var_ksk_prices);
-
-        $ret_str1 .= '<tr><td>Количество<br>страниц</td>';
-        $ret_str2 .= '<tr><td>Стоимость<br>страницы</td>';
-        for ($i=0;$i < count($pr_quantity); $i++) {
-            //$pr_quantity[$i] = explode('-', $pr_quantity[$i]);
-            if ($locale_info['decimal_point'] !== ',') {
-                $var_ksk_prices[$i] = str_replace(',', $locale_info['decimal_point'], $var_ksk_prices[$i]);
-            }
-            $ret_str1 .= '<td>' . $pr_quantity[$i] . '</td>';
-            $ret_str2 .= '<td>' . $var_ksk_prices[$i] . '<br>руб.</td>';
-        }
-        $ret_str1 .= '</tr>';
-        $ret_str2 .= '</tr>';
-        
-        $ret_str .= $ret_str1 . $ret_str2 . '</table>';
-    }
-    
-    return $ret_str;
-}
-//add_filter( 'woocommerce_show_variation_price', 'ksk_show_variation_price' );

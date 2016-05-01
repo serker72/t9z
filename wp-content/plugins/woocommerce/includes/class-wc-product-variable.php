@@ -611,6 +611,8 @@ class WC_Product_Variable extends WC_Product {
 			'image_srcset'			=> $image_srcset ? $image_srcset : '',
 			'image_sizes'			=> $image_sizes ? $image_sizes : '',
 			'price_html'            => apply_filters( 'woocommerce_show_variation_price', $variation->get_price() === "" || $this->get_variation_price( 'min' ) !== $this->get_variation_price( 'max' ), $this, $variation ) ? '<span class="price">' . $variation->get_price_html() . '</span>' : '',
+                    // KSK
+			'price_html_ksk'        => ksk_get_variation_price_html($variation->variation_id),
 			'availability_html'     => $availability_html,
 			'sku'                   => $variation->get_sku(),
 			'weight'                => $variation->get_weight() . ' ' . esc_attr( get_option('woocommerce_weight_unit' ) ),

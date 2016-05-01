@@ -4,7 +4,7 @@
         {{{ data.variation.variation_description }}}
         
         <div class="woocommerce-variation-price print-options-sum-value">
-            {{{ data.variation.price_html_ksk }}}
+            {{{ data.variation.price_html }}}
         </div>
 
         <div class="print-options-sum-descr">Постоянным клиентам предоставляются скидки. При размещении каждого заказа Вам начисляются подарочные баллы, которые можно использовать при размещении следующего заказа.</div>
