@@ -262,6 +262,11 @@ if (is_user_logged_in() && ($user_bonus_amount > 0)) { ?>
     <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="1"> Наличные при получении</label></div>
     <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="2" checked="checked"> Банковской картой, электронные кошельки Яндекс.Деньги, Webmoney и пр.</label></div>
 </div>
+<!-- Комментарии -->
+<div class="print-cart-item">
+    <h3>Комментарии:</h3>
+    <div class="print-cart-item-field"><textarea rows="5" cols="45" name="comments"><?php echo ksk_get_var_from_session_post_get('comments', ''); ?></textarea></div>
+</div>
 <!-- Стоимость заказа -->
 <div class="print-cart-item">
     <h3>Стоимость заказа с учётом доставки<span id="total-amount-label"><?php echo ksk_check_var_in_session_post_get('natsenka-30', 'on') ? ' и наценки за срочность' : ''; ?></span>:</h3>

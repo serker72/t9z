@@ -80,7 +80,7 @@
 
 						<?php if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) : ?>
 							<div class="form-item">
-								<label for="reg_username" class="form-label"><?php _e( 'Username', 'woocommerce' ); ?> <span class="required">*</span></label>
+                                                            <label for="reg_username" class="form-label"><?php _e( 'Username', 'woocommerce' ); ?> <span class="required">*<br>должно состоять из латинских букв и цифр</span></label>
 								<input type="text" class="input-text" name="username" id="reg_username" value="<?php if ( ! empty( $_POST['username'] ) ) echo esc_attr( $_POST['username'] ); ?>" />
 							</div>
 						<?php endif; ?>

@@ -516,6 +516,7 @@ function ksk_wc_order_status_hold( $order_id ) {
     update_post_meta($order_id, 'ksk_wc_order_shipping-amount', ksk_get_var_from_session_post_get('shipping-amount', 0));
     update_post_meta($order_id, 'ksk_wc_order_shipping-office', ksk_get_var_from_session_post_get('shipping-office', ''));
     update_post_meta($order_id, 'ksk_wc_order_pay-method', ksk_get_var_from_session_post_get('pay-method', 0));
+    update_post_meta($order_id, 'ksk_wc_order_comments', ksk_get_var_from_session_post_get('comments', ''));
     
     // Если выбран пункт списания бонусов в оплату заказа
     if (ksk_check_var_in_session_post_get('user-bonus', 'on')) {
@@ -675,6 +676,7 @@ function ksk_save_t9z_cart_new_field_to_session() {
         'pay-method' => 2,
         'subtotal-amount' => 0,
         'total-amount' => 0,
+        'comments' => '',
     );
     
     foreach ($names as $key => $value) {
@@ -706,6 +708,7 @@ function ksk_clear_t9z_cart_new_field_from_session() {
         'pay-method' => 2,
         'subtotal-amount' => 0,
         'total-amount' => 0,
+        'comments' => '',
     );
     
     foreach ($names as $key => $value) {

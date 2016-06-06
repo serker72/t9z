@@ -212,6 +212,10 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                         <p><b><?php echo (isset($_POST['pay-method']) && ($_POST['pay-method'] == 2)) ? 'Банковской картой, электронные кошельки Яндекс-Деньги, Webmoney и пр.' : ((isset($_POST['pay-method']) && ($_POST['pay-method'] == 1)) ? 'Наличные при получении' : ''); ?></b></p>
                 </div>
                 <div class="print-checkout-item">
+                    <h3>Комментарии:</h3>
+                    <p><strong><?php echo ksk_get_var_from_session_post_get('comments', ''); ?></strong></p>
+                </div>
+                <div class="print-checkout-item">
                         <h3 class="print-checkout-item-title">Стоимость заказа с учётом доставки<?php echo ksk_check_var_in_session_post_get('natsenka-30', 'on') ? ' и наценки за срочность' : ''; ?>:</h3>
                         <div class="print-checkout-sum"><?php echo isset($_POST['total-amount']) ? $_POST['total-amount'] : ''; ?> руб.</div>
                         <div class="print-checkout-sum-bonus"><span class="print-checkout-sum-bonus-label">За этот заказ Вам будет начислено:</span> <?php echo isset($_POST['bonus-amount']) ? $_POST['bonus-amount'] : ''; ?> бонусов</div>
