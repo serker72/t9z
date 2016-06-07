@@ -546,6 +546,7 @@ add_action( 'woocommerce_order_status_pending', 'ksk_wc_order_status_hold' );
 add_action( 'woocommerce_order_status_on-hold', 'ksk_wc_order_status_hold' );
 add_action( 'woocommerce_order_status_processing', 'ksk_wc_order_status_hold' );
 add_action( 'woocommerce_order_status_completed', 'ksk_wc_order_status_hold' );
+add_action( 'woocommerce_checkout_order_processed', 'ksk_wc_order_status_hold' );
 
 /*
  * Заказ отменен - статус cancelled
