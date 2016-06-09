@@ -10,6 +10,7 @@ if (!session_id()) {
 <meta charset="<?php bloginfo( 'charset' ); ?>" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link href="<?php bloginfo( 'template_directory' ); ?>/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>

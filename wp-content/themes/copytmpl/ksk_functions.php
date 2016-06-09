@@ -399,8 +399,10 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
                     $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
                     for($i=0; $i < count($office); $i++) {
                         $label = 'Адрес точки самовывоза: г.'.$shipping_settings['shipping_sets'][$key]['city'].', '.$office[$i];
-                        $output .= '<div class="print-cart-item-field"><label id="l_t9z_shipping_2_'.$i.'"><input type="radio" id="t9z_shipping_2_'.$i.'" name="t9z_shipping_2" value="'.$i.'" data-label="'.$label.'">г.'.$shipping_settings['shipping_sets'][$key]['city'].', '.$office[$i].', <a href="/">на карте</a></label></div>';
+                        $output .= '<div class="print-cart-item-field"><label id="l_t9z_shipping_2_'.$i.'"><input type="radio" id="t9z_shipping_2_'.$i.'" name="t9z_shipping_2" value="'.$i.'" data-label="'.$label.'">г.'.$shipping_settings['shipping_sets'][$key]['city'].', '.$office[$i].', <a href="#map_canvas" onclick="ShowMap(\'' . $shipping_settings['shipping_sets'][$key]['city'].' '.$office[$i] . '\');">на карте</a></label></div>';
                     }
+                    
+            $output .= '<div id="map_canvas"></div>';
             $output .= '</div></div>';
         }
     } else {

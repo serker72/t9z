@@ -1,6 +1,8 @@
 (function($){
         // KSK
 	$(document).ready(function(){
+            var myMap;
+            
             checkout_href = $("a.checkout-button").attr("href");
             //$('#natsenka-30').on('click', function(){ kskNatsenkaClick(); });
             $('#natsenka-30').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
@@ -373,6 +375,7 @@ function ksk_wc_cart_add_amount_calc() {
     if (jQuery('#t9z_shipping_1_office').is(':checked')) {
         jQuery('div.print-cart-item-subfields').show();
     } else {
+        jQuery("#map_canvas").hide();
         jQuery('div.print-cart-item-subfields').hide();
     }
     
@@ -571,4 +574,52 @@ function ChangeCount (obj) {
     //jQuery('.selector').unbind('click');
     ksk_cart_quantity_calc(obj.attr('id'));
    // SelectorClick(names, obj_id);
+}
+
+function ShowMap(OfficeAddress) {
+    if (OfficeAddress == '') {
+        return false;
+    }
+    
+    if (typeof(myMap) === 'undefined') {
+        // Создание карты
+        myMap = new ymaps.Map("map_canvas", {
+            center: [55.76, 37.64],
+            zoom: 5,
+            controls: ['zoomControl','typeSelector']
+        });
+    }
+    
+    jQuery("#map_canvas").show();
+        
+    // Поиск координат по адресу
+    ymaps.geocode(OfficeAddress, {
+        /**
+         * Опции запроса
+         * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/geocode.xml
+         */
+        // Сортировка результатов от центра окна карты.
+        // boundedBy: myMap.getBounds(),
+        // strictBounds: true,
+        // Вместе с опцией boundedBy будет искать строго внутри области, указанной в boundedBy.
+        // Если нужен только один результат, экономим трафик пользователей.
+        results: 1
+    }).then(function (res) {
+        // Выбираем первый результат геокодирования.
+        var firstGeoObject = res.geoObjects.get(0),
+            // Координаты геообъекта.
+            coords = firstGeoObject.geometry.getCoordinates(),
+            // Область видимости геообъекта.
+            bounds = firstGeoObject.properties.get('boundedBy');
+
+        // Добавляем первый найденный геообъект на карту.
+        myMap.geoObjects.add(firstGeoObject);
+        // Масштабируем карту на область видимости геообъекта.
+        myMap.setBounds(bounds, {
+            // Проверяем наличие тайлов на данном масштабе.
+            checkZoomRange: true
+        });
+    });
+    
+    return false;
 }
