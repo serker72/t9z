@@ -159,6 +159,22 @@
 
                         if ((togglerId.indexOf('copies_') > -1) || (togglerId.indexOf('pages_') > -1)) {
                             ksk_cart_quantity_calc(togglerId)
+                            
+                            // Попытка подключить jQuery Text Change
+                            //selectorField.bind('textchange', function (event, previousText) {
+                            selectorField.bind('keypress', function (eventObject) {
+                                if (((eventObject.charCode < 48) || (eventObject.charCode > 57)) && (eventObject.keyCode != 8) && (eventObject.keyCode != 46)) return false;
+                                else return true;
+                            });
+                            selectorField.bind('keyup', function (eventObject) {
+                                //alert('Text changed from "' + previousText + '" to "' + $(this).val() + '"');
+                                //if (((eventObject.keyCode < 48) || (eventObject.keyCode > 57)) && (eventObject.keyCode != 8) && (eventObject.keyCode != 46)) return false;
+                                
+                                //alert('Text changed - ' + $(this).val() + '\nВведен символ ' + eventObject.which);
+                                selectorField.trigger('change');
+                                //return true;
+                            });
+                            //
                         }
 
 		selector.append('<span class="selector-minus selector" data-type="minus"/><span class="selector-plus selector" data-type="plus"/>')
@@ -622,4 +638,11 @@ function ShowMap(OfficeAddress) {
     });
     
     return false;
+}
+
+function checkNumberFields(n, event){
+    var reg = /^\d+$/;
+    alert('Text changed - ' + jQuery(this).val() + '\nВведен символ ' + event.which);
+    if (!reg.test(n)) return false;
+    else return true;
 }
