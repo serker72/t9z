@@ -36,7 +36,9 @@
                 jQuery('#payment_method_cod').prop('checked', (jQuery('#pay-method').attr("value") == 1));
                 //jQuery('#payment_method_robokassa').prop('checked', (jQuery('#pay-method').attr("value") == 2));
                 jQuery('#payment_method_bank').prop('checked', (jQuery('#pay-method').attr("value") == 2));
-                jQuery('#payment').hide();
+                //jQuery('#payment').hide();
+                jQuery('table.shop_table.woocommerce-checkout-review-order-table').hide();
+                jQuery('#payment').show();
             }
           
         });
