@@ -30,7 +30,7 @@
             
             // Оформление заказа
             if (jQuery("input").is("#place_order") && jQuery("div").is("#ksk-checkout-submit")) {
-                jQuery("#place_order").appendTo("#ksk-checkout-submit");
+                //jQuery("#place_order").appendTo("#ksk-checkout-submit");
                 //jQuery("#payment_method_cod").attr("disabled", "disabled");
                 //jQuery("#payment_method_robokassa").attr("disabled", "disabled");
                 jQuery('#payment_method_cod').prop('checked', (jQuery('#pay-method').attr("value") == 1));
