@@ -24,6 +24,7 @@
             if (jQuery("table").is(".cart")) {
                 jQuery("span.selector-minus.selector").css({'top': '7px'});
                 jQuery("span.selector-plus.selector").css({'top': '7px'});
+                $('#t9z_shipping_1_office').trigger('click');
             }
             
             ksk_free_shipping_check();

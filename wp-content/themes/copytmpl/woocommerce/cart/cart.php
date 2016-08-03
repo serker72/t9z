@@ -259,8 +259,8 @@ if (is_user_logged_in() && ($user_bonus_amount > 0)) { ?>
 <!-- Выбор способа оплаты -->
 <div class="print-cart-item">
     <h3>Способ оплаты:</h3>
-    <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="1"> Наличные при получении</label></div>
-    <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="2" checked="checked"> Банковской картой, электронные кошельки Яндекс.Деньги, Webmoney и пр.</label></div>
+    <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="1" checked="checked"> Наличные при получении</label></div>
+    <div class="print-cart-item-field"><label><input type="radio" name="pay-method" value="2"> Банковской картой, электронные кошельки Яндекс.Деньги, Webmoney и пр.</label></div>
 </div>
 <!-- Комментарии -->
 <div class="print-cart-item">

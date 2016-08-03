@@ -381,20 +381,20 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - Бесплатно</strong> (сумма заказа превышает <strong>'.$shipping_settings['free_shipping_amount'].' руб.</strong>)';
             $output .= '
             <div class="print-cart-item-field">
-                <label id="l_t9z_shipping_1_free"><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'free')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'" '.(($total < (int)$shipping_settings['free_shipping_amount']) ? 'disabled="disabled"' : '').'>'.$label.'</label>
+                <label id="l_t9z_shipping_1_free"><input type="radio" id="t9z_shipping_1_free" name="t9z_shipping_1" value="free" '.((isset($_POST['t9z_shipping_1']) && ($_POST['t9z_shipping_1'] == 'free')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'" '.(($total < (int)$shipping_settings['free_shipping_amount']) ? 'disabled="disabled"' : '').'>'.$label.'</label>
             </div>';
 
             $label = 'Доставка по <strong>г.'.$shipping_settings['shipping_sets'][$key]['city'].' - '.($shipping_settings['shipping_sets'][$key]['amount'] > 0 ? $shipping_settings['shipping_sets'][$key]['amount'].' руб.' : 'Бесплатно').'</strong>';
             $output .= '
             <div class="print-cart-item-field">
-                <label id="l_t9z_shipping_1_city"><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'city')) ? 'checked="checked"' : '').' data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'" data-label="'.$label.'"'.(($total >= (int)$shipping_settings['free_shipping_amount']) ? 'disabled="disabled"' : '').'>'.$label.'</label>
+                <label id="l_t9z_shipping_1_city"><input type="radio" id="t9z_shipping_1_city" name="t9z_shipping_1" value="city" '.((isset($_POST['t9z_shipping_1']) && ($_POST['t9z_shipping_1'] == 'city')) ? 'checked="checked"' : '').' data-cost="'.$shipping_settings['shipping_sets'][$key]['amount'].'" data-label="'.$label.'"'.(($total >= (int)$shipping_settings['free_shipping_amount']) ? 'disabled="disabled"' : '').'>'.$label.'</label>
             </div>';
     
             $label = 'Получение в офисе - <strong>Бесплатно</strong>';
             $output .= '
             <div class="print-cart-item-field">
-                <label id="l_t9z_shipping_1_office"><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" '.((isset($_POST['t9z_shipping_1']) && ($_POST['t9z_shipping_1'] == 'office')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'">'.$label.'</label> 
-                <div class="print-cart-item-subfields" style="display: none;">';
+                <label id="l_t9z_shipping_1_office"><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'office')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'">'.$label.'</label> 
+                <div class="print-cart-item-subfields" style="'.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'office')) ? 'display: none;' : '').'">';
                     
                     $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
                     for($i=0; $i < count($office); $i++) {
