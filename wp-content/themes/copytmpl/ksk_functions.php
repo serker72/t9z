@@ -493,19 +493,25 @@ function ksk_wc_order_status_hold( $order_id ) {
     $user_id = (int)$order->user_id;
     $order_total = $order->get_total();
     
-    $order_last_number = (int)get_option('ksk_wc_order_last_number', 0);
-    $order_number = $order_last_number + 1;
-    update_option('ksk_wc_order_last_number', $order_number);
-    
     $shipping_city = ksk_get_var_from_session_post_get('shipping_city', '');
     $shipping_method = ksk_get_var_from_session_post_get('t9z_shipping_1', 0);
     $shipping_punkt = (int)ksk_get_var_from_session_post_get('t9z_shipping_2', 0) + 1;
-    $order_number_txt = mb_substr($shipping_city, 0, 1, 'UTF-8');
-    $order_number_txt .= ($shipping_method === 'office' ? $shipping_punkt : '');
-    $order_number_txt .= '-'.$order_number;
+    
+    // Необходимо выполнять проверку на присвоение номера заказу
+    $order_number_meta = get_post_meta($order_id, 'ksk_wc_order_number', true);
+    if (empty($order_number_meta)) {
+        $order_last_number = (int)get_option('ksk_wc_order_last_number', 0);
+        $order_number = $order_last_number + 1;
+        update_option('ksk_wc_order_last_number', $order_number);
+
+        $order_number_txt = mb_substr($shipping_city, 0, 1, 'UTF-8');
+        $order_number_txt .= ($shipping_method === 'office' ? $shipping_punkt : '');
+        $order_number_txt .= '-'.$order_number;
+        update_post_meta($order_id, 'ksk_wc_order_number', $order_number_txt);
+    }
+    
     
     // Запишем meta-поля заказа
-    update_post_meta($order_id, 'ksk_wc_order_number', $order_number_txt);
     update_post_meta($order_id, 'ksk_wc_order_natsenka-30', ksk_get_var_from_session_post_get('natsenka-30', 0));
     update_post_meta($order_id, 'ksk_wc_order_natsenka-amount', ksk_get_var_from_session_post_get('natsenka-amount', 0));
     update_post_meta($order_id, 'ksk_wc_order_natsenka-percent', ksk_get_var_from_session_post_get('natsenka-percent', 0));
