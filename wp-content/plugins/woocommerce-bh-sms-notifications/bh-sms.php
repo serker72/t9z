@@ -173,7 +173,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		}
 		
 
-		if ( $status == 'on-hold' ) {
+		//if ( $status == 'on-hold' ) {
+                // KSK
+		if (( $status == 'on-hold' ) || ( $status == 'processing' ) || ( $status == 'pending' )) {
 			if ( isset( $configuracion['notificacion'] ) && $configuracion['notificacion'] == 1 ) {
 				bh_sms_envia_sms( $configuracion, $telefono_propietario, bh_sms_procesa_variables( $mensaje_pedido, $pedido, $configuracion['variables'] ) ); //Mensaje para el propietario
 			}
