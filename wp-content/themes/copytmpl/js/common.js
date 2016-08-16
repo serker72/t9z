@@ -11,6 +11,7 @@
             // Скрытие/отображение пунктов доставки
             //$('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
             $('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
+            $('input[name=t9z_shipping_2]').on('click', function(e){ ksk_wc_cart_shipping_office_click(e); });
             
             jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ 
                 if (jQuery("input").is("#user-bonus-amount")) {
@@ -101,6 +102,7 @@
                             // Скрытие/отображение пунктов доставки
                             //jQuery('input[name=t9z_shipping_1]').on('click', function(e){ kskT9zShippingClick(e); });
                             jQuery('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
+                            jQuery('input[name=t9z_shipping_2]').on('click', function(e){ ksk_wc_cart_shipping_office_click(e); });
                         }
                         //alert(data);
                         ksk_wc_cart_add_amount_calc();
@@ -445,8 +447,8 @@ function ksk_wc_proceed_to_checkout(e) {
 
         if (jQuery('#t9z_shipping_1_office').is(':checked')) {
             jQuery("#shipping-text-1").attr("value", jQuery('#t9z_shipping_1_office')[0].dataset.label);
-            id2 = jQuery("input[name=t9z_shipping_2]").attr("value");
-            jQuery("#shipping-text-2").attr("value", jQuery('#t9z_shipping_2_' + id2)[0].dataset.label);
+            //id2 = jQuery("input[name=t9z_shipping_2]").attr("value");
+            //jQuery("#shipping-text-2").attr("value", jQuery('#t9z_shipping_2_' + id2)[0].dataset.label);
         }
 
         // Сохранима новые поля формы в $_SESSION
@@ -648,4 +650,11 @@ function checkNumberFields(n, event){
     alert('Text changed - ' + jQuery(this).val() + '\nВведен символ ' + event.which);
     if (!reg.test(n)) return false;
     else return true;
+}
+
+function ksk_wc_cart_shipping_office_click(e) {
+    var id = e.target.id;
+    var txt = jQuery('#' + id)[0].dataset.label;
+    jQuery("#shipping-text-2").attr("value", txt);
+    //alert(id+', '+txt+'/n'+jQuery("#shipping-text-2").attr("value"));
 }

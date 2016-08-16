@@ -548,7 +548,7 @@ function ksk_wc_order_status_hold( $order_id ) {
     }
     
     // Очистим поля в $_SESSION
-    ksk_clear_t9z_cart_new_field_from_session();
+    //ksk_clear_t9z_cart_new_field_from_session();
 }
 add_action( 'woocommerce_order_status_pending', 'ksk_wc_order_status_hold' );
 add_action( 'woocommerce_order_status_on-hold', 'ksk_wc_order_status_hold' );
@@ -583,6 +583,13 @@ function ksk_wc_order_status_cancelled( $order_id ) {
     update_user_meta($user_id, 'bonus_amount', $user_bonus_amount);
 }
 add_action( 'woocommerce_order_status_completed', 'ksk_wc_order_status_completed' );
+
+// Очистим поля в $_SESSION после того, как корзина была очищена
+function ksk_wc_cart_emptied() {
+    // Очистим поля в $_SESSION
+    ksk_clear_t9z_cart_new_field_from_session();
+}
+add_action( 'woocommerce_cart_emptied', 'ksk_wc_cart_emptied');
 
 /*
  * Формирование номера заказа
