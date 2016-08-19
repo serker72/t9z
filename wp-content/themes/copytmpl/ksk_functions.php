@@ -934,3 +934,85 @@ function ksk_get_variation_price_html($variation_id)
     return $ret_str;
 }
 //add_filter( 'woocommerce_show_variation_price', 'ksk_show_variation_price' );
+
+function ksk_shop_order_columns($columns)
+{
+    $new_columns = array();
+    /*$new_columns = (is_array($columns)) ? $columns : array();
+    unset( $new_columns['order_actions'] );
+
+    //edit this for you column(s)
+    //all of your columns will be added before the actions column
+    $new_columns['ksk_wc_order_shipping_city'] = 'Город';
+    $new_columns['ksk_wc_order_shipping-office'] = 'Точка самовывоза';
+    //stop editing
+
+    $new_columns['order_actions'] = $columns['order_actions'];*/
+    
+    foreach ($columns as $key => $value) {
+        if ($key == 'shipping_address') {
+            $new_columns['ksk_wc_order_shipping_city'] = 'Город';
+            $new_columns['ksk_wc_order_shipping-office'] = 'Офис';
+        } else {
+            $new_columns[$key] = $value;
+        }
+    }
+    
+    return $new_columns;
+}
+add_filter( 'manage_edit-shop_order_columns', 'ksk_shop_order_columns' );
+
+
+function ksk_shop_order_column_values($column)
+{
+    global $post;
+    $data = get_post_meta( $post->ID );
+
+    //start editing, I was saving my fields for the orders as custom post meta
+    //if you did the same, follow this code
+    if ( $column == 'ksk_wc_order_shipping_city' ) {    
+        echo (isset($data['ksk_wc_order_shipping_city']) ? $data['ksk_wc_order_shipping_city'][0] : '');
+    }
+    if ( $column == 'ksk_wc_order_shipping-office' ) {   
+        //echo (isset($data['ksk_wc_order_shipping-office']) ? $data['ksk_wc_order_shipping-office'][0] : '');
+        if (isset($data['ksk_wc_order_shipping-office'])) {
+            $d1 = explode(':', $data['ksk_wc_order_shipping-office'][0]);
+            $d2 = explode(',', $d1[1]);
+            echo $d2[1];
+        }
+    }
+    //stop editing    
+}
+add_action( 'manage_shop_order_posts_custom_column', 'ksk_shop_order_column_values', 2 );
+
+function ksk_shop_order_columns_sort($columns)
+{
+    $custom = array(
+        //start editing
+        'ksk_wc_order_shipping_city' => 'ksk_wc_order_shipping_city',
+        'ksk_wc_order_shipping-office' => 'ksk_wc_order_shipping-office'
+        //stop editing
+    );
+    
+    return wp_parse_args( $custom, $columns );    
+}
+add_filter( "manage_edit-shop_order_sortable_columns", 'ksk_shop_order_columns_sort' );
+
+function ksk_shop_filter_orders($query) 
+{
+    global $pagenow;
+    $qv = &$query->query_vars;
+
+    $user = wp_get_current_user();
+    $user_shipping_city = get_user_meta($user->ID, 'shipping_city', true);
+
+    if ($pagenow == 'edit.php' && isset($qv['post_type']) && $qv['post_type'] == 'shop_order') {            
+        if (in_array('shop_manager', (array) $user->roles ) && ($user_shipping_city !== '')) {
+            $query->set('meta_key', 'ksk_wc_order_shipping_city');
+            $query->set('meta_value', $user_shipping_city);
+        }
+    }
+
+    return $query;
+}
+add_filter('pre_get_posts', 'ksk_shop_filter_orders');
