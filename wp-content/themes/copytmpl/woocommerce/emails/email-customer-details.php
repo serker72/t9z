@@ -29,8 +29,10 @@ $user_first_name = get_user_meta($user_id, 'first_name', true);
 ?>
 <h2><?php _e( 'Customer details', 'woocommerce' ); ?></h2>
 <ul>
-    <li><strong>Фамилия и имя:</strong> <span class="text"><?php echo wp_kses_post( $user_last_name . ' ' . $user_first_name ); ?></span></li>
-    <?php foreach ( $fields as $field ) : ?>
+    <!--li><strong>Фамилия и имя:</strong> <span class="text"><?php //echo wp_kses_post( $user_last_name . ' ' . $user_first_name ); ?></span></li-->
+    <?php
+    ksort($fields);
+    foreach ( $fields as $field ) : ?>
         <li><strong><?php echo wp_kses_post( $field['label'] ); ?>:</strong> <span class="text"><?php echo wp_kses_post( $field['value'] ); ?></span></li>
     <?php endforeach; ?>
 </ul>

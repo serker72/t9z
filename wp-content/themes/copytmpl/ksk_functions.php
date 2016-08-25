@@ -1016,3 +1016,22 @@ function ksk_shop_filter_orders($query)
     return $query;
 }
 add_filter('pre_get_posts', 'ksk_shop_filter_orders');
+
+//-------------------------------------------------------------------------
+// Добавить дополнительное поле из формы оформления заказа в письмо заказа
+//-------------------------------------------------------------------------
+function ksk_shop_filter_woocommerce_email_customer_details_fields( $fields, $sent_to_admin, $order ) 
+{                 
+    // add the customer name
+    if ( $order->billing_last_name || $order->billing_first_name) { 
+        $fields['billing_1name'] = array( 
+            //'label' => __( 'Name', 'woocommerce' ),
+            'label' => 'Фамилия и имя',
+            'value' => wptexturize( $order->billing_first_name . ' ' . $order->billing_last_name ) 
+        );
+    }
+    
+    // add your custom field here in the same way
+    return $fields; 
+}; 
+add_filter( 'woocommerce_email_customer_details_fields', 'ksk_shop_filter_woocommerce_email_customer_details_fields', 10, 3 );
