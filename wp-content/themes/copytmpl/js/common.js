@@ -41,6 +41,7 @@
                 //jQuery('#payment').hide();
                 jQuery('table.shop_table.woocommerce-checkout-review-order-table').hide();
                 jQuery('#payment').show();
+                jQuery("#billing_phone").mask("+7(999)9999999?9");
             }
           
         });

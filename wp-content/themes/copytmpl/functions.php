@@ -121,6 +121,10 @@ function copytmpl_scripts_styles() {
 	wp_register_script( 'copytmpl-common-js', get_template_directory_uri() . '/js/common.js', array('jquery'), '20160121', true );
 	wp_enqueue_script('copytmpl-common-js');
 
+	// Masked Input Plugin scripts
+	wp_register_script( 'maskedinput-js', get_template_directory_uri() . '/js/jquery.maskedinput.min.js', array('jquery'), '20160121', true );
+	wp_enqueue_script('maskedinput-js');
+
 	// Styles
 	wp_enqueue_style( 'copytmpl-style', get_stylesheet_uri(), array(), '20160121' );
 }
@@ -224,7 +228,7 @@ function copytmpl_header_user_nav_shortcode_func( $atts ) {
 	$output = '<div class="header-user-nav">';
 
 	if ( is_user_logged_in() ) {
-		$output .= '<a href="'. wc_customer_edit_account_url() .'" class="header-user-nav-item">'. __( 'Info', 'copytmpl' ) .'</a> <a href="'. wc_get_page_permalink( 'myaccount' ) .'" class="header-user-nav-item">'. __( 'Orders', 'copytmpl' ) .'</a>';
+		$output .= '<a href="'. wc_customer_edit_account_url() .'" class="header-user-nav-item">'. __( 'Info', 'copytmpl' ) .'</a> <a href="'. wc_get_page_permalink( 'myaccount' ) .'" class="header-user-nav-item">'. __( 'Orders', 'copytmpl' ) .'</a> <a href="'.wc_get_endpoint_url( 'customer-logout', '', wc_get_page_permalink( 'myaccount' ) ). '" class="header-user-nav-item">'. __( 'Exit', 'copytmpl' ) .'</a>';
 	}
 	else {
 		$output .= '<a href="'. wc_get_page_permalink( 'myaccount' ) .'" class="header-user-nav-item popup-inline-show" data-target-popup="form-auth">'. __( 'Login', 'copytmpl' ) .'</a> ';
