@@ -13,7 +13,13 @@
             $('input[name=t9z_shipping_1]').on('click', function(e){ ksk_wc_cart_add_amount_calc(); });
             $('input[name=t9z_shipping_2]').on('click', function(e){ ksk_wc_cart_shipping_office_click(e); });
             
-            jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){ 
+            jQuery("#ksk-wc-proceed-to-checkout").on('click', function(e){
+                if (jQuery('#t9z_shipping_1_city').is(':checked') && (jQuery("#t9z_shipping_1_address").val() == "")) {
+                    alert('Необходимо указать адрес доставки !');
+                    jQuery("#t9z_shipping_1_address").focus();
+                    return false;
+                }
+                
                 if (jQuery("input").is("#user-bonus-amount")) {
                     ksk_wc_proceed_to_checkout(e); 
                 } else {
@@ -300,9 +306,11 @@ function kskT9zShippingClick(e) {
     var id = e.target.id;
     var cost = e.target.dataset.cost;
     if (id == 't9z_shipping_1_office') {
-        jQuery('div.print-cart-item-subfields').show();
+        jQuery('#t9z_shipping_1_office_info').show();
+        jQuery('#t9z_shipping_1_address_info').hide();
     } else {
-        jQuery('div.print-cart-item-subfields').hide();
+        jQuery('#t9z_shipping_1_office_info').hide();
+        jQuery('#t9z_shipping_1_address_info').show();
     }
     
     jQuery.ajax({
@@ -395,10 +403,12 @@ function ksk_wc_cart_add_amount_calc() {
     }
     
     if (jQuery('#t9z_shipping_1_office').is(':checked')) {
-        jQuery('div.print-cart-item-subfields').show();
+        jQuery('#t9z_shipping_1_office_info').show();
+        jQuery('#t9z_shipping_1_address_info').hide();
     } else {
         jQuery("#map_canvas").hide();
-        jQuery('div.print-cart-item-subfields').hide();
+        jQuery('#t9z_shipping_1_office_info').hide();
+        jQuery('#t9z_shipping_1_address_info').show();
     }
     
     if (jQuery('#t9z_shipping_1_city').is(':checked')) {

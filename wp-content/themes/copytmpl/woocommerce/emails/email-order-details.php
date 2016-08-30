@@ -63,6 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                             $m_shipping_city = get_post_meta($order->id, 'ksk_wc_order_shipping_city', true);
                                             $m_shipping_office = get_post_meta($order->id, 'ksk_wc_order_shipping-office', true);
                                             $m_shipping_amount = get_post_meta($order->id, 'ksk_wc_order_shipping-amount', true);
+                                            $m_shipping_address = get_post_meta($order->id, 'ksk_wc_order_shipping-address', true);
                                             
                                             if ($m_t9z_shipping_1 == 'city') {
                                                 $m_shipping_text1 = 'Доставка по г.' . $m_shipping_city;
@@ -74,7 +75,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<td class="td" style="text-align:left; <?php if ( $i === 1 ) echo 'border-top-width: 4px;'; ?>"><?php echo $m_shipping_text1; ?></td>
 					</tr><?php
                                         
-                                            if ($m_t9z_shipping_1 != 'city') {
+                                            if ($m_t9z_shipping_1 == 'city') {
+					?><tr>
+						<th class="td" scope="row" colspan="2" style="text-align:left; <?php if ( $i === 1 ) echo 'border-top-width: 4px;'; ?>">Адрес доставки:</th>
+						<td class="td" style="text-align:left; <?php if ( $i === 1 ) echo 'border-top-width: 4px;'; ?>"><?php echo $m_shipping_address; ?></td>
+					</tr>
+                                            <?php } else {
                                                 $m_shipping_office_ex = explode(':', $m_shipping_office);
 					?><tr>
 						<th class="td" scope="row" colspan="2" style="text-align:left; <?php if ( $i === 1 ) echo 'border-top-width: 4px;'; ?>"><?php echo $m_shipping_office_ex[0]; ?>:</th>

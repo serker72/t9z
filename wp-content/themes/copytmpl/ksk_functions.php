@@ -394,7 +394,7 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
             $output .= '
             <div class="print-cart-item-field">
                 <label id="l_t9z_shipping_1_office"><input type="radio" id="t9z_shipping_1_office" name="t9z_shipping_1" value="office" '.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'office')) ? 'checked="checked"' : '').' data-cost="0" data-label="'.$label.'">'.$label.'</label> 
-                <div class="print-cart-item-subfields" style="'.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'office')) ? 'display: none;' : '').'">';
+                <div class="print-cart-item-subfields" id="t9z_shipping_1_office_info" style="'.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'office')) ? 'display: none;' : '').'">';
                     
                     $office = explode('|', $shipping_settings['shipping_sets'][$key]['offices']);
                     for($i=0; $i < count($office); $i++) {
@@ -403,7 +403,15 @@ function ksk_woocommerce_t9z_shipping_cart_print($city = null) {
                     }
                     
             $output .= '<div id="map_canvas"></div>';
-            $output .= '</div></div>';
+            $output .= '</div>';
+            
+            // KSK - 30.08.2016 - Добавляем поле для ввода адреса доставки
+            $output .= '<div class="print-cart-item-subfields" id="t9z_shipping_1_address_info" style="'.((!isset($_POST['t9z_shipping_1']) || ($_POST['t9z_shipping_1'] == 'city')) ? 'display: none;' : '').'">
+                            <label for="t9z_shipping_1_address">Укажите адрес доставки</label>
+                            <input type="text" name="t9z_shipping_1_address" id="t9z_shipping_1_address" placeholder=""  value="'.$_POST['t9z_shipping_1_address'].'" style="width: 70%;">
+                        </div>';
+            
+            $output .= '</div>';
         }
     } else {
         $output .= '<div class="woocommerce-error">Необходимо активировать метод доставки "T9Z" и выполнить настройку хотя бы для одного города.</div>';
@@ -530,11 +538,13 @@ function ksk_wc_order_status_hold( $order_id ) {
     $t9z_shipping_1 = ksk_get_var_from_session_post_get('t9z_shipping_1', '');
     $t9z_shipping_2 = ksk_get_var_from_session_post_get('t9z_shipping_2', '');
     $shipping_office = ksk_get_var_from_session_post_get('shipping-office', '');
+    $shipping_address = ksk_get_var_from_session_post_get('t9z_shipping_1_address', '');
     
     if ($t9z_shipping_1 !== '') update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_1', $t9z_shipping_1);
     if ($t9z_shipping_2 !== '') update_post_meta($order_id, 'ksk_wc_order_t9z_shipping_2', $t9z_shipping_2);
     if ($shipping_city !== '') update_post_meta($order_id, 'ksk_wc_order_shipping_city', $shipping_city);
     if ($shipping_office !== '') update_post_meta($order_id, 'ksk_wc_order_shipping-office', $shipping_office);
+    if ($shipping_address !== '') update_post_meta($order_id, 'ksk_wc_order_shipping-address', $shipping_address);
     
     
     // Если выбран пункт списания бонусов в оплату заказа
@@ -698,6 +708,7 @@ function ksk_save_t9z_cart_new_field_to_session() {
         'bonus-percent' => 0,
         't9z_shipping_1' => 'city',
         't9z_shipping_2' => 0,
+        't9z_shipping_1_address' => '',
         'shipping-amount' => 0,
         'shipping-office' => isset($_POST['shipping-text-2']) ? $_POST['shipping-text-2'] : '',
         'pay-method' => 2,
@@ -730,6 +741,7 @@ function ksk_clear_t9z_cart_new_field_from_session() {
         'bonus-percent' => 0,
         't9z_shipping_1' => 'city',
         't9z_shipping_2' => 0,
+        't9z_shipping_1_address' => '',
         'shipping-amount' => 0,
         'shipping-office' => '',
         'pay-method' => 2,
@@ -963,7 +975,7 @@ function ksk_shop_order_columns($columns)
     foreach ($columns as $key => $value) {
         if ($key == 'shipping_address') {
             $new_columns['ksk_wc_order_shipping_city'] = 'Город';
-            $new_columns['ksk_wc_order_shipping-office'] = 'Офис';
+            $new_columns['ksk_wc_order_shipping-office'] = 'Адрес доставки или офиса';
         } else {
             $new_columns[$key] = $value;
         }
@@ -986,10 +998,12 @@ function ksk_shop_order_column_values($column)
     }
     if ( $column == 'ksk_wc_order_shipping-office' ) {   
         //echo (isset($data['ksk_wc_order_shipping-office']) ? $data['ksk_wc_order_shipping-office'][0] : '');
-        if (isset($data['ksk_wc_order_shipping-office'])) {
+        if (isset($data['ksk_wc_order_shipping-office']) && ($data['ksk_wc_order_shipping-office'][0] !== '')) {
             $d1 = explode(':', $data['ksk_wc_order_shipping-office'][0]);
             $d2 = explode(',', $d1[1]);
             echo $d2[1];
+        } else if (isset($data['ksk_wc_order_shipping-address']) && ($data['ksk_wc_order_shipping-address'][0] !== '')) {
+            echo $data['ksk_wc_order_shipping-address'][0];
         }
     }
     //stop editing    
@@ -1046,3 +1060,11 @@ function ksk_shop_filter_woocommerce_email_customer_details_fields( $fields, $se
     return $fields; 
 }; 
 add_filter( 'woocommerce_email_customer_details_fields', 'ksk_shop_filter_woocommerce_email_customer_details_fields', 10, 3 );
+
+//-------------------------------------------------------------------------
+// Увеличить количество вариаций товара
+//-------------------------------------------------------------------------
+function ksk_wc_ajax_variation_threshold_more($qty, $product) {
+    return 100;
+}
+add_filter ('woocommerce_ajax_variation_threshold', 'ksk_wc_ajax_variation_threshold_more', 10, 2);

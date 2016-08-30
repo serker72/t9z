@@ -198,8 +198,9 @@ if ( ! $checkout->enable_signup && ! $checkout->enable_guest_checkout && ! is_us
                 </div>
                 <div class="print-checkout-item">
                         <h3 class="print-checkout-item-title">Способ получения:</h3>
-                        <p><?php echo isset($_POST['shipping-text-1']) ? $_POST['shipping-text-1'] : ''; ?></p>
-                        <p><?php echo isset($_POST['shipping-text-2']) ? $_POST['shipping-text-2'] : ''; ?></p>
+                        <?php echo isset($_POST['shipping-text-1']) ? '<p>'.$_POST['shipping-text-1'].'</p>' : ''; ?>
+                        <?php echo isset($_POST['shipping-text-2']) ? '<p>'.$_POST['shipping-text-2'].'</p>' : ''; ?>
+                        <?php echo isset($_POST['t9z_shipping_1_address']) && ($_POST['t9z_shipping_1_address'] != '') ? '<p>Адрес доставки: <strong>'.$_POST['t9z_shipping_1_address'].'</strong></p>' : ''; ?>
                         <?php if (ksk_check_var_in_session_post_get('natsenka-30', 'on')) { ?>
                             <p>Наценка за срочное выполнение - <strong><?php echo ksk_get_var_from_session_post_get('natsenka-amount', '0').' руб.'; ?></strong></p>
                         <?php } ?>
