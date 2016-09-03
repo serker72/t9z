@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</tr><?php
                                         
                                         // KSK
-                                        if ($total['label'] == 'Подытог:') {
+                                        if ($total['label'] == 'Подитог:') {
                                             $m_t9z_shipping_1 = get_post_meta($order->id, 'ksk_wc_order_t9z_shipping_1', true);
                                             $m_t9z_shipping_2 = get_post_meta($order->id, 'ksk_wc_order_t9z_shipping_2', true);
                                             $m_shipping_city = get_post_meta($order->id, 'ksk_wc_order_shipping_city', true);

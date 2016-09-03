@@ -71,6 +71,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             'free_shipping_amount' => 5000,
                             'bonus_rate' => 5,
                             'natsenka_rate' => 30,
+                            'order_min_amount' => 500,
                             'default_city' => 'Краснодар',
                             'shipping_sets' => array(
                                 '1' => array(
@@ -101,7 +102,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         $this->settings['title'] = isset( $_POST['title'] ) ? $_POST['title'] : ''; 
                         $this->settings['free_shipping_amount'] = isset( $_POST['free_shipping_amount'] ) ? $_POST['free_shipping_amount'] : ''; 
                         $this->settings['bonus_rate'] = isset( $_POST['bonus_rate'] ) ? $_POST['bonus_rate'] : ''; 
-                        $this->settings['natsenka_rate'] = isset( $_POST['natsenka_rate'] ) ? $_POST['natsenka_rate'] : ''; 
+                        $this->settings['natsenka_rate'] = isset( $_POST['natsenka_rate'] ) ? $_POST['natsenka_rate'] : '';
+                        $this->settings['order_min_amount'] = isset( $_POST['order_min_amount'] ) ? $_POST['order_min_amount'] : '';
                         $this->settings['default_city'] = isset( $_POST['default_city'] ) ? $_POST['default_city'] : '';
                         
                         foreach ($this->settings['shipping_sets'] AS $id => $data) {
@@ -208,8 +210,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         </th>
 			<td class="forminp">
                             <fieldset>
-                                <legend class="screen-reader-text"><span>% от суммы заказа для расчета бонусов</span></legend>
+                                <legend class="screen-reader-text"><span>Наценка за срочное выполнение заказа</span></legend>
                                 <input class="input-text regular-input " type="text" name="natsenka_rate" id="<?php echo $this->plugin_slug; ?>_natsenka_rate" style="" value="<?php echo $this->settings['natsenka_rate']; ?>" placeholder=""/>
+                            </fieldset>
+			</td>
+		</tr>                 
+                <tr valign="top">
+			<th scope="row" class="titledesc">
+                            <label for="order_min_amount">Минимальная сумма заказа</label>
+                            <span class="woocommerce-help-tip" data-tip="Минимальная сумма заказа, при достижении которой доступно оформление заказа."></span>
+                        </th>
+			<td class="forminp">
+                            <fieldset>
+                                <legend class="screen-reader-text"><span>Минимальная сумма заказа</span></legend>
+                                <input class="input-text regular-input " type="text" name="order_min_amount" id="<?php echo $this->plugin_slug; ?>_order_min_amount" style="" value="<?php echo $this->settings['order_min_amount']; ?>" placeholder=""/>
                             </fieldset>
 			</td>
 		</tr>                 

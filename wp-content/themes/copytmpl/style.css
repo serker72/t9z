@@ -1491,3 +1491,10 @@ input[type="password"] {
     height: 300px;
     margin: 5px auto;
 }
+
+.ninja-forms-success-msg {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fa1;
+    text-align: center;
+}

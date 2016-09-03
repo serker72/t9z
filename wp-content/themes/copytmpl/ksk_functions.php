@@ -1068,3 +1068,36 @@ function ksk_wc_ajax_variation_threshold_more($qty, $product) {
     return 100;
 }
 add_filter ('woocommerce_ajax_variation_threshold', 'ksk_wc_ajax_variation_threshold_more', 10, 2);
+
+//-------------------------------------------------------------------------
+// Установка минимальной суммы заказа
+//-------------------------------------------------------------------------
+function ksk_wc_minimum_order_amount() {
+    // Set this variable to specify a minimum order value
+    $shipping_settings = maybe_unserialize(get_option('woocommerce_t9z_shipping_settings', null));
+    if ((count($shipping_settings) > 0) && ($shipping_settings['enabled'] == 1) && (count($shipping_settings['shipping_sets']) > 0)) {
+        $minimum = (float)$shipping_settings['order_min_amount'];
+    } else {
+        $minimum = 300;
+    }
+ 
+    if ( WC()->cart->total < $minimum ) {
+        if( is_cart() ) {
+            wc_print_notice( 
+                sprintf( 'Для оформления заказа, общая стоимость товаров в вашей корзине должна быть не меньше %s.' , 
+                    wc_price( $minimum ) 
+                    //wc_price( WC()->cart->total )
+                ), 'error' 
+            );
+        } else {
+            wc_add_notice( 
+                sprintf( 'Для оформления заказа, общая стоимость товаров в вашей корзине должна быть не меньше %s.' , 
+                    wc_price( $minimum )
+                    //wc_price( WC()->cart->total )
+                ), 'error' 
+            );
+        }
+    }
+}
+add_action( 'woocommerce_checkout_process', 'ksk_wc_minimum_order_amount' );
+add_action( 'woocommerce_before_cart' , 'ksk_wc_minimum_order_amount' );
